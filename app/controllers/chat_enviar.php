@@ -25,19 +25,11 @@ try {
     if ($yoId === $destinatarioId) throw new Exception('No puedes enviarte mensajes a ti mismo');
 
     $model = new Chat();
-    $rolDestinatario = $model->getRolDestinatario($destinatarioId);
-    if (!$rolDestinatario) throw new Exception('Usuario no encontrado');
+    if (!$model->getRolDestinatario($destinatarioId)) throw new Exception('Usuario no encontrado');
 
-    $rolesProf = ['coach', 'nutriologo', 'psicologo'];
-    if (in_array($yo['rol'], $rolesProf)) {
-        if ($rolDestinatario !== 'usuario') throw new Exception('Solo puedes chatear con usuarios');
-        $usuarioId    = $destinatarioId;
-        $profesionalId = $yoId;
-    } else {
-        if (!in_array($rolDestinatario, $rolesProf)) throw new Exception('Solo puedes chatear con profesionales');
-        $usuarioId    = $yoId;
-        $profesionalId = $destinatarioId;
-    }
+    // Orden consistente: menor ID = usuario_id, mayor ID = profesional_id
+    $usuarioId     = min($yoId, $destinatarioId);
+    $profesionalId = max($yoId, $destinatarioId);
 
     $conversacionId = $model->getOCrearConversacion($usuarioId, $profesionalId);
     $msgId = $model->enviarMensaje($conversacionId, $yoId, $contenido);

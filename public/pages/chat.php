@@ -11,11 +11,9 @@ if (!$authController->isAuthenticated()) {
     redirect('login');
 }
 
-$user       = $authController->getCurrentUser();
-$esPro      = isProfessional();
-$esAdmin    = isAdmin();
-$puedeNuevo = $esPro || $esAdmin;
-$rolesProf  = ['coach', 'nutriologo', 'psicologo'];
+$user    = $authController->getCurrentUser();
+$esPro   = isProfessional();
+$esAdmin = isAdmin();
 
 include '../../app/views/layouts/header.php';
 ?>
@@ -24,13 +22,11 @@ include '../../app/views/layouts/header.php';
     <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
         <div>
             <h1>Mensajes</h1>
-            <p><?php echo $esPro ? 'Conversaciones con tus usuarios' : ($esAdmin ? 'Conversaciones con todos los usuarios' : 'Mensajes de tus profesionales'); ?></p>
+            <p><?php echo $esPro ? 'Conversaciones con tus usuarios' : ($esAdmin ? 'Conversaciones con todos los usuarios' : 'Mensajes con tus especialistas'); ?></p>
         </div>
-        <?php if ($puedeNuevo): ?>
         <button class="btn btn-primary" onclick="chatAbrirModalNuevo()" style="font-size:0.88rem;">
             + Nuevo mensaje
         </button>
-        <?php endif; ?>
     </div>
 
     <div class="chat-container" style="height:calc(100vh - 220px); min-height:420px;">
@@ -51,11 +47,7 @@ include '../../app/views/layouts/header.php';
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="chat-placeholder">
-                    <?php if ($puedeNuevo): ?>
-                        Selecciona una conversación o inicia una nueva.
-                    <?php else: ?>
-                        Aquí aparecerán los mensajes de tus especialistas.
-                    <?php endif; ?>
+                    Selecciona una conversación o inicia una nueva.
                 </div>
             </div>
             <div class="chat-input-area" id="chatInputArea" style="display:none;">
@@ -74,8 +66,7 @@ include '../../app/views/layouts/header.php';
     </div>
 </div>
 
-<?php if ($puedeNuevo): ?>
-<!-- Modal nuevo chat -->
+<!-- Modal nuevo chat — disponible para todos -->
 <div id="modalNuevoChat" class="modal" style="display:none;">
     <div class="modal-content" style="max-width:420px;">
         <div class="modal-header">
@@ -85,9 +76,9 @@ include '../../app/views/layouts/header.php';
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>Usuario</label>
+                <label>Destinatario</label>
                 <select id="chatNuevoUsuario">
-                    <option value="">— Selecciona un usuario —</option>
+                    <option value="">— Selecciona un destinatario —</option>
                 </select>
             </div>
             <div class="modal-footer">
@@ -98,19 +89,10 @@ include '../../app/views/layouts/header.php';
         </div>
     </div>
 </div>
-<?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    <?php if ($esPro || $esAdmin): ?>
     chatInitPro(<?php echo (int)$user['id']; ?>);
-    <?php if ($esAdmin): ?>
-    window.chatEsAdmin = true;
-    <?php endif; ?>
-    <?php else: ?>
-    chatInitUser(<?php echo (int)$user['id']; ?>);
-    chatCargarConversaciones();
-    <?php endif; ?>
 });
 </script>
 
