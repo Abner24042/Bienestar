@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/abner/.claude/projects/c--xampp-htdocs-a-Bienestar/**)"
+    ]
+  }
+}

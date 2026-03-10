@@ -1,0 +1,434 @@
+/**
+ * BIENIESTAR - Estilos de Autenticación
+ */
+
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de partículas / formas de fondo */
+.auth-page::before,
+.auth-page::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+}
+
+.auth-page::before {
+    width: 500px;
+    height: 500px;
+    background: var(--color-primary);
+    top: -150px;
+    right: -100px;
+}
+
+.auth-page::after {
+    width: 400px;
+    height: 400px;
+    background: var(--color-primary);
+    bottom: -120px;
+    left: -80px;
+}
+
+/* Container */
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    max-width: 880px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+/* Lado izquierdo - Formulario */
+.auth-box {
+    padding: 45px 40px;
+    background: white;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-logo h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+    color: var(--color-text-primary);
+    letter-spacing: -0.5px;
+}
+
+.auth-logo h1 span {
+    color: var(--color-primary);
+}
+
+.auth-logo p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Alertas */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 0.85rem;
+}
+
+.alert-error {
+    background-color: #fff5f5;
+    color: #c33;
+    border: 1px solid #fcc;
+}
+
+.alert-success {
+    background-color: #f0fff4;
+    color: #38a169;
+    border: 1px solid #c6f6d5;
+}
+
+.alert-icon {
+    font-size: 1.1rem;
+}
+
+/* Formulario */
+.auth-form {
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background: #f8fafc;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    background: white;
+}
+
+.form-group input.error {
+    border-color: #c33;
+}
+
+.error-message {
+    display: block;
+    margin-top: 4px;
+    color: #c33;
+    font-size: 0.8rem;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--color-primary);
+}
+
+/* Botones */
+.btn-block {
+    width: 100%;
+}
+
+.auth-form .btn-primary {
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 10px;
+    letter-spacing: 0.3px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-form .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.35);
+}
+
+.auth-form .btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: white;
+    color: var(--color-text-primary);
+    border: 1.5px solid #e2e8f0;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 11px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+}
+
+.btn-google:hover {
+    background: #f8fafc;
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-google:active {
+    transform: translateY(0);
+}
+
+/* Divider */
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.divider span {
+    background: white;
+    padding: 0 12px;
+    color: #a0aec0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Links */
+.back-home {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.back-home a {
+    font-size: 0.85rem;
+}
+
+.link-primary {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.link-primary:hover {
+    text-decoration: underline;
+}
+
+.link-secondary {
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+}
+
+.link-secondary:hover {
+    color: var(--color-primary);
+}
+
+/* ============================================
+   LADO DERECHO - Info Panel
+   ============================================ */
+.auth-info {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    padding: 45px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decoración del panel */
+.auth-info::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    top: -60px;
+    right: -60px;
+}
+
+.auth-info::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    bottom: -40px;
+    left: -40px;
+}
+
+.info-content {
+    position: relative;
+    z-index: 1;
+}
+
+.info-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.info-content p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+.info-features {
+    list-style: none;
+}
+
+.info-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.info-features li svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    padding: 3px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+    }
+
+    .auth-info {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-box {
+        padding: 30px 24px;
+    }
+
+    .auth-logo h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-options {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 14px 20px;
+    background: #333;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    max-width: 360px;
+}
+
+.toast-notification.toast-error { background: #dc3545; }
+.toast-notification.toast-success { background: #28a745; }
+.toast-notification.toast-warning { background: #ffc107; color: #333; }
+.toast-notification.toast-info { background: #17a2b8; }
+
+/* Spinner */
+.spinner-small {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Campo con error */
+.field-error {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+}

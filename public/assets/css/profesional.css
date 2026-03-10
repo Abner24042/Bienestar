@@ -1,0 +1,114 @@
+/* Panel Profesional */
+
+.pro-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.pro-form .form-full {
+    grid-column: 1 / -1;
+}
+
+.pro-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .pro-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Agenda Table */
+.pro-agenda-wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.pro-agenda-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pro-agenda-table thead tr {
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.pro-agenda-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #666;
+}
+
+.pro-agenda-table td {
+    padding: 1rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.pro-agenda-table .empty-message {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+    border-bottom: none;
+}
+
+.pro-agenda-email {
+    color: #666;
+}
+
+/* ===========================================
+   DARK MODE - Profesional
+   =========================================== */
+[data-theme="dark"] .checkbox-label {
+    color: #ccc;
+}
+
+[data-theme="dark"] .pro-agenda-wrapper {
+    background: #1e1e1e;
+}
+
+[data-theme="dark"] .pro-agenda-table thead tr {
+    border-bottom-color: #333;
+}
+
+[data-theme="dark"] .pro-agenda-table th {
+    color: #aaa;
+}
+
+[data-theme="dark"] .pro-agenda-table td {
+    color: #ddd;
+}
+
+[data-theme="dark"] .pro-agenda-table td {
+    border-bottom-color: #333;
+}
+
+[data-theme="dark"] .pro-agenda-table .empty-message {
+    color: #777;
+}
+
+[data-theme="dark"] .pro-agenda-email {
+    color: #999;
+}

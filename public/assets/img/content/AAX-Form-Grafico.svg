@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="330px" height="330px" viewBox="0 0 330 330" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="161" cy="161" r="161"></circle>
+        <filter x="-2.2%" y="-1.6%" width="104.3%" height="104.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Sitio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Licenciatura" transform="translate(-222.000000, -3142.000000)">
+            <g id="Group-4" transform="translate(226.000000, 3144.000000)">
+                <g id="Oval">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FF5900" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <path d="M135.750729,161.437778 L157.739076,97.2560607 L164.260924,97.2560607 L186.249271,161.437778 L135.750729,161.437778 Z M223.384878,209.743441 L183.267554,97.2560607 L204.382752,97.2560607 L204.382752,78 L117.617248,78 L117.617248,97.2560607 L138.732446,97.2560607 L98.6151218,209.743441 L85,209.743441 L85,229 L138.046436,229 L138.046436,209.743441 L119.491141,209.743441 L130.092022,178.058631 L191.907978,178.058631 L202.508859,209.743441 L183.953564,209.743441 L183.953564,229 L237,229 L237,209.743441 L223.384878,209.743441 Z" id="Fill-1" fill="#FF5900"></path>
+                <path d="M108.684842,69 L108.684842,106.927375 L125.952865,106.927375 L92.3910579,201.072625 L76,201.072625 L76,239 L147.840869,239 L147.840869,201.072625 L132.866291,201.072625 L137.26114,187.931732 L185.73886,187.931732 L190.133208,201.072625 L175.15863,201.072625 L175.15863,239 L247,239 L247,201.072625 L230.608942,201.072625 L197.047135,106.927375 L214.315158,106.927375 L214.315158,69 L108.684842,69 Z M118.027094,78.3121726 L204.972405,78.3121726 L204.972405,97.6162019 L183.813449,97.6162019 L224.01391,210.383798 L237.657247,210.383798 L237.657247,229.687827 L184.500881,229.687827 L184.500881,210.383798 L203.094628,210.383798 L192.47228,178.620059 L130.52772,178.620059 L119.905372,210.383798 L138.498617,210.383798 L138.498617,229.687827 L85.3427526,229.687827 L85.3427526,210.383798 L98.9855882,210.383798 L139.186049,97.6162019 L118.027094,97.6162019 L118.027094,78.3121726 Z" id="Fill-2" fill="#FFFFFF"></path>
+                <path d="M148.90452,151.737764 L161,116.180662 L173.09548,151.737764 L148.90452,151.737764 Z M164.228731,97 L157.771269,97 L136,161 L186,161 L164.228731,97 Z" id="Fill-3" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

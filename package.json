@@ -1,0 +1,15 @@
+{
+  "name": "bienestar-deploy",
+  "version": "1.0.0",
+  "description": "Deploy tools para Bienestar - IEST",
+  "scripts": {
+    "deploy": "node deploy.js",
+    "deploy:full": "node deploy.js --full"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1"
+  },
+  "devDependencies": {
+    "ftp-deploy": "^2.4.7"
+  }
+}

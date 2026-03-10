@@ -1,0 +1,424 @@
+/* CITAS - Sistema de Agendamiento con Calendario */
+
+.appointment-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Formulario de citas */
+.appointment-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ff6b35;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Calendario */
+.calendar-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.calendar-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.calendar-controls button {
+    background: #f5f5f5;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.calendar-controls button:hover {
+    background: #e0e0e0;
+}
+
+.calendar-month-year {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ff6b35;
+}
+
+/* Grid del calendario */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: #f9f9f9;
+    border-color: #ff6b35;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+}
+
+.calendar-day.today {
+    background: #fff3cd;
+    border-color: #ffc107;
+    font-weight: bold;
+}
+
+.calendar-day.has-appointment {
+    background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
+.calendar-day.has-appointment:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.calendar-day.selected {
+    outline: 3px solid #ff6b35;
+    outline-offset: -3px;
+}
+
+.calendar-day-number {
+    font-size: 1rem;
+}
+
+.calendar-day-indicator {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+
+/* Lista de citas */
+.appointments-list {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    grid-column: 1 / -1;
+}
+
+.appointments-list h3 {
+    margin: 0 0 1.5rem 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.appointment-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
+}
+
+.appointment-item:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+}
+
+.apt-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.apt-details {
+    flex: 1;
+}
+
+.apt-details h4 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+    text-transform: capitalize;
+}
+
+.apt-details p {
+    margin: 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-cancel {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+    background: #cc0000;
+    transform: translateY(-2px);
+}
+
+.no-appointments {
+    text-align: center;
+    color: #999;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .appointment-container {
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-grid {
+        gap: 0.25rem;
+    }
+
+    .calendar-day {
+        padding: 0.25rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Tooltip para citas en calendario */
+.calendar-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.calendar-day:hover .calendar-tooltip {
+    opacity: 1;
+}
+
+.calendar-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* ===========================================
+   DARK MODE - Citas
+   =========================================== */
+[data-theme="dark"] .appointment-form,
+[data-theme="dark"] .calendar-container,
+[data-theme="dark"] .appointments-list {
+    background: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .calendar-header {
+    border-bottom-color: #333;
+}
+
+[data-theme="dark"] .calendar-header h3,
+[data-theme="dark"] .appointments-list h3 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .calendar-controls button {
+    background: #333;
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .calendar-controls button:hover {
+    background: #444;
+}
+
+[data-theme="dark"] .calendar-day {
+    border-color: #333;
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .calendar-day:hover {
+    background: #2a2a2a;
+    border-color: #ff6b35;
+}
+
+[data-theme="dark"] .calendar-day.other-month {
+    color: #555;
+}
+
+[data-theme="dark"] .calendar-day.today {
+    background: #332a1a;
+    border-color: #ff6b35;
+}
+
+[data-theme="dark"] .calendar-day-header {
+    color: #aaa;
+}
+
+[data-theme="dark"] .appointment-item {
+    background: #2a2a2a;
+}
+
+[data-theme="dark"] .appointment-item:hover {
+    background: #333;
+}
+
+[data-theme="dark"] .apt-details h4 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .apt-details p {
+    color: #aaa;
+}
+
+[data-theme="dark"] .no-appointments {
+    color: #888;
+}
+
+[data-theme="dark"] .form-group label {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group textarea {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #e8e8e8;
+}

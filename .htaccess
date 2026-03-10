@@ -1,0 +1,41 @@
+RewriteEngine On
+RewriteBase /
+
+# Permitir acceso directo a archivos existentes (CSS, JS, imágenes, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Servir assets directamente desde public/assets/
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+# Bloquear carpetas sensibles
+RewriteRule ^app/(config|models|helpers|views)/ - [F,L]
+RewriteRule ^(vendor|database|node_modules|logs)/ - [F,L]
+
+# Bloquear acceso directo a controllers (ahora pasan por el router)
+RewriteRule ^controllers/ - [F,L]
+RewriteRule ^app/controllers/ - [F,L]
+
+# Proteger archivos sensibles
+<FilesMatch "^\.env">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<FilesMatch "\.(sql|log|lock)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Enviar todo lo demás al front controller
+RewriteRule ^(.*)$ public/index.php [QSA,L]

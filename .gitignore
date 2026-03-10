@@ -1,0 +1,41 @@
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# Uploads
+/public/assets/uploads/*
+!/public/assets/uploads/.gitkeep
+
+# Logs
+/logs/*
+*.log
+!/logs/.gitkeep
+
+# Node
+/node_modules/
+package-lock.json
+
+# Deploy
+deploy.js
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores/IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Backups
+*.bak
+*.backup
+*.tmp
