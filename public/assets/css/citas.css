@@ -307,6 +307,24 @@
     }
 }
 
+@media (max-width: 480px) {
+    .appointment-container {
+        padding: 0;
+        gap: 1rem;
+    }
+    .appointment-form,
+    .calendar-container,
+    .appointments-list {
+        padding: 1rem;
+    }
+    .calendar-day-number {
+        font-size: 0.85rem;
+    }
+    .appointment-item {
+        flex-wrap: wrap;
+    }
+}
+
 /* Tooltip para citas en calendario */
 .calendar-tooltip {
     position: absolute;

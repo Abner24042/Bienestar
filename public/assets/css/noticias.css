@@ -357,6 +357,21 @@
     }
 }
 
+@media (max-width: 480px) {
+    .featured-bg-img {
+        height: 160px;
+    }
+    .featured-content {
+        padding: 16px 18px 20px;
+    }
+    .featured-content h2 {
+        font-size: 1.05rem;
+    }
+    .news-content {
+        padding: 16px;
+    }
+}
+
 /* ===========================================
    DARK MODE - Noticias
    =========================================== */

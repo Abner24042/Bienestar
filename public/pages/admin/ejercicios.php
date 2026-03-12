@@ -119,6 +119,21 @@ $additionalCSS = ['admin.css'];
                 </div>
 
                 <div class="form-group">
+                    <label for="ejercicio_musculo">Músculo objetivo</label>
+                    <input type="text" id="ejercicio_musculo" name="musculo_objetivo" placeholder="ej. Pecho, Cuádriceps...">
+                </div>
+
+                <div class="form-group">
+                    <label for="ejercicio_secundarios">Músculos secundarios</label>
+                    <input type="text" id="ejercicio_secundarios" name="musculos_secundarios" placeholder="ej. Tríceps, Glúteos...">
+                </div>
+
+                <div class="form-group">
+                    <label for="ejercicio_equipamiento">Equipamiento</label>
+                    <input type="text" id="ejercicio_equipamiento" name="equipamiento" placeholder="ej. Mancuernas, Sin equipo...">
+                </div>
+
+                <div class="form-group">
                     <label for="ejercicio_instrucciones">Instrucciones</label>
                     <textarea id="ejercicio_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea"></textarea>
                 </div>

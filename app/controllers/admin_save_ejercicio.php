@@ -21,9 +21,12 @@ try {
         'duracion' => $_POST['duracion'] ?? null,
         'nivel' => $_POST['nivel'] ?? 'principiante',
         'tipo' => $_POST['tipo'] ?? 'cardio',
-        'calorias_quemadas' => $_POST['calorias_quemadas'] ?? null,
-        'video_url' => $_POST['video_url'] ?? null,
-        'instrucciones' => $_POST['instrucciones'] ?? null
+        'calorias_quemadas'    => $_POST['calorias_quemadas'] ?? null,
+        'musculo_objetivo'     => $_POST['musculo_objetivo'] ?? null,
+        'musculos_secundarios' => $_POST['musculos_secundarios'] ?? null,
+        'equipamiento'         => $_POST['equipamiento'] ?? null,
+        'video_url'            => $_POST['video_url'] ?? null,
+        'instrucciones'        => $_POST['instrucciones'] ?? null
     ];
 
     if (empty($data['titulo'])) {

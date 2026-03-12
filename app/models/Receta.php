@@ -113,7 +113,7 @@ class Receta {
 
     public function delete($id) {
         try {
-            $query = "UPDATE {$this->table} SET activo = 0 WHERE id = :id";
+            $query = "DELETE FROM {$this->table} WHERE id = :id";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':id', $id);
             return $stmt->execute();

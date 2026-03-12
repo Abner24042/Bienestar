@@ -112,6 +112,16 @@ $router->post('/api/pro/ejercicios/delete', APP_PATH . '/controllers/pro_delete_
 $router->get('/api/pro/noticias', APP_PATH . '/controllers/pro_get_noticias.php');
 $router->post('/api/pro/noticias/save', APP_PATH . '/controllers/pro_save_noticia.php');
 $router->post('/api/pro/noticias/delete', APP_PATH . '/controllers/pro_delete_noticia.php');
+$router->get('/api/pro/rutinas', APP_PATH . '/controllers/pro_get_rutinas.php');
+$router->post('/api/pro/rutinas/save', APP_PATH . '/controllers/pro_save_rutina.php');
+$router->post('/api/pro/rutinas/delete', APP_PATH . '/controllers/pro_delete_rutina.php');
+$router->get('/api/pro/rutinas/detail', APP_PATH . '/controllers/pro_get_rutina_detail.php');
+$router->post('/api/pro/rutinas/asignar', APP_PATH . '/controllers/pro_asignar_rutina.php');
+$router->get('/api/pro/planes-alimenticios', APP_PATH . '/controllers/pro_get_planes_alimenticios.php');
+$router->post('/api/pro/planes-alimenticios/save', APP_PATH . '/controllers/pro_save_plan_alimenticio.php');
+$router->post('/api/pro/planes-alimenticios/delete', APP_PATH . '/controllers/pro_delete_plan_alimenticio.php');
+$router->get('/api/pro/planes-alimenticios/detail', APP_PATH . '/controllers/pro_get_plan_alimenticio_detail.php');
+$router->post('/api/pro/planes-alimenticios/asignar', APP_PATH . '/controllers/pro_asignar_plan_alimenticio.php');
 
 
 // API - Chat

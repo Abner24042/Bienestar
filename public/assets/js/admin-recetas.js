@@ -73,6 +73,11 @@ async function cargarRecetas() {
                                 onclick="toggleReceta(${receta.id}, ${receta.activo == 1 ? 0 : 1})">
                             ${receta.activo == 1 ? 'Desactivar' : 'Activar'}
                         </button>
+                        <button class="btn btn-sm"
+                                style="background: #c0392b; color: white; border: none; margin-left: 4px;"
+                                onclick="eliminarReceta(${receta.id}, '${escapar(receta.titulo)}')">
+                            Eliminar
+                        </button>
                     </td>
                 </tr>
             `).join('');
@@ -190,6 +195,28 @@ async function toggleReceta(id, activo) {
             cargarRecetas();
         } else {
             showToast(result.message || 'Error al cambiar estado', 'error');
+        }
+    } catch (error) {
+        showToast('Error de comunicacion', 'error');
+    }
+}
+
+async function eliminarReceta(id, titulo) {
+    if (!confirm(`¿Eliminar la receta "${titulo}"?\nEsta acción no se puede deshacer.`)) return;
+
+    try {
+        const response = await fetch(API_URL + '/admin/recetas/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, action: 'delete' })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('Receta eliminada', 'success');
+            cargarRecetas();
+        } else {
+            showToast(result.message || 'Error al eliminar', 'error');
         }
     } catch (error) {
         showToast('Error de comunicacion', 'error');

@@ -184,6 +184,60 @@ $additionalCSS = ['admin.css', 'profesional.css'];
             </div>
         </div>
 
+        <!-- Mis Planes Alimenticios -->
+        <div class="admin-section" style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>🥗 Mis Planes Alimenticios</h2>
+                <button class="btn btn-primary" id="btnNuevoPlanAlim">+ Nuevo Plan</button>
+            </div>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Objetivo</th>
+                            <th>Duración</th>
+                            <th>Recetas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proPlanesAlimBody">
+                        <tr><td colspan="5" class="empty-message">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal Plan Alimenticio -->
+        <div id="modalPlanAlim" class="modal" style="display:none;">
+            <div class="modal-content" style="max-width:860px;">
+                <div class="modal-header">
+                    <h3 id="modalPlanAlimTitle">Nuevo Plan Alimenticio</h3>
+                    <button class="modal-close" onclick="cerrarModalPlanAlim()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPlanAlim">
+                        <input type="hidden" id="plan_alim_id">
+                        <div class="form-group"><label>Nombre</label><input type="text" id="plan_alim_nombre" required placeholder="Ej: Plan hipocalórico semana 1"></div>
+                        <div class="form-group"><label>Objetivo</label><input type="text" id="plan_alim_objetivo" placeholder="Ej: Pérdida de peso, Ganancia muscular..."></div>
+                        <div class="form-group"><label>Duración (semanas)</label><input type="number" id="plan_alim_duracion" value="1" min="1"></div>
+                        <div class="form-group form-full"><label>Descripción</label><textarea id="plan_alim_descripcion" rows="2" placeholder="Descripción general del plan..."></textarea></div>
+                        <div style="grid-column:1/-1; margin-top:0.5rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <h4 style="margin:0; font-size:1rem;">🍽️ Recetas del Plan</h4>
+                                <button type="button" class="btn btn-secondary" style="padding:5px 14px; font-size:0.82rem;" onclick="agregarRecetaPlanAlim()">+ Agregar receta</button>
+                            </div>
+                            <div id="planAlimRecetasList"></div>
+                        </div>
+                        <div class="modal-footer" style="grid-column:1/-1;">
+                            <button type="button" class="btn btn-secondary" onclick="cerrarModalPlanAlim()">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="guardarPlanAlim()">Guardar Plan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal Receta Pro -->
         <div id="modalRecetaPro" class="modal" style="display:none;">
             <div class="modal-content">
@@ -230,6 +284,67 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <?php endif; ?>
 
         <?php if ($user['rol'] === 'coach'): ?>
+
+        <!-- Mis Rutinas -->
+        <div class="admin-section" style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>🏃 Mis Rutinas</h2>
+                <button class="btn btn-primary" id="btnNuevaRutina">+ Nueva Rutina</button>
+            </div>
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Nivel</th>
+                            <th>Ejercicios</th>
+                            <th>Duración</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proRutinasBody">
+                        <tr><td colspan="5" class="empty-message">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal Rutina -->
+        <div id="modalRutina" class="modal" style="display:none;">
+            <div class="modal-content" style="max-width:820px;">
+                <div class="modal-header">
+                    <h3 id="modalRutinaTitle">Nueva Rutina</h3>
+                    <button class="modal-close" onclick="cerrarModalRutina()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRutina">
+                        <input type="hidden" id="rutina_id">
+                        <div class="form-group"><label>Nombre</label><input type="text" id="rutina_nombre" required placeholder="Ej: Rutina Full Body 3x"></div>
+                        <div class="form-group"><label>Descripción</label><textarea id="rutina_descripcion" rows="2" placeholder="Descripción general de la rutina..."></textarea></div>
+                        <div class="form-group">
+                            <label>Nivel</label>
+                            <select id="rutina_nivel">
+                                <option value="principiante">Principiante</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Duración estimada (min)</label><input type="number" id="rutina_duracion" placeholder="Ej: 60"></div>
+                        <div style="grid-column:1/-1; margin-top:0.5rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <h4 style="margin:0; font-size:1rem;">💪 Ejercicios de la Rutina</h4>
+                                <button type="button" class="btn btn-secondary" style="padding:5px 14px; font-size:0.82rem;" onclick="agregarEjercicioRutina()">+ Agregar ejercicio</button>
+                            </div>
+                            <div id="rutinaEjerciciosList"></div>
+                        </div>
+                        <div class="modal-footer" style="grid-column:1/-1;">
+                            <button type="button" class="btn btn-secondary" onclick="cerrarModalRutina()">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="guardarRutina()">Guardar Rutina</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Mis Ejercicios -->
         <div class="admin-section" style="width: 100%;">
@@ -436,7 +551,10 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                 <div style="margin-bottom:2rem;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                         <h3 style="margin:0;font-size:1rem;">💪 Ejercicios asignados</h3>
-                        <button class="btn btn-primary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarEjercicio()">+ Asignar ejercicio</button>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-secondary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarEjercicio()">+ Asignar ejercicio</button>
+                            <button class="btn btn-primary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarRutina()">🏃 Asignar rutina</button>
+                        </div>
                     </div>
                     <div id="planEjerciciosList" class="plan-pro-list">Selecciona un usuario.</div>
                 </div>
@@ -446,7 +564,10 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                 <div style="margin-bottom:2rem;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
                         <h3 style="margin:0;font-size:1rem;">🍽️ Recetas asignadas</h3>
-                        <button class="btn btn-primary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarReceta()">+ Asignar receta</button>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn btn-secondary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarReceta()">+ Asignar receta</button>
+                            <button class="btn btn-primary" style="padding:6px 14px;font-size:0.82rem;" onclick="abrirModalAsignarPlanAlim()">🥗 Asignar plan</button>
+                        </div>
                     </div>
                     <div id="planRecetasList" class="plan-pro-list">Selecciona un usuario.</div>
                 </div>
@@ -464,6 +585,24 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         </div>
 
         <?php if ($user['rol'] === 'coach'): ?>
+        <div id="modalAsignarRutina" class="modal" style="display:none;">
+            <div class="modal-content" style="max-width:480px;">
+                <div class="modal-header">
+                    <h3>Asignar Rutina</h3>
+                    <button class="modal-close" onclick="document.getElementById('modalAsignarRutina').style.display='none'">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return false;">
+                        <div class="form-group"><label>Rutina</label><select id="asignarRutinaSelect"><option value="">Cargando...</option></select></div>
+                        <div class="form-group"><label>Notas para el usuario (opcional)</label><textarea id="asignarRutinaNotas" rows="2" placeholder="Ej: Realiza esta rutina 3 veces por semana..."></textarea></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalAsignarRutina').style.display='none'">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmarAsignarRutina()">Asignar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div id="modalAsignarEjercicio" class="modal" style="display:none;">
             <div class="modal-content" style="max-width:480px;">
                 <div class="modal-header">
@@ -485,6 +624,24 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <?php endif; ?>
 
         <?php if ($user['rol'] === 'nutriologo'): ?>
+        <div id="modalAsignarPlanAlim" class="modal" style="display:none;">
+            <div class="modal-content" style="max-width:480px;">
+                <div class="modal-header">
+                    <h3>Asignar Plan Alimenticio</h3>
+                    <button class="modal-close" onclick="document.getElementById('modalAsignarPlanAlim').style.display='none'">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="return false;">
+                        <div class="form-group"><label>Plan</label><select id="asignarPlanAlimSelect"><option value="">Cargando...</option></select></div>
+                        <div class="form-group"><label>Notas para el usuario (opcional)</label><textarea id="asignarPlanAlimNotas" rows="2" placeholder="Ej: Seguir este plan durante 4 semanas..."></textarea></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalAsignarPlanAlim').style.display='none'">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmarAsignarPlanAlim()">Asignar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div id="modalAsignarReceta" class="modal" style="display:none;">
             <div class="modal-content" style="max-width:480px;">
                 <div class="modal-header">
@@ -548,10 +705,22 @@ const PROFESSIONAL_USER = {
 <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
 <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
+<?php if (in_array($user['rol'], ['coach', 'nutriologo'])): ?>
+<!-- jsPDF para exportar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<?php endif; ?>
+
 <?php
 $additionalJS = ['emailConfig.js', 'googleCalendar.js', 'profesional.js', 'profesional-planes.js'];
-if ($user['rol'] === 'nutriologo') $additionalJS[] = 'profesional-recetas.js';
-if ($user['rol'] === 'coach') $additionalJS[] = 'profesional-ejercicios.js';
+if ($user['rol'] === 'nutriologo') {
+    $additionalJS[] = 'profesional-recetas.js';
+    $additionalJS[] = 'profesional-planes-alimenticios.js';
+}
+if ($user['rol'] === 'coach') {
+    $additionalJS[] = 'profesional-ejercicios.js';
+    $additionalJS[] = 'profesional-rutinas.js';
+}
 if ($user['rol'] === 'psicologo') $additionalJS[] = 'profesional-noticias.js';
 include '../../../app/views/layouts/footer.php';
 ?>

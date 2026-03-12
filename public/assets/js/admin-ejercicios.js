@@ -121,6 +121,9 @@ function editarEjercicio(id) {
     document.getElementById('ejercicio_nivel').value = ej.nivel || 'principiante';
     document.getElementById('ejercicio_tipo').value = ej.tipo || 'cardio';
     document.getElementById('ejercicio_calorias').value = ej.calorias_quemadas || '';
+    document.getElementById('ejercicio_musculo').value = ej.musculo_objetivo || '';
+    document.getElementById('ejercicio_secundarios').value = ej.musculos_secundarios || '';
+    document.getElementById('ejercicio_equipamiento').value = ej.equipamiento || '';
     document.getElementById('ejercicio_video').value = ej.video_url || '';
     document.getElementById('ejercicio_instrucciones').value = ej.instrucciones || '';
 
@@ -146,6 +149,9 @@ async function guardarEjercicio() {
     formData.append('nivel', document.getElementById('ejercicio_nivel').value);
     formData.append('tipo', document.getElementById('ejercicio_tipo').value);
     formData.append('calorias_quemadas', document.getElementById('ejercicio_calorias').value);
+    formData.append('musculo_objetivo', document.getElementById('ejercicio_musculo').value);
+    formData.append('musculos_secundarios', document.getElementById('ejercicio_secundarios').value);
+    formData.append('equipamiento', document.getElementById('ejercicio_equipamiento').value);
     formData.append('video_url', document.getElementById('ejercicio_video').value);
     formData.append('instrucciones', document.getElementById('ejercicio_instrucciones').value);
 

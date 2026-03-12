@@ -328,10 +328,51 @@
 /* Responsive */
 @media (max-width: 768px) {
     .plan-summary-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     .plan-tabs {
         overflow-x: auto;
         flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 4px;
+    }
+    .plan-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    .plan-tab {
+        white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+    }
+    .plan-modal-box {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+    #planModalTitle {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .plan-summary-grid {
+        grid-template-columns: 1fr;
+    }
+    .plan-grid {
+        grid-template-columns: 1fr;
+    }
+    .plan-summary-card {
+        padding: 14px 16px;
+    }
+    .summary-icon {
+        width: 44px;
+        height: 44px;
+    }
+    .summary-num {
+        font-size: 1.6rem;
     }
 }

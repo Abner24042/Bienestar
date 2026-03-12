@@ -305,6 +305,18 @@
     }
 }
 
+@media (max-width: 480px) {
+    .recipe-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .recipe-content {
+        padding: 16px;
+    }
+    .nutrition-tips {
+        padding: 24px 16px;
+    }
+}
+
 /* ===========================================
    DARK MODE - Alimentación
    =========================================== */

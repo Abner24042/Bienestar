@@ -25,7 +25,7 @@ include '../../app/views/layouts/header.php';
     </div>
 
     <!-- Stats Cards -->
-    <div class="stats-grid" style="grid-template-columns: 1fr 3fr;">
+    <div class="stats-grid" id="homeStatsGrid">
         <div class="stat-card" id="mentalStatCard" style="cursor:pointer;" onclick="window.location.href='<?php echo url('salud-mental'); ?>'">
             <div class="stat-icon" style="background: #e3f2fd;">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
