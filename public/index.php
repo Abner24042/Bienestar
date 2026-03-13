@@ -31,7 +31,8 @@ $router->get('/noticias', PUBLIC_PATH . '/pages/noticias.php');
 $router->get('/citas', PUBLIC_PATH . '/pages/citas.php');
 $router->get('/calendario', PUBLIC_PATH . '/pages/calendario.php');
 $router->get('/perfil', PUBLIC_PATH . '/pages/perfil.php');
-$router->get('/mi-plan', PUBLIC_PATH . '/pages/mi-plan.php');
+$router->get('/mi-plan',   PUBLIC_PATH . '/pages/mi-plan.php');
+$router->get('/favoritos', PUBLIC_PATH . '/pages/favoritos.php');
 
 
 // PÁGINAS ADMIN
@@ -136,6 +137,12 @@ $router->post('/api/chat/eliminar-chat',    APP_PATH . '/controllers/chat_elimin
 $router->post('/api/chat/subir-archivo',    APP_PATH . '/controllers/chat_subir_archivo.php');
 $router->get('/api/admin/todos-usuarios',        APP_PATH . '/controllers/chat_get_todos_usuarios.php');
 $router->get('/api/chat/usuarios-disponibles',  APP_PATH . '/controllers/chat_get_usuarios_disponibles.php');
+
+
+// API - Favoritos
+
+$router->get('/api/favoritos',         APP_PATH . '/controllers/favoritos_get.php');
+$router->post('/api/favoritos/toggle', APP_PATH . '/controllers/favoritos_toggle.php');
 
 
 // CRON

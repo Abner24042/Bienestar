@@ -2,11 +2,54 @@
  * BIENIESTAR - JavaScript de Ejercicio (Dinámico)
  */
 
+let favoritosEjercicioIds = new Set();
+
 document.addEventListener('DOMContentLoaded', function() {
     loadEjercicios();
+    loadFavoritosEjercicioIds();
     initFilters();
     initSearch();
 });
+
+async function loadFavoritosEjercicioIds() {
+    try {
+        const res  = await fetch(API_URL + '/favoritos');
+        const data = await res.json();
+        if (data.success) {
+            favoritosEjercicioIds = new Set(data.ejercicio_ids.map(String));
+            renderEjerciciosPaginated();
+        }
+    } catch (e) {}
+}
+
+let _exerciseModalCurrentId = null;
+
+async function toggleFavoritoModal(tipo, btn) {
+    const id = _exerciseModalCurrentId;
+    if (!id) return;
+    try {
+        const res  = await fetch(API_URL + '/favoritos/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipo, id }),
+        });
+        const data = await res.json();
+        if (!data.success) return;
+        const svg   = btn.querySelector('svg polygon');
+        const label = btn.querySelector('.modal-fav-label');
+        if (data.action === 'added') {
+            favoritosEjercicioIds.add(String(id));
+            btn.classList.add('fav-active');
+            if (svg)   svg.setAttribute('fill', 'currentColor');
+            if (label) label.textContent = 'Guardado';
+        } else {
+            favoritosEjercicioIds.delete(String(id));
+            btn.classList.remove('fav-active');
+            if (svg)   svg.setAttribute('fill', 'none');
+            if (label) label.textContent = 'Guardar';
+        }
+    } catch (e) {}
+}
 
 let exercisesData     = [];
 let filteredExercises = [];
@@ -83,9 +126,9 @@ function mostrarMasEjercicios() {
 }
 
 function renderEjercicioCard(e) {
-    const img      = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
-    const tipo     = capitalize(e.tipo || 'cardio');
-    const nivel    = capitalize(e.nivel || 'principiante');
+    const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
+    const tipo       = capitalize(e.tipo || 'cardio');
+    const nivel      = capitalize(e.nivel || 'principiante');
     const levelClass = 'level-' + (e.nivel || 'principiante');
 
     const duracionStat = e.duracion ? `
@@ -110,7 +153,8 @@ function renderEjercicioCard(e) {
         ? `<div class="exercise-stats">${duracionStat}${caloriasStat}${musculoStat}</div>`
         : '';
 
-    return `<div class="exercise-card" data-type="${escapeHtml(e.tipo)}" data-level="${escapeHtml(e.nivel)}">
+    return `<div class="exercise-card" data-type="${escapeHtml(e.tipo)}" data-level="${escapeHtml(e.nivel)}"
+        onclick="showExerciseModal(${e.id})" style="cursor:pointer;">
         <div class="exercise-image">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(e.titulo)}"
                  loading="lazy" decoding="async"
@@ -119,12 +163,14 @@ function renderEjercicioCard(e) {
                 <span class="badge badge-type">${escapeHtml(tipo)}</span>
                 <span class="badge badge-level ${levelClass}">${escapeHtml(nivel)}</span>
             </div>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.52);color:#fff;font-size:0.7rem;text-align:center;padding:5px 0;letter-spacing:0.3px;">
+                Dar click para ver detalles
+            </div>
         </div>
         <div class="exercise-content">
             <h3>${escapeHtml(e.titulo)}</h3>
             <p class="exercise-description">${escapeHtml(e.descripcion || '')}</p>
             ${statsSection}
-            <button class="btn btn-primary btn-block" onclick="showExerciseModal(${e.id})">Ver Rutina</button>
         </div>
     </div>`;
 }
@@ -132,6 +178,17 @@ function renderEjercicioCard(e) {
 function showExerciseModal(id) {
     const e = exercisesData.find(item => item.id == id);
     if (!e) return;
+
+    _exerciseModalCurrentId = id;
+    const isFav = favoritosEjercicioIds.has(String(id));
+    const favBtn = document.getElementById('exerciseModalFavBtn');
+    if (favBtn) {
+        const svg   = favBtn.querySelector('svg polygon');
+        const label = favBtn.querySelector('.modal-fav-label');
+        favBtn.classList.toggle('fav-active', isFav);
+        if (svg)   svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
+        if (label) label.textContent = isFav ? 'Guardado' : 'Guardar';
+    }
 
     const img = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
 

@@ -223,27 +223,22 @@
 
 /* Divider */
 .divider {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin: 20px 0;
-    position: relative;
 }
 
 .divider::before,
 .divider::after {
     content: '';
-    position: absolute;
-    top: 50%;
-    width: 40%;
+    flex: 1;
     height: 1px;
     background: #e2e8f0;
 }
 
-.divider::before { left: 0; }
-.divider::after { right: 0; }
-
 .divider span {
-    background: white;
-    padding: 0 12px;
+    padding: 0;
     color: #a0aec0;
     font-size: 0.8rem;
     text-transform: uppercase;

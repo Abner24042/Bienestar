@@ -85,10 +85,14 @@ function mostrarMasNoticias() {
 function renderNoticiaCard(n) {
     const img = n.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80';
     const cat = capitalize(n.categoria || 'general');
-    return `<article class="news-card" data-category="${escapeHtml(n.categoria)}">
-        <div class="news-image">
+    return `<article class="news-card" data-category="${escapeHtml(n.categoria)}"
+        onclick="showNewsModal(${n.id})" style="cursor:pointer;">
+        <div class="news-image" style="position:relative;">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80'">
             <div class="news-category-badge">${escapeHtml(cat)}</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.52);color:#fff;font-size:0.7rem;text-align:center;padding:5px 0;letter-spacing:0.3px;">
+                Dar click para ver detalles
+            </div>
         </div>
         <div class="news-content">
             <div class="news-meta">
@@ -97,7 +101,6 @@ function renderNoticiaCard(n) {
             </div>
             <h3>${escapeHtml(n.titulo)}</h3>
             <p>${escapeHtml(n.resumen || truncate(n.contenido, 180))}</p>
-            <a href="javascript:void(0)" class="read-more" onclick="showNewsModal(${n.id})">Leer artículo →</a>
         </div>
     </article>`;
 }

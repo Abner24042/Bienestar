@@ -332,6 +332,86 @@
 .chat-bubble.mine .chat-file-name  { color: rgba(255,255,255,0.95); }
 .chat-bubble.theirs .chat-file-name { color: var(--color-text-primary); }
 
+/* ── Buscador de destinatario en modal ────────────────────────────────── */
+.chat-search-results {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    margin-top: 6px;
+    overflow: hidden;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.chat-search-results:empty { display: none; }
+
+.chat-search-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 13px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.chat-search-item:last-child { border-bottom: none; }
+.chat-search-item:hover { background: rgba(255,107,53,0.07); }
+
+.chat-search-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b35, #ff8c00);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.chat-search-info { flex: 1; min-width: 0; }
+
+.chat-search-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-search-rol {
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: rgba(255,107,53,0.12);
+    color: #ff6b35;
+    border-radius: 5px;
+    padding: 1px 6px;
+}
+
+.chat-search-correo {
+    font-size: 0.74rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+}
+
+.chat-search-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.83rem;
+}
+
+[data-theme="dark"] .chat-search-results {
+    border-color: rgba(255,255,255,0.1);
+    background: #2a2a2a;
+}
+[data-theme="dark"] .chat-search-item { border-color: rgba(255,255,255,0.04); }
+[data-theme="dark"] .chat-search-item:hover { background: rgba(255,107,53,0.1); }
+
 /* ── Badge en sidebar nav ─────────────────────────────────────────────── */
 .chat-nav-badge {
     background: #f44336;

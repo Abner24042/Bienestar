@@ -1,9 +1,52 @@
+let favoritosRecetaIds = new Set();
+
 document.addEventListener('DOMContentLoaded', function() {
     setAutoFilterButton();
     loadRecetas();
+    loadFavoritosRecetaIds();
     initFilters();
     initSearch();
 });
+
+async function loadFavoritosRecetaIds() {
+    try {
+        const res  = await fetch(API_URL + '/favoritos');
+        const data = await res.json();
+        if (data.success) {
+            favoritosRecetaIds = new Set(data.receta_ids.map(String));
+            renderRecetasPaginated();
+        }
+    } catch (e) {}
+}
+
+let _recipeModalCurrentId = null;
+
+async function toggleFavoritoModal(tipo, btn) {
+    const id = _recipeModalCurrentId;
+    if (!id) return;
+    try {
+        const res  = await fetch(API_URL + '/favoritos/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipo, id }),
+        });
+        const data = await res.json();
+        if (!data.success) return;
+        const svg   = btn.querySelector('svg polygon');
+        const label = btn.querySelector('.modal-fav-label');
+        if (data.action === 'added') {
+            favoritosRecetaIds.add(String(id));
+            btn.classList.add('fav-active');
+            if (svg)   svg.setAttribute('fill', 'currentColor');
+            if (label) label.textContent = 'Guardado';
+        } else {
+            favoritosRecetaIds.delete(String(id));
+            btn.classList.remove('fav-active');
+            if (svg)   svg.setAttribute('fill', 'none');
+            if (label) label.textContent = 'Guardar';
+        }
+    } catch (e) {}
+}
 
 function getAutoCategory() {
     const h = new Date().getHours();
@@ -108,10 +151,13 @@ function renderRecetaCard(r) {
     const cat = capitalize(r.categoria || 'comida');
 
     return `<div class="recipe-card" data-category="${escapeHtml(r.categoria)}" onclick="showRecipeModal(${r.id})" style="cursor:pointer;">
-        <div class="recipe-image">
+        <div class="recipe-image" style="position:relative;">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(r.titulo)}"
                  onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
             <span class="recipe-badge">${escapeHtml(cat)}</span>
+            <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.52);color:#fff;font-size:0.7rem;text-align:center;padding:5px 0;letter-spacing:0.3px;">
+                Dar click para ver detalles
+            </div>
         </div>
         <div class="recipe-content">
             <h3>${escapeHtml(r.titulo)}</h3>
@@ -133,8 +179,18 @@ function showRecipeModal(id) {
     const r = recipesData.find(item => item.id == id);
     if (!r) return;
 
-    const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
+    _recipeModalCurrentId = id;
+    const isFav = favoritosRecetaIds.has(String(id));
+    const favBtn = document.getElementById('recipeModalFavBtn');
+    if (favBtn) {
+        const svg   = favBtn.querySelector('svg polygon');
+        const label = favBtn.querySelector('.modal-fav-label');
+        favBtn.classList.toggle('fav-active', isFav);
+        if (svg)   svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
+        if (label) label.textContent = isFav ? 'Guardado' : 'Guardar';
+    }
 
+    const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
 
     let healthBadges = '';
     if (r.etiquetas_salud) {
@@ -186,7 +242,6 @@ function showRecipeModal(id) {
     document.getElementById('recipeModalTitle').textContent = r.titulo;
     document.getElementById('recipeModalBody').innerHTML = `
         <div class="recipe-modal-content">
-            <!-- Fila superior: imagen izquierda + stats derecha -->
             <div class="recipe-modal-top">
                 <div class="recipe-modal-image">
                     <img src="${escapeHtml(img)}" alt="${escapeHtml(r.titulo)}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
@@ -204,9 +259,7 @@ function showRecipeModal(id) {
                     </div>
                 </div>
             </div>
-            <!-- Barra nutricional full-width -->
             ${nutBar}
-            <!-- Detalle scrollable -->
             <div class="recipe-modal-detail">
                 ${healthBadges}
                 <h3>Ingredientes:</h3>

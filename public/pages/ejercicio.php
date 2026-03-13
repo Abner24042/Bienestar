@@ -11,7 +11,7 @@ if (!$authController->isAuthenticated()) {
 $user = $authController->getCurrentUser();
 $currentPage = 'ejercicio';
 $pageTitle = 'Ejercicio';
-$additionalCSS = ['filters.css', 'ejercicio.css'];
+$additionalCSS = ['filters.css', 'ejercicio.css', 'favoritos.css'];
 ?>
 
 <?php include '../../app/views/layouts/header.php'; ?>
@@ -95,7 +95,15 @@ $additionalCSS = ['filters.css', 'ejercicio.css'];
     <div class="modal-container modal-large">
         <div class="modal-header">
             <h3 class="modal-title" id="exerciseModalTitle"></h3>
-            <button class="modal-close" onclick="closeExerciseModal()">&times;</button>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                <button id="exerciseModalFavBtn" class="modal-fav-btn" onclick="toggleFavoritoModal('ejercicio', this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span class="modal-fav-label">Guardar</span>
+                </button>
+                <button class="modal-close" onclick="closeExerciseModal()">&times;</button>
+            </div>
         </div>
         <div class="modal-body" id="exerciseModalBody"></div>
     </div>

@@ -41,7 +41,15 @@
       "Bash(node deploy.js \"app/controllers/pro_get_usuarios_list.php\")",
       "Bash(node deploy.js \"public/assets/js/profesional-planes.js\")",
       "Bash(sftp -o StrictHostKeyChecking=no -o BatchMode=no -P 22 a28641@access-5019601772.webspace-host.com)",
-      "Bash(sshpass -p:*)"
+      "Bash(sshpass -p:*)",
+      "Bash(node deploy.js public/assets/css/favoritos.css)",
+      "Bash(sed -i \"s/\\\\[''filters.css'', ''alimentacion.css''\\\\]/[''filters.css'', ''alimentacion.css'', ''favoritos.css'']/\" public/pages/alimentacion.php)",
+      "Bash(sed -i \"s/\\\\[''filters.css'', ''ejercicio.css''\\\\]/[''filters.css'', ''ejercicio.css'', ''favoritos.css'']/\" public/pages/ejercicio.php)",
+      "Bash(node deploy.js public/pages/alimentacion.php public/pages/ejercicio.php)",
+      "Bash(node deploy.js public/pages/favoritos.php)",
+      "Bash(node deploy.js public/assets/js/ejercicio.js public/assets/js/noticias.js)",
+      "Bash(node deploy.js public/assets/js/favoritos.js)",
+      "Bash(node deploy.js public/assets/css/auth.css)"
     ]
   }
 }

@@ -116,39 +116,81 @@ async function chatAbrirConv(convId, nombre, otroId) {
     chatActualizarBadgeGlobal();
 }
 
-/* Modal: nuevo chat (profesional inicia) */
+/* Modal: nuevo chat */
+let chatUsuariosCache = [];
+
 async function chatAbrirModalNuevo() {
     const modal = document.getElementById('modalNuevoChat');
     if (!modal) return;
 
-    const sel = document.getElementById('chatNuevoUsuario');
-    if (sel && sel.options.length <= 1) {
+    // Reset campos
+    const buscar = document.getElementById('chatNuevoBuscar');
+    const resultados = document.getElementById('chatNuevoResultados');
+    if (buscar) buscar.value = '';
+    if (resultados) resultados.innerHTML = '';
+    document.getElementById('chatNuevoUsuarioId').value = '';
+    document.getElementById('chatNuevoUsuarioNombre').value = '';
+
+    // Cargar usuarios si no están en caché
+    if (!chatUsuariosCache.length) {
         try {
             const res  = await fetch(API_URL + '/chat/usuarios-disponibles');
             const data = await res.json();
-            if (data.success) {
-                sel.innerHTML = '<option value="">— Selecciona un destinatario —</option>' +
-                    data.usuarios.map(u => {
-                        const extra = u.rol ? ` [${chatEsc(u.rol)}]` : '';
-                        return `<option value="${u.id}" data-nombre="${chatEscAttr(u.nombre)}">${chatEsc(u.nombre)}${extra} (${chatEsc(u.correo)})</option>`;
-                    }).join('');
-            }
+            if (data.success) chatUsuariosCache = data.usuarios;
         } catch (e) {}
     }
+
     modal.style.display = 'flex';
+    setTimeout(() => buscar?.focus(), 80);
+}
+
+function chatFiltrarUsuarios(query) {
+    const resultados = document.getElementById('chatNuevoResultados');
+    if (!resultados) return;
+
+    // Limpiar selección al escribir
+    document.getElementById('chatNuevoUsuarioId').value = '';
+    document.getElementById('chatNuevoUsuarioNombre').value = '';
+
+    const q = query.trim().toLowerCase();
+    if (!q) { resultados.innerHTML = ''; return; }
+
+    const filtrados = chatUsuariosCache.filter(u =>
+        u.nombre.toLowerCase().includes(q) || u.correo.toLowerCase().includes(q)
+    ).slice(0, 8);
+
+    if (!filtrados.length) {
+        resultados.innerHTML = '<div class="chat-search-empty">Sin resultados</div>';
+        return;
+    }
+
+    resultados.innerHTML = filtrados.map(u => {
+        const rolLabel = u.rol ? `<span class="chat-search-rol">${chatEsc(u.rol)}</span>` : '';
+        return `<div class="chat-search-item" onclick="chatSeleccionarUsuario(${u.id},'${chatEscAttr(u.nombre)}')">
+            <div class="chat-search-avatar">${u.nombre.charAt(0).toUpperCase()}</div>
+            <div class="chat-search-info">
+                <div class="chat-search-name">${chatEsc(u.nombre)} ${rolLabel}</div>
+                <div class="chat-search-correo">${chatEsc(u.correo)}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function chatSeleccionarUsuario(id, nombre) {
+    document.getElementById('chatNuevoUsuarioId').value   = id;
+    document.getElementById('chatNuevoUsuarioNombre').value = nombre;
+    document.getElementById('chatNuevoBuscar').value      = nombre;
+    document.getElementById('chatNuevoResultados').innerHTML = '';
 }
 
 function chatIniciarDesdeModal() {
-    const sel  = document.getElementById('chatNuevoUsuario');
-    const opt  = sel?.options[sel.selectedIndex];
-    if (!sel?.value) { alert('Selecciona un usuario'); return; }
+    const id     = document.getElementById('chatNuevoUsuarioId').value;
+    const nombre = document.getElementById('chatNuevoUsuarioNombre').value;
+    if (!id) { alert('Selecciona un destinatario de la lista'); return; }
 
-    const destinatarioId = parseInt(sel.value);
-    const nombre = opt?.dataset?.nombre || 'Usuario';
-
+    const destinatarioId = parseInt(id);
     document.getElementById('modalNuevoChat').style.display = 'none';
 
-    // Set as pending: conversation created on first send
     chatConvActiva = { id: null, nombre, otroId: destinatarioId, pendingInit: true };
     chatLastMsgId  = 0;
 

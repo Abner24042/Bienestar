@@ -87,11 +87,15 @@ include '../../app/views/layouts/header.php';
                 onclick="document.getElementById('modalNuevoChat').style.display='none'">&times;</button>
         </div>
         <div class="modal-body">
-            <div class="form-group">
+            <div class="form-group" style="position:relative;">
                 <label>Destinatario</label>
-                <select id="chatNuevoUsuario">
-                    <option value="">— Selecciona un destinatario —</option>
-                </select>
+                <input type="text" id="chatNuevoBuscar" class="form-control"
+                       placeholder="Buscar por nombre o correo…"
+                       oninput="chatFiltrarUsuarios(this.value)" autocomplete="off"
+                       style="width:100%;box-sizing:border-box;">
+                <div id="chatNuevoResultados" class="chat-search-results"></div>
+                <input type="hidden" id="chatNuevoUsuarioId">
+                <input type="hidden" id="chatNuevoUsuarioNombre">
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary"

@@ -1,0 +1,146 @@
+/* === FAVORITOS === */
+
+/* Botón estrella sobre las tarjetas */
+.fav-btn {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.15s, color 0.15s;
+    z-index: 3;
+    flex-shrink: 0;
+    padding: 0;
+}
+.fav-btn:hover {
+    background: rgba(0, 0, 0, 0.65);
+    transform: scale(1.12);
+    color: #ffc107;
+}
+.fav-btn.fav-active {
+    color: #ffc107;
+    background: rgba(0, 0, 0, 0.5);
+}
+.fav-btn.fav-active svg {
+    fill: #ffc107;
+    stroke: #ffc107;
+}
+
+/* Fijar layout del header para que el título no empuje los botones */
+#dynamicRecipeModal .modal-title,
+#dynamicExerciseModal .modal-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 12px;
+    font-size: 1.15rem;
+}
+
+/* Botón favoritos en el header del modal */
+.modal-fav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 22px;
+    border: none;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.modal-fav-btn svg {
+    flex-shrink: 0;
+    transition: fill 0.15s, stroke 0.15s;
+}
+.modal-fav-btn:hover {
+    background: #333;
+    transform: scale(1.04);
+}
+.modal-fav-btn:not(.fav-active) svg polygon {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.45);
+}
+.modal-fav-btn.fav-active {
+    background: #1a1a1a;
+    color: #fff;
+}
+.modal-fav-btn.fav-active svg polygon {
+    fill: #ffc107;
+    stroke: #ffc107;
+}
+
+[data-theme="dark"] .modal-fav-btn {
+    background: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .modal-fav-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* Asegurar posición relativa en los contenedores de imagen */
+.recipe-image,
+.exercise-image {
+    position: relative;
+}
+
+/* ── Tabs de favoritos ────────────────────────────────────────────── */
+.fav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.fav-tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s, border-color 0.14s;
+}
+.fav-tab:hover {
+    background: rgba(255, 107, 53, 0.06);
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+.fav-tab.active {
+    background: rgba(255, 107, 53, 0.1);
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+
+.fav-tab-count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: inherit;
+    opacity: 0.8;
+}
+
+/* Dark mode */
+[data-theme="dark"] .fav-tab {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .fav-btn {
+    background: rgba(0, 0, 0, 0.55);
+}
