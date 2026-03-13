@@ -49,7 +49,13 @@
       "Bash(node deploy.js public/pages/favoritos.php)",
       "Bash(node deploy.js public/assets/js/ejercicio.js public/assets/js/noticias.js)",
       "Bash(node deploy.js public/assets/js/favoritos.js)",
-      "Bash(node deploy.js public/assets/css/auth.css)"
+      "Bash(node deploy.js public/assets/css/auth.css)",
+      "Bash(node deploy.js app/views/layouts/header.php public/pages/dashboard.php public/pages/mi-plan.php public/assets/js/mi-plan.js public/assets/css/mi-plan.css)",
+      "Bash(node deploy.js app/controllers/get_mi_plan.php public/pages/mi-plan.php public/assets/js/mi-plan.js public/assets/css/mi-plan.css)",
+      "Bash(node deploy.js public/assets/js/mi-plan.js)",
+      "Bash(grep -rn \"Gestión de Planes\\\\|Selecciona un usuario\\\\|select.*usuario\\\\|profesional.*plan\" \"c:\\\\xampp\\\\htdocs\\\\a\\\\Bienestar\\\\public\\\\pages\"\" --include=\"*.php \" -l)",
+      "Bash(\"c:/xampp/htdocs/a/Bienestar/public/assets/css/mi-plan.css\":*)",
+      "Bash(node deploy.js public/assets/js/mi-plan.js public/assets/css/mi-plan.css public/pages/profesional/panel.php public/assets/js/profesional-planes.js public/assets/css/profesional.css)"
     ]
   }
 }

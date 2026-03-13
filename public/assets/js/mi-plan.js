@@ -3,21 +3,38 @@
  */
 
 let planData = {};
+let planFavRecetaIds   = new Set();
+let planFavEjercicioIds = new Set();
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarPlan();
-    initTabs();
+    if (!esPaginaCompleta) initTabs();
 });
 
+// Detecta si estamos en la página dedicada (layout nuevo) o en el dashboard
+const esPaginaCompleta = !!document.getElementById('planEjerciciosRow');
+
 async function cargarPlan() {
+    const url = esPaginaCompleta ? API_URL + '/mi-plan?todas=1' : API_URL + '/mi-plan';
     try {
-        const res  = await fetch(API_URL + '/mi-plan');
-        const data = await res.json();
+        const [resPlan, resFav] = await Promise.all([
+            fetch(url),
+            fetch(API_URL + '/favoritos'),
+        ]);
+        const data    = await resPlan.json();
+        const dataFav = await resFav.json();
         if (!data.success) throw new Error();
+        if (dataFav.success) {
+            planFavRecetaIds    = new Set((dataFav.receta_ids    || []).map(String));
+            planFavEjercicioIds = new Set((dataFav.ejercicio_ids || []).map(String));
+        }
         planData = data.plan;
         renderPlan(planData);
     } catch (e) {
-        ['planEjerciciosGrid','planRecetasGrid','planRecomendacionesGrid'].forEach(id => {
+        const ids = esPaginaCompleta
+            ? ['planEjerciciosRow','planRecetasRow','planRecomendacionesCol']
+            : ['planEjerciciosGrid','planRecetasGrid','planRecomendacionesGrid'];
+        ids.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = '<p class="plan-loading">No se pudo cargar el plan.</p>';
         });
@@ -25,30 +42,85 @@ async function cargarPlan() {
 }
 
 function renderPlan(plan) {
-    // Counters
     document.getElementById('numEjercicios').textContent      = plan.ejercicios.length;
     document.getElementById('numRecetas').textContent         = plan.recetas.length;
     document.getElementById('numRecomendaciones').textContent = plan.recomendaciones.length;
 
-    // Ejercicios
-    const gE = document.getElementById('planEjerciciosGrid');
-    gE.innerHTML = plan.ejercicios.length
-        ? plan.ejercicios.map(e => ejercicioCard(e)).join('')
-        : '<p class="plan-loading">No tienes ejercicios asignados aún.</p>';
+    if (esPaginaCompleta) {
+        // Layout nuevo: filas horizontales + columna lateral
+        const rowE = document.getElementById('planEjerciciosRow');
+        rowE.innerHTML = plan.ejercicios.length
+            ? plan.ejercicios.map(e => ejercicioCard(e)).join('')
+            : '<p class="plan-empty">No tienes ejercicios asignados aún.</p>';
 
-    // Recetas
-    const gR = document.getElementById('planRecetasGrid');
-    const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    const hoy = dias[new Date().getDay()];
-    gR.innerHTML = plan.recetas.length
-        ? plan.recetas.map(r => recetaCard(r)).join('')
-        : `<p class="plan-loading">No tienes recetas para ${hoy} aún.</p>`;
+        const rowR = document.getElementById('planRecetasRow');
+        rowR.innerHTML = plan.recetas.length
+            ? plan.recetas.map(r => recetaCard(r)).join('')
+            : '<p class="plan-empty">No tienes recetas asignadas aún.</p>';
 
-    // Recomendaciones
-    const gRec = document.getElementById('planRecomendacionesGrid');
-    gRec.innerHTML = plan.recomendaciones.length
-        ? plan.recomendaciones.map(r => recomendacionCard(r)).join('')
-        : '<p class="plan-loading" style="padding:40px 0;text-align:center;">No hay recomendaciones aún.</p>';
+        const colRec = document.getElementById('planRecomendacionesCol');
+        colRec.innerHTML = plan.recomendaciones.length
+            ? plan.recomendaciones.map(r => recomendacionCard(r)).join('')
+            : '<p class="plan-empty">No hay recomendaciones aún.</p>';
+    } else {
+        // Layout dashboard: grids con tabs
+        const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+        const hoy  = dias[new Date().getDay()];
+
+        const gE = document.getElementById('planEjerciciosGrid');
+        if (gE) gE.innerHTML = plan.ejercicios.length
+            ? plan.ejercicios.map(e => ejercicioCard(e)).join('')
+            : '<p class="plan-loading">No tienes ejercicios asignados aún.</p>';
+
+        const gR = document.getElementById('planRecetasGrid');
+        if (gR) gR.innerHTML = plan.recetas.length
+            ? plan.recetas.map(r => recetaCard(r)).join('')
+            : `<p class="plan-loading">No tienes recetas para ${hoy} aún.</p>`;
+
+        const gRec = document.getElementById('planRecomendacionesGrid');
+        if (gRec) gRec.innerHTML = plan.recomendaciones.length
+            ? plan.recomendaciones.map(r => recomendacionCard(r)).join('')
+            : '<p class="plan-loading" style="padding:40px 0;text-align:center;">No hay recomendaciones aún.</p>';
+    }
+}
+
+function planFavStarBtn(tipo, id) {
+    const isFav = tipo === 'ejercicio' ? planFavEjercicioIds.has(String(id)) : planFavRecetaIds.has(String(id));
+    const cls   = isFav ? 'fav-active' : '';
+    const fill  = isFav ? '#ffc107' : 'none';
+    const strk  = isFav ? '#ffc107' : 'rgba(255,255,255,0.5)';
+    return `<button class="plan-fav-star ${cls}" title="${isFav ? 'Quitar de favoritos' : 'Guardar en favoritos'}"
+        onclick="event.stopPropagation(); planToggleFav('${tipo}', ${id}, this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="${fill}" stroke="${strk}" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+    </button>`;
+}
+
+async function planToggleFav(tipo, id, btn) {
+    try {
+        const res  = await fetch(API_URL + '/favoritos/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tipo, id }),
+        });
+        const data = await res.json();
+        if (!data.success) return;
+        const set = tipo === 'ejercicio' ? planFavEjercicioIds : planFavRecetaIds;
+        if (data.action === 'added') {
+            set.add(String(id));
+            btn.classList.add('fav-active');
+            btn.querySelector('polygon').setAttribute('fill', '#ffc107');
+            btn.querySelector('polygon').setAttribute('stroke', '#ffc107');
+            btn.title = 'Quitar de favoritos';
+        } else {
+            set.delete(String(id));
+            btn.classList.remove('fav-active');
+            btn.querySelector('polygon').setAttribute('fill', 'none');
+            btn.querySelector('polygon').setAttribute('stroke', 'rgba(255,255,255,0.5)');
+            btn.title = 'Guardar en favoritos';
+        }
+    } catch (e) {}
 }
 
 function ejercicioCard(e) {
@@ -57,7 +129,8 @@ function ejercicioCard(e) {
     const tipo  = cap(e.tipo  || 'ejercicio');
     const notas = e.notas ? `<div class="plan-card-notas">📝 ${esc(e.notas)}</div>` : '';
     return `
-    <div class="plan-card" onclick="openEjercicioModal(${e.id})">
+    <div class="plan-card" onclick="openEjercicioModal(${e.id})" style="position:relative;">
+        ${planFavStarBtn('ejercicio', e.id)}
         ${img}
         <div class="plan-card-body">
             <div class="plan-card-badges">
@@ -77,7 +150,8 @@ function recetaCard(r) {
     const cat  = cap(r.categoria || 'receta');
     const notas = r.notas ? `<div class="plan-card-notas">📝 ${esc(r.notas)}</div>` : '';
     return `
-    <div class="plan-card" onclick="openRecetaModal(${r.id})">
+    <div class="plan-card" onclick="openRecetaModal(${r.id})" style="position:relative;">
+        ${planFavStarBtn('receta', r.id)}
         ${img}
         <div class="plan-card-body">
             <div class="plan-card-badges">

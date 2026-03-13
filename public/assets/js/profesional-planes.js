@@ -4,6 +4,7 @@
 
 let planUsuarioActual = null;
 let planDataPro = {};
+let planUsuariosCache = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     cargarUsuariosPlan();
@@ -12,6 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
         cargarRecomendacionesPro();
         document.getElementById('btnNuevaRecPro').addEventListener('click', abrirModalNuevaRecPro);
     }
+    // Cerrar resultados al click fuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#planUsuarioBuscar') && !e.target.closest('#planUsuarioResultados')) {
+            const r = document.getElementById('planUsuarioResultados');
+            if (r) r.innerHTML = '';
+        }
+    });
 });
 
 async function cargarUsuariosPlan() {
@@ -19,14 +27,53 @@ async function cargarUsuariosPlan() {
         const res = await fetch(API_URL + '/pro/usuarios-list');
         const data = await res.json();
         if (!data.success) throw new Error();
-        const sel = document.getElementById('planUsuarioSelect');
-        if (!sel) return;
-        sel.innerHTML = '<option value="">— Selecciona un usuario —</option>' +
-            data.usuarios.map(u => `<option value="${u.id}">${escP(u.nombre)} (${escP(u.correo)})</option>`).join('');
+        planUsuariosCache = data.usuarios || [];
     } catch (e) {
-        const sel = document.getElementById('planUsuarioSelect');
-        if (sel) sel.innerHTML = '<option value="">Error al cargar usuarios</option>';
+        planUsuariosCache = [];
     }
+}
+
+function planFiltrarUsuarios(query) {
+    const results = document.getElementById('planUsuarioResultados');
+    if (!results) return;
+    const q = query.trim().toLowerCase();
+    if (!q) { results.innerHTML = ''; return; }
+
+    const matches = planUsuariosCache.filter(u =>
+        u.nombre.toLowerCase().includes(q) || u.correo.toLowerCase().includes(q)
+    ).slice(0, 8);
+
+    if (!matches.length) {
+        results.innerHTML = '<div class="pro-user-search-empty">No se encontraron usuarios</div>';
+        return;
+    }
+
+    results.innerHTML = matches.map(u => `
+        <div class="pro-user-search-item" onclick="planSeleccionarUsuario(${u.id}, '${escP(u.nombre)}')">
+            <div class="pro-user-search-avatar">${escP(u.nombre.charAt(0).toUpperCase())}</div>
+            <div>
+                <div class="pro-user-search-name">${escP(u.nombre)}</div>
+                <div class="pro-user-search-correo">${escP(u.correo)}</div>
+            </div>
+        </div>`).join('');
+}
+
+function planSeleccionarUsuario(id, nombre) {
+    document.getElementById('planUsuarioBuscar').value = '';
+    document.getElementById('planUsuarioResultados').innerHTML = '';
+    document.getElementById('planUsuarioId').value = id;
+    const tag = document.getElementById('planUsuarioTag');
+    tag.style.display = 'flex';
+    document.getElementById('planUsuarioNombreTag').textContent = nombre;
+    cargarPlanUsuario(id);
+}
+
+function planLimpiarUsuario() {
+    document.getElementById('planUsuarioId').value = '';
+    document.getElementById('planUsuarioBuscar').value = '';
+    document.getElementById('planUsuarioTag').style.display = 'none';
+    document.getElementById('planUsuarioContainer').style.display = 'none';
+    planUsuarioActual = null;
 }
 
 async function cargarPlanUsuario(userId) {

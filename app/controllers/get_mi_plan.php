@@ -13,6 +13,7 @@ if (!$authController->isAuthenticated()) {
 
 $user = $authController->getCurrentUser();
 $model = new Plan();
-$plan  = $model->getMiPlan($user['id'], true);
+$todas = isset($_GET['todas']) && $_GET['todas'] == '1';
+$plan  = $model->getMiPlan($user['id'], !$todas);
 
 echo json_encode(['success' => true, 'plan' => $plan]);

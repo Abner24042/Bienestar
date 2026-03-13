@@ -112,3 +112,67 @@
 [data-theme="dark"] .pro-agenda-email {
     color: #999;
 }
+
+/* Buscador de usuarios en planes */
+.pro-user-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-surface, #fff);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 100;
+}
+.pro-user-search-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+.pro-user-search-item:hover {
+    background: rgba(255,107,53,0.07);
+}
+.pro-user-search-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ff6b35;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.pro-user-search-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text, #1a1a1a);
+}
+.pro-user-search-correo {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #888);
+}
+.pro-user-search-empty {
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+}
+[data-theme="dark"] .pro-user-search-results {
+    background: #1e1e1e;
+    border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .pro-user-search-item:hover {
+    background: rgba(255,107,53,0.1);
+}
+[data-theme="dark"] .pro-user-search-name {
+    color: #f0f0f0;
+}

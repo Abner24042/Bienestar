@@ -1,7 +1,7 @@
 <?php
 $pageTitle   = 'Mi Plan Personal';
 $currentPage = 'mi-plan';
-$additionalCSS = ['mi-plan.css'];
+$additionalCSS = ['mi-plan.css', 'favoritos.css'];
 require_once '../../app/config/config.php';
 require_once '../../app/controllers/AuthController.php';
 
@@ -22,7 +22,7 @@ include '../../app/views/layouts/header.php';
 
     <!-- Resumen -->
     <div class="plan-summary-grid" id="planSummary">
-        <div class="plan-summary-card" id="countEjercicios">
+        <div class="plan-summary-card">
             <div class="summary-icon" style="background:#fff3e0;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2"><path d="M3 12h18M3 9v6M7 10v4M17 10v4M21 9v6"/></svg>
             </div>
@@ -31,7 +31,7 @@ include '../../app/views/layouts/header.php';
                 <div class="summary-label">Ejercicios</div>
             </div>
         </div>
-        <div class="plan-summary-card" id="countRecetas">
+        <div class="plan-summary-card">
             <div class="summary-icon" style="background:#e8f5e9;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
             </div>
@@ -40,7 +40,7 @@ include '../../app/views/layouts/header.php';
                 <div class="summary-label">Recetas</div>
             </div>
         </div>
-        <div class="plan-summary-card" id="countRecomendaciones">
+        <div class="plan-summary-card">
             <div class="summary-icon" style="background:#e3f2fd;">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2196f3" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </div>
@@ -51,32 +51,55 @@ include '../../app/views/layouts/header.php';
         </div>
     </div>
 
-    <!-- Tabs -->
-    <div class="plan-tabs">
-        <button class="plan-tab active" data-tab="ejercicios">💪 Ejercicios</button>
-        <button class="plan-tab" data-tab="recetas">🥗 Recetas</button>
-        <button class="plan-tab" data-tab="recomendaciones">💡 Recomendaciones</button>
-    </div>
+    <!-- Layout principal -->
+    <div class="plan-layout">
 
-    <!-- Sección Ejercicios -->
-    <div class="plan-section active" id="tab-ejercicios">
-        <div class="plan-grid" id="planEjerciciosGrid">
-            <p class="plan-loading">Cargando tu plan...</p>
-        </div>
-    </div>
+        <!-- Columna izquierda: Ejercicios + Recetas -->
+        <div class="plan-left">
 
-    <!-- Sección Recetas -->
-    <div class="plan-section" id="tab-recetas">
-        <div class="plan-grid" id="planRecetasGrid">
-            <p class="plan-loading">Cargando tu plan...</p>
-        </div>
-    </div>
+            <!-- Ejercicios -->
+            <div class="plan-section-block">
+                <div class="plan-section-header">
+                    <span class="plan-section-icon" style="background:#fff3e0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2"><path d="M3 12h18M3 9v6M7 10v4M17 10v4M21 9v6"/></svg>
+                    </span>
+                    <h2>Ejercicios</h2>
+                </div>
+                <div class="plan-row" id="planEjerciciosRow">
+                    <p class="plan-loading">Cargando...</p>
+                </div>
+            </div>
 
-    <!-- Sección Recomendaciones -->
-    <div class="plan-section" id="tab-recomendaciones">
-        <div id="planRecomendacionesGrid">
-            <p class="plan-loading">Cargando tu plan...</p>
+            <!-- Recetas -->
+            <div class="plan-section-block">
+                <div class="plan-section-header">
+                    <span class="plan-section-icon" style="background:#e8f5e9;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
+                    </span>
+                    <h2>Recetas</h2>
+                </div>
+                <div class="plan-row" id="planRecetasRow">
+                    <p class="plan-loading">Cargando...</p>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Columna derecha: Recomendaciones -->
+        <div class="plan-right">
+            <div class="plan-section-block">
+                <div class="plan-section-header">
+                    <span class="plan-section-icon" style="background:#e3f2fd;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2196f3" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </span>
+                    <h2>Recomendaciones</h2>
+                </div>
+                <div id="planRecomendacionesCol">
+                    <p class="plan-loading">Cargando...</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

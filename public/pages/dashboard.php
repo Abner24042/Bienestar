@@ -96,7 +96,7 @@ include '../../app/views/layouts/header.php';
         <!-- Tabs -->
         <div class="plan-tabs">
             <button class="plan-tab active" data-tab="ejercicios">💪 Ejercicios</button>
-            <button class="plan-tab" data-tab="recetas">🥗 Recetas</button>
+            <button class="plan-tab" data-tab="recetas">🥗 Recetas de hoy</button>
             <button class="plan-tab" data-tab="recomendaciones">💡 Recomendaciones</button>
         </div>
 

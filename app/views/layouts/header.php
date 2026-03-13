@@ -107,6 +107,12 @@ if (!isset($pageTitle)) {
                 </svg>
                 <span>Favoritos</span>
             </a>
+            <a href="<?php echo url('mi-plan'); ?>" class="nav-item <?php echo $currentPage === 'mi-plan' ? 'active' : ''; ?>">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <span>Mi Plan</span>
+            </a>
             <a href="<?php echo url('salud-mental'); ?>" class="nav-item <?php echo $currentPage === 'salud-mental' ? 'active' : ''; ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M20.84 4.61C20.3292 4.099 19.7228 3.69364 19.0554 3.41708C18.3879 3.14052 17.6725 2.99817 16.95 2.99817C16.2275 2.99817 15.5121 3.14052 14.8446 3.41708C14.1772 3.69364 13.5708 4.099 13.06 4.61L12 5.67L10.94 4.61C9.9083 3.57831 8.50903 2.99871 7.05 2.99871C5.59096 2.99871 4.19169 3.57831 3.16 4.61C2.1283 5.64169 1.54871 7.04097 1.54871 8.5C1.54871 9.95903 2.1283 11.3583 3.16 12.39L4.22 13.45L12 21.23L19.78 13.45L20.84 12.39C21.351 11.8792 21.7564 11.2728 22.0329 10.6054C22.3095 9.93789 22.4518 9.2225 22.4518 8.5C22.4518 7.7775 22.3095 7.06211 22.0329 6.39464C21.7564 5.72718 21.351 5.12084 20.84 4.61V4.61Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -201,6 +207,12 @@ if (!isset($pageTitle)) {
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
                     <span>Favoritos</span>
+                </a>
+                <a href="<?php echo url('mi-plan'); ?>" class="mobile-menu-item <?php echo $currentPage === 'mi-plan' ? 'active' : ''; ?>">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    <span>Mi Plan</span>
                 </a>
                 <a href="<?php echo url('salud-mental'); ?>" class="mobile-menu-item <?php echo $currentPage === 'salud-mental' ? 'active' : ''; ?>">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

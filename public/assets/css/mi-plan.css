@@ -376,3 +376,236 @@
         font-size: 1.6rem;
     }
 }
+
+/* Botón estrella de favoritos en plan cards */
+.plan-fav-star {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.12s;
+}
+.plan-fav-star:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* === NUEVO LAYOUT DE MI PLAN === */
+
+.plan-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 28px;
+    align-items: start;
+}
+
+.plan-left {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+}
+
+.plan-right {
+    min-width: 0;
+}
+
+.plan-section-block {
+    background: var(--color-surface, #fff);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.plan-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.plan-section-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-text, #1a1a1a);
+}
+
+.plan-section-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Fila horizontal scrollable de cards */
+.plan-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.15) transparent;
+}
+
+.plan-row::-webkit-scrollbar {
+    height: 4px;
+}
+
+.plan-row::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.plan-row::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+}
+
+/* Cards dentro de la fila — tamaño fijo */
+.plan-row .plan-card {
+    min-width: 200px;
+    max-width: 220px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--color-background, #f8f9fa);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.plan-row .plan-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.13);
+}
+
+.plan-row .plan-card-image {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+}
+
+.plan-row .plan-card-body {
+    padding: 10px 12px 12px;
+}
+
+.plan-row .plan-card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 6px 0 4px;
+    line-height: 1.3;
+    color: var(--color-text, #1a1a1a);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.plan-row .plan-card-meta {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary, #666);
+    margin: 2px 0 0;
+}
+
+.plan-row .plan-card-badges {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.plan-row .plan-card-notas {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary, #888);
+    margin-top: 4px;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    padding-top: 4px;
+}
+
+/* Columna derecha: recomendaciones apiladas */
+.recomendacion-card {
+    border-left: 4px solid #2196f3;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    background: var(--color-background, #f8f9fa);
+}
+
+.plan-empty {
+    color: var(--color-text-secondary, #999);
+    font-size: 0.85rem;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .plan-layout {
+        grid-template-columns: 1fr;
+    }
+    .plan-right {
+        order: 3;
+    }
+}
+
+@media (max-width: 600px) {
+    .plan-summary-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .plan-row .plan-card {
+        min-width: 170px;
+        max-width: 185px;
+    }
+    .plan-row .plan-card-image {
+        height: 110px;
+    }
+}
+
+/* Dark mode */
+[data-theme="dark"] .plan-section-block {
+    background: var(--color-surface, #1e1e1e);
+}
+[data-theme="dark"] .plan-row .plan-card {
+    background: var(--color-background, #2a2a2a);
+}
+[data-theme="dark"] .recomendacion-card {
+    background: var(--color-background, #2a2a2a);
+}
+
+/* Dark mode text overrides for new layout */
+[data-theme="dark"] .plan-section-header h2 {
+    color: #fff;
+}
+[data-theme="dark"] .plan-row .plan-card-title {
+    color: #f0f0f0;
+}
+[data-theme="dark"] .plan-row .plan-card-meta {
+    color: rgba(255,255,255,0.55);
+}
+[data-theme="dark"] .plan-row .plan-card-notas {
+    color: rgba(255,255,255,0.45);
+    border-top-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .recomendacion-titulo {
+    color: #f0f0f0;
+}
+[data-theme="dark"] .recomendacion-contenido {
+    color: rgba(255,255,255,0.65);
+}
+[data-theme="dark"] .recomendacion-meta {
+    color: rgba(255,255,255,0.4);
+}

@@ -568,11 +568,17 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <!-- Gestión de Planes Personalizados -->
         <div class="admin-section" style="width: 100%;">
             <h2>📋 Gestión de Planes Personalizados</h2>
-            <div class="form-group" style="max-width:420px; margin-bottom:1.5rem;">
-                <label for="planUsuarioSelect">Seleccionar usuario</label>
-                <select id="planUsuarioSelect" onchange="cargarPlanUsuario(this.value)">
-                    <option value="">Cargando usuarios...</option>
-                </select>
+            <div class="form-group" style="max-width:420px; margin-bottom:1.5rem; position:relative;">
+                <label>Buscar usuario</label>
+                <input type="text" id="planUsuarioBuscar" class="form-control"
+                       placeholder="Escribe nombre o correo..."
+                       oninput="planFiltrarUsuarios(this.value)" autocomplete="off">
+                <div id="planUsuarioResultados" class="pro-user-search-results"></div>
+                <input type="hidden" id="planUsuarioId">
+                <div id="planUsuarioTag" style="display:none;margin-top:8px;padding:7px 12px;background:rgba(255,107,53,0.12);border-radius:8px;font-size:0.85rem;color:#ff6b35;display:flex;align-items:center;gap:8px;">
+                    <span id="planUsuarioNombreTag" style="flex:1;"></span>
+                    <button onclick="planLimpiarUsuario()" style="background:none;border:none;cursor:pointer;color:#ff6b35;font-size:1.1rem;padding:0;line-height:1;">×</button>
+                </div>
             </div>
 
             <div id="planUsuarioContainer" style="display:none;">
