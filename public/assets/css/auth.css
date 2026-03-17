@@ -4,7 +4,10 @@
 
 .auth-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background:
+        linear-gradient(135deg, rgba(15,20,50,0.72) 0%, rgba(10,25,60,0.78) 100%),
+        url('../img/content/DSC07783.jpg')
+        center center / cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
