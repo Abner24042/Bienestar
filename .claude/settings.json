@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/Users/abner/.claude/projects/c--xampp-htdocs-a-Bienestar/**)"
+      "Read(//c/Users/abner/.claude/projects/c--xampp-htdocs-a-Bienestar/**)",
+      "WebSearch",
+      "WebFetch(domain:foursquare.com)",
+      "WebFetch(domain:www.anahuac.mx)"
     ]
   }
 }
