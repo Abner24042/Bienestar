@@ -24,9 +24,6 @@
 </head>
 <body>
 
-    <!-- Overlay de transición de página -->
-    <div id="pageTransition" style="position:fixed;inset:0;background:#000;z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.45s ease;"></div>
-
     <!-- Navegación Sticky -->
     <nav class="sticky-nav" id="stickyNav">
         <div class="nav-container">

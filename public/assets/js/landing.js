@@ -3,16 +3,18 @@
  * Efectos parallax y scroll optimizados con rAF
  */
 
-// Transición suave al ir al login
+// Transición suave al ir al login: desvanece el contenido, deja el fondo
 (function() {
-    var overlay = document.getElementById('pageTransition');
-    if (!overlay) return;
     document.querySelectorAll('a[href*="login"]').forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             var href = this.href;
-            overlay.style.opacity = '1';
-            setTimeout(function() { window.location.href = href; }, 450);
+            var els = document.querySelectorAll('.sticky-nav, .hero-content, .hero-overlay, .scroll-indicator, .features-section, .services-section, .cta-section, .footer');
+            els.forEach(function(el) {
+                el.style.transition = 'opacity 0.4s ease';
+                el.style.opacity = '0';
+            });
+            setTimeout(function() { window.location.href = href; }, 420);
         });
     });
 })();

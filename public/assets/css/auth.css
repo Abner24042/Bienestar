@@ -41,6 +41,11 @@
     left: -80px;
 }
 
+@keyframes authCardIn {
+    from { opacity: 0; transform: translateY(28px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
 /* Container */
 .auth-container {
     display: grid;
@@ -52,6 +57,7 @@
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
     position: relative;
     z-index: 1;
+    animation: authCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Lado izquierdo - Formulario */

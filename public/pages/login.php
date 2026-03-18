@@ -22,9 +22,6 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="<?php echo asset('css/auth.css'); ?>">
 </head>
 <body class="auth-page">
-    <!-- Overlay de transición de página -->
-    <div id="pageTransition" style="position:fixed;inset:0;background:#000;z-index:9999;opacity:1;pointer-events:none;transition:opacity 0.5s ease;"></div>
-
     <div class="auth-container">
         <div class="auth-box">
             <!-- Logo -->

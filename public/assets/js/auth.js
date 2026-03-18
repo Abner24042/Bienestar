@@ -74,14 +74,6 @@ function initLoginForm(form) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Revelar página (desvanece overlay de transición)
-    var overlay = document.getElementById('pageTransition');
-    if (overlay) {
-        requestAnimationFrame(function() {
-            overlay.style.opacity = '0';
-        });
-    }
-
     var loginForm = document.getElementById('loginForm');
     if (loginForm) initLoginForm(loginForm);
 });
