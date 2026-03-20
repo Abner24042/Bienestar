@@ -43,24 +43,32 @@
     }
 
     // ── Construcción del path ─────────────────────────────────────────────────
-    // Coordenadas relativas al TOP del sidebar (no del sidebarNav).
-    // La cara DERECHA del blob es cóncava (mordida líquida).
+    // Blob rectangular que cubre todo el item, con concavidad líquida solo en borde derecho.
     function buildPath(topY, botY, stretch) {
         var h    = botY - topY;
         var midY = (topY + botY) / 2;
-        var rX   = sW - 2;                 // borde derecho del blob
-        var bite = 18 - stretch * 10;      // profundidad concavidad
+        var rX   = sW - 2;               // borde derecho
+        var bite = 20 - stretch * 12;    // profundidad de la mordida cóncava
         var cX   = rX - bite;
-        var tOff = h * 0.18;
-        var r    = 8;                       // radio esquinas izq
+        var r    = 8;                    // radio esquinas izquierdas
+        var cr   = Math.min(10, h * 0.2); // radio curvas esquinas derechas
 
         return [
+            // Esquina superior izquierda
             'M', 0, topY + r,
-            'Q', 0, topY,     r, topY,
-            'C', rX * 0.45, topY,  rX, topY + tOff,  rX, topY + tOff * 2,
-            'C', rX, midY - tOff,  cX, midY,          rX, midY + tOff,
-            'C', rX, botY - tOff * 2,  rX * 0.45, botY,  r, botY,
-            'Q', 0, botY,   0, botY - r,
+            'Q', 0, topY,  r, topY,
+            // Línea recta por arriba hasta cerca del borde derecho
+            'L', rX - cr, topY,
+            // Esquina superior derecha redondeada
+            'Q', rX, topY,  rX, topY + cr,
+            // Cara derecha CÓNCAVA: de (rX, topY+cr) baja hasta (rX, botY-cr) con mordida en el medio
+            'C', rX, midY - h * 0.15,  cX, midY,  rX, midY + h * 0.15,
+            // Esquina inferior derecha redondeada
+            'Q', rX, botY,  rX - cr, botY,
+            // Línea recta por abajo de vuelta a la izquierda
+            'L', r, botY,
+            // Esquina inferior izquierda
+            'Q', 0, botY,  0, botY - r,
             'Z'
         ].join(' ');
     }
