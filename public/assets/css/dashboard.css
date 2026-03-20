@@ -130,9 +130,17 @@ body {
     color: var(--color-primary);
 }
 
+/* Fallback: siempre legible aunque el blob JS no cargue */
 .nav-item.active {
-    color: #fff;
+    color: var(--color-primary);
+    background-color: rgba(255, 107, 53, 0.12);
     font-weight: 600;
+}
+
+/* Cuando el blob JS está listo: blob maneja el fondo, texto blanco */
+.sidebar-nav.liquid-ready .nav-item.active {
+    background-color: transparent;
+    color: #fff;
 }
 
 .nav-item svg {
@@ -487,6 +495,12 @@ body {
 }
 
 [data-theme="dark"] .nav-item.active {
+    color: var(--color-primary);
+    background-color: rgba(255, 107, 53, 0.15);
+}
+
+[data-theme="dark"] .sidebar-nav.liquid-ready .nav-item.active {
+    background-color: transparent;
     color: #fff;
 }
 
