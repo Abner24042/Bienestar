@@ -106,10 +106,19 @@
         if (!rafId) rafId = requestAnimationFrame(tick);
     }
 
-    // ── Init (doble RAF para layout estable) ──────────────────────────────────
+    // ── Init (ocultar sidebar hasta que el blob esté listo) ───────────────────
+    // Evita el flash entre el fallback CSS y el estado con blob
+    sidebar.style.opacity = '0';
+    var revealTimer = setTimeout(function () {
+        // Fallback: si JS tarda más de 400ms, mostrar de todas formas
+        sidebar.style.transition = 'opacity 0.15s ease';
+        sidebar.style.opacity = '1';
+    }, 400);
+
     requestAnimationFrame(function () {
         requestAnimationFrame(function () {
             measure();
+            clearTimeout(revealTimer);
 
             var activeItem = sidebarNav.querySelector('.nav-item.active');
             if (activeItem) {
@@ -117,6 +126,10 @@
                 blobEl.setAttribute('d', buildPath(centerY - BH / 2, centerY + BH / 2, 0));
                 sidebarNav.classList.add('liquid-ready');
             }
+
+            // Mostrar sidebar con blob ya posicionado (sin flash)
+            sidebar.style.transition = 'opacity 0.12s ease';
+            sidebar.style.opacity = '1';
 
             // Hover: blob sigue al cursor
             // Cuando el blob se aleja del item activo, ese item necesita colores legibles
