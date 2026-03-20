@@ -111,15 +111,23 @@
             }
 
             // Hover: blob sigue al cursor
+            // Cuando el blob se aleja del item activo, ese item necesita colores legibles
             sidebarNav.querySelectorAll('.nav-item').forEach(function (item) {
                 item.addEventListener('mouseenter', function () {
                     sidebarNav.classList.add('liquid-ready');
+                    // Si el blob se va del item activo, marcar para mostrar fallback
+                    if (activeItem && item !== activeItem) {
+                        sidebarNav.classList.add('blob-away');
+                    } else {
+                        sidebarNav.classList.remove('blob-away');
+                    }
                     moveTo(itemCenterY(item));
                 });
             });
 
-            // Al salir: vuelve al activo
+            // Al salir: vuelve al activo, quitar blob-away
             sidebarNav.addEventListener('mouseleave', function () {
+                sidebarNav.classList.remove('blob-away');
                 if (activeItem) moveTo(itemCenterY(activeItem));
             });
 
