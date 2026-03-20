@@ -121,17 +121,17 @@ body {
     padding: 15px 30px;
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast);
+    position: relative;
+    z-index: 1;
 }
 
 .nav-item:hover {
-    background-color: var(--color-bg-secondary);
     color: var(--color-primary);
 }
 
 .nav-item.active {
-    background-color: rgba(255, 107, 53, 0.1);
-    color: var(--color-primary);
+    color: #fff;
     font-weight: 600;
 }
 
@@ -483,12 +483,11 @@ body {
 }
 
 [data-theme="dark"] .nav-item:hover {
-    background-color: #2a2a2a;
     color: var(--color-primary);
 }
 
 [data-theme="dark"] .nav-item.active {
-    background-color: rgba(255, 107, 53, 0.15);
+    color: #fff;
 }
 
 [data-theme="dark"] .stat-card,

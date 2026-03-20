@@ -1,6 +1,6 @@
 /**
  * BIENIESTAR - Liquid blob indicator para el sidebar
- * Se mueve con spring physics y morfea mientras se desplaza.
+ * Cubre el item completo con forma líquida cóncava en el borde derecho.
  */
 (function () {
     'use strict';
@@ -9,60 +9,56 @@
     var sidebarNav = document.querySelector('.sidebar-nav');
     if (!sidebar || !sidebarNav) return;
 
-    // ── SVG fixed (así el overflow:auto del sidebar no lo recorta) ────────────
+    // ── SVG absoluto dentro del sidebar-nav ───────────────────────────────────
     var NS  = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('aria-hidden', 'true');
-    svg.style.cssText = 'position:fixed;width:30px;pointer-events:none;z-index:300;overflow:visible;top:0;left:0;';
+    svg.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:0;';
 
     var blobEl = document.createElementNS(NS, 'path');
-    blobEl.style.filter = 'drop-shadow(3px 0 7px rgba(255,107,53,0.38))';
+    blobEl.setAttribute('fill', 'var(--color-primary, #ff6b35)');
     svg.appendChild(blobEl);
-    document.body.appendChild(svg);
 
-    // BH se mide dinámicamente desde el primer nav-item real
-    var BH = 54;
-    var firstItem = sidebarNav.querySelector('.nav-item');
-    if (firstItem) BH = firstItem.getBoundingClientRect().height;
+    // Insertar como primer hijo para que quede detrás del texto
+    sidebarNav.style.position = 'relative';
+    sidebarNav.insertBefore(svg, sidebarNav.firstChild);
+
+    // ── Dimensiones ───────────────────────────────────────────────────────────
+    var sW  = 0;   // ancho del sidebar-nav
+    var BH  = 54;  // altura del blob (= altura del nav item)
+
+    function measure() {
+        var r = sidebarNav.getBoundingClientRect();
+        sW  = r.width;
+        var first = sidebarNav.querySelector('.nav-item');
+        if (first) BH = first.getBoundingClientRect().height;
+    }
 
     // ── Constructor del path ──────────────────────────────────────────────────
-    // x=0 → borde derecho del sidebar  /  x positivo → entra al contenido
-    // La cara derecha del blob es CÓNCAVA gracias al punto de control tirado a la izquierda
+    // El blob va de x=0 (borde izq del sidebar) hasta cerca del borde der,
+    // con una mordida cóncava líquida en el lado derecho.
     function buildPath(topY, botY, stretch) {
-        var h       = botY - topY;
-        var midY    = (topY + botY) / 2;
-        var W       = 28;                         // ancho máximo del blob
-        var concave = 8 - stretch * 7;            // cuanto se hunde la cara derecha
-        var tOff    = h * 0.22;                   // profundidad de las curvas top/bot
+        var h        = botY - topY;
+        var midY     = (topY + botY) / 2;
+        var rightX   = sW - 2;                   // borde derecho del blob
+        var concave  = sW - 2 - 18 + stretch * 8; // profundidad de la concavidad
+        var tOff     = h * 0.22;
+        var r        = 10;                        // radio de esquinas izq
 
         return [
-            'M 0,' + topY,
-            'C 8,' + topY + ' ' + W + ',' + (topY + tOff * 0.4) + ' ' + W + ',' + (topY + tOff),
-            'C ' + W + ',' + (midY - tOff * 0.4) + ' ' + concave + ',' + midY + ' ' + W + ',' + (midY + tOff * 0.4),
-            'C ' + W + ',' + (botY - tOff) + ' 8,' + botY + ' 0,' + botY,
+            // Esquina superior izquierda redondeada
+            'M', 0, topY + r,
+            'Q', 0, topY, r, topY,
+            // Curva superior → borde derecho
+            'C', rightX * 0.5, topY,  rightX, topY + tOff * 0.4,  rightX, topY + tOff,
+            // Cara derecha CÓNCAVA (el punto de control tira hacia la izq)
+            'C', rightX, midY - tOff * 0.4,  concave, midY,  rightX, midY + tOff * 0.4,
+            // Curva inferior → borde izquierdo
+            'C', rightX, botY - tOff,  rightX * 0.5, botY,  r, botY,
+            // Esquina inferior izquierda redondeada
+            'Q', 0, botY, 0, botY - r,
             'Z'
         ].join(' ');
-    }
-
-    // ── Métricas del sidebar ──────────────────────────────────────────────────
-    var svgOffsetLeft = 0;
-    var svgOffsetTop  = 0;
-
-    function reposition() {
-        var r = sidebar.getBoundingClientRect();
-        svgOffsetLeft = r.right - 1;
-        svgOffsetTop  = r.top;
-        svg.style.left   = svgOffsetLeft + 'px';
-        svg.style.top    = svgOffsetTop  + 'px';
-        svg.style.height = r.height + 'px';
-    }
-
-    // Centro Y del item (basado en el icono SVG si existe) relativo al top del sidebar
-    function itemCenterY(item) {
-        var sr   = sidebar.getBoundingClientRect();
-        var icon = item.querySelector('svg');
-        var ref  = icon ? icon.getBoundingClientRect() : item.getBoundingClientRect();
-        return (ref.top - sr.top) + ref.height / 2;
     }
 
     // ── Spring animation ──────────────────────────────────────────────────────
@@ -93,13 +89,19 @@
         if (!rafId) rafId = requestAnimationFrame(tick);
     }
 
+    // Centro Y de un item relativo al top del sidebar-nav
+    function itemCenterY(item) {
+        var nr = sidebarNav.getBoundingClientRect();
+        var ir = item.getBoundingClientRect();
+        return (ir.top - nr.top) + ir.height / 2;
+    }
+
     // ── Init ─────────────────────────────────────────────────────────────────
-    reposition();
+    measure();
 
     var activeItem = sidebarNav.querySelector('.nav-item.active');
     if (activeItem) {
         centerY = targetY = itemCenterY(activeItem);
-        blobEl.setAttribute('fill', 'var(--color-primary, #ff6b35)');
         blobEl.setAttribute('d', buildPath(centerY - BH / 2, centerY + BH / 2, 0));
     } else {
         blobEl.setAttribute('fill', 'transparent');
@@ -118,17 +120,9 @@
         else blobEl.setAttribute('fill', 'transparent');
     });
 
-    // ── Resize / scroll del sidebar ───────────────────────────────────────────
+    // ── Resize ───────────────────────────────────────────────────────────────
     window.addEventListener('resize', function () {
-        reposition();
-        if (activeItem) {
-            centerY = targetY = itemCenterY(activeItem);
-            blobEl.setAttribute('d', buildPath(centerY - BH / 2, centerY + BH / 2, 0));
-        }
-    }, { passive: true });
-
-    sidebar.addEventListener('scroll', function () {
-        reposition();
+        measure();
         if (activeItem) {
             centerY = targetY = itemCenterY(activeItem);
             blobEl.setAttribute('d', buildPath(centerY - BH / 2, centerY + BH / 2, 0));
