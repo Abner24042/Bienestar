@@ -20,7 +20,10 @@
     svg.appendChild(blobEl);
     document.body.appendChild(svg);
 
-    var BH = 72; // altura del blob en px
+    // BH se mide dinámicamente desde el primer nav-item real
+    var BH = 54;
+    var firstItem = sidebarNav.querySelector('.nav-item');
+    if (firstItem) BH = firstItem.getBoundingClientRect().height;
 
     // ── Constructor del path ──────────────────────────────────────────────────
     // x=0 → borde derecho del sidebar  /  x positivo → entra al contenido
@@ -28,18 +31,15 @@
     function buildPath(topY, botY, stretch) {
         var h       = botY - topY;
         var midY    = (topY + botY) / 2;
-        var W       = 24;                         // ancho máximo del blob
-        var concave = 7 - stretch * 6;            // cuanto se hunde la cara derecha
-        var tOff    = h * 0.20;                   // profundidad de las curvas top/bot
+        var W       = 28;                         // ancho máximo del blob
+        var concave = 8 - stretch * 7;            // cuanto se hunde la cara derecha
+        var tOff    = h * 0.22;                   // profundidad de las curvas top/bot
 
-        // Top curve: va de (0,topY) hacia la derecha hasta (W, topY+tOff)
-        // Mid curve: borde derecho CÓNCAVO — el punto de control tira hacia la izquierda
-        // Bot curve: espejo del top, regresa a (0,botY)
         return [
             'M 0,' + topY,
-            'C 7,' + topY + ' ' + W + ',' + (topY + tOff * 0.4) + ' ' + W + ',' + (topY + tOff),
+            'C 8,' + topY + ' ' + W + ',' + (topY + tOff * 0.4) + ' ' + W + ',' + (topY + tOff),
             'C ' + W + ',' + (midY - tOff * 0.4) + ' ' + concave + ',' + midY + ' ' + W + ',' + (midY + tOff * 0.4),
-            'C ' + W + ',' + (botY - tOff) + ' 7,' + botY + ' 0,' + botY,
+            'C ' + W + ',' + (botY - tOff) + ' 8,' + botY + ' 0,' + botY,
             'Z'
         ].join(' ');
     }
@@ -57,11 +57,12 @@
         svg.style.height = r.height + 'px';
     }
 
-    // Centro Y de un item relativo al top del sidebar en pantalla
+    // Centro Y del item (basado en el icono SVG si existe) relativo al top del sidebar
     function itemCenterY(item) {
-        var ir = item.getBoundingClientRect();
-        var sr = sidebar.getBoundingClientRect();
-        return (ir.top - sr.top) + ir.height / 2;
+        var sr   = sidebar.getBoundingClientRect();
+        var icon = item.querySelector('svg');
+        var ref  = icon ? icon.getBoundingClientRect() : item.getBoundingClientRect();
+        return (ref.top - sr.top) + ref.height / 2;
     }
 
     // ── Spring animation ──────────────────────────────────────────────────────
