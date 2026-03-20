@@ -130,16 +130,21 @@ body {
     color: var(--color-primary);
 }
 
-/* Fallback: siempre legible aunque el blob JS no cargue */
+/* Fallback siempre legible */
 .nav-item.active {
     color: var(--color-primary);
-    background-color: rgba(255, 107, 53, 0.12);
+    background-color: rgba(255, 107, 53, 0.1);
     font-weight: 600;
 }
 
-/* Cuando el blob JS está listo: blob maneja el fondo, texto blanco */
+/* Blob listo: el fondo lo maneja el SVG, texto blanco sobre el naranja */
 .sidebar-nav.liquid-ready .nav-item.active {
     background-color: transparent;
+    color: #fff;
+}
+
+/* Hover con blob: texto naranja (el blob naranja actúa como fondo hover) */
+.sidebar-nav.liquid-ready .nav-item:not(.active):hover {
     color: #fff;
 }
 
