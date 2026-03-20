@@ -118,7 +118,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 15px 30px;
+    padding: 10px 30px;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color var(--transition-fast);
