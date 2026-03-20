@@ -122,7 +122,6 @@ body {
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: all var(--transition-fast);
-    border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
@@ -133,7 +132,6 @@ body {
 .nav-item.active {
     background-color: rgba(255, 107, 53, 0.1);
     color: var(--color-primary);
-    border-left-color: var(--color-primary);
     font-weight: 600;
 }
 
