@@ -85,22 +85,28 @@ async function cargarRecetas() {
 
 function getCategoriaColor(categoria) {
     const colors = {
-        'desayuno': '#FBBC04',
-        'comida': '#34A853',
-        'cena': '#4285F4',
-        'snack': '#FF6D01',
-        'postre': '#9C27B0'
+        'desayuno':  '#FBBC04',
+        'almuerzo':  '#FF6D01',
+        'comida':    '#34A853',
+        'merienda':  '#00BCD4',
+        'cena':      '#4285F4',
+        'snacks':    '#FF6D01',
+        'snack':     '#FF6D01',
+        'postre':    '#9C27B0'
     };
     return colors[categoria] || '#999';
 }
 
 function getCategoriaLabel(categoria) {
     const labels = {
-        'desayuno': 'Desayuno',
-        'comida': 'Comida',
-        'cena': 'Cena',
-        'snack': 'Snack',
-        'postre': 'Postre'
+        'desayuno':  'Desayuno',
+        'almuerzo':  'Almuerzo',
+        'comida':    'Comida',
+        'merienda':  'Merienda',
+        'cena':      'Cena',
+        'snacks':    'Snacks',
+        'snack':     'Snacks',
+        'postre':    'Postre'
     };
     return labels[categoria] || categoria;
 }

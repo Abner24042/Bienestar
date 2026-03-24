@@ -255,4 +255,16 @@ class Chat {
             return null;
         }
     }
+
+    public function existeConversacion($usuarioId, $profesionalId) {
+        try {
+            $stmt = $this->db->prepare(
+                "SELECT id FROM chat_conversaciones WHERE usuario_id = :uid AND profesional_id = :pid LIMIT 1"
+            );
+            $stmt->execute([':uid' => $usuarioId, ':pid' => $profesionalId]);
+            return $stmt->fetch() !== false;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }

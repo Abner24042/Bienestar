@@ -13,13 +13,33 @@ if (!$authController->isAuthenticated()) {
 
 $currentUser = $authController->getCurrentUser();
 $db = (new Database())->getConnection();
+$myRol = strtolower($currentUser['rol']);
+$profesionales = ['coach', 'nutriologo', 'psicologo'];
 
-// Todos pueden hablar con todos
-$stmt = $db->prepare(
-    "SELECT id, nombre, correo, rol FROM usuarios
-     WHERE activo = 1 AND id != :me
-     ORDER BY rol ASC, nombre ASC"
-);
+if ($myRol === 'usuario') {
+    // Usuario: puede ver especialistas y otros usuarios — NO admin
+    $stmt = $db->prepare(
+        "SELECT id, nombre, correo, rol FROM usuarios
+         WHERE activo = 1 AND id != :me
+           AND LOWER(rol) != 'administrador'
+         ORDER BY rol ASC, nombre ASC"
+    );
+} elseif (in_array($myRol, $profesionales)) {
+    // Especialista: puede ver usuarios, otros especialistas y admin
+    $stmt = $db->prepare(
+        "SELECT id, nombre, correo, rol FROM usuarios
+         WHERE activo = 1 AND id != :me
+         ORDER BY rol ASC, nombre ASC"
+    );
+} else {
+    // Admin: puede ver a todos
+    $stmt = $db->prepare(
+        "SELECT id, nombre, correo, rol FROM usuarios
+         WHERE activo = 1 AND id != :me
+         ORDER BY rol ASC, nombre ASC"
+    );
+}
+
 $stmt->execute([':me' => $currentUser['id']]);
 $usuarios = $stmt->fetchAll();
 

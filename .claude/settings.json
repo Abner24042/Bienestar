@@ -10,7 +10,13 @@
       "Bash(node deploy.js public/pages/admin/panel.php)",
       "Bash(node deploy.js public/assets/css/admin.css public/assets/js/admin-citas.js public/pages/admin/citas.php)",
       "Bash(node deploy.js public/assets/css/admin.css public/assets/css/profesional.css public/assets/css/salud-mental.css public/assets/js/admin-citas.js public/assets/js/admin-ejercicios.js public/assets/js/admin-noticias.js public/assets/js/admin-recetas.js public/assets/js/admin-usuarios.js public/assets/js/salud-mental.js public/pages/admin/citas.php public/pages/admin/ejercicios.php public/pages/admin/noticias.php public/pages/admin/panel.php public/pages/admin/recetas.php public/pages/admin/usuarios.php public/pages/salud-mental.php)",
-      "Bash(node deploy.js public/assets/css/perfil.css public/pages/perfil.php)"
+      "Bash(node deploy.js public/assets/css/perfil.css public/pages/perfil.php)",
+      "Bash(node deploy.js public/pages/about.php public/assets/img/icons/HanniaPerez.jpeg public/assets/img/icons/AnaPaula.jpeg public/assets/img/icons/FridaIsabel.jpeg public/assets/img/icons/AbnerBorrego.jpeg)",
+      "Bash(node deploy.js public/pages/about.php)",
+      "Bash(node deploy.js public/pages/admin/recetas.php)",
+      "Bash(node deploy.js app/models/Receta.php public/assets/js/admin-recetas.js public/pages/admin/recetas.php)",
+      "Bash(node deploy.js app/controllers/chat_get_usuarios_disponibles.php app/controllers/chat_enviar.php app/controllers/chat_subir_archivo.php app/models/Chat.php)",
+      "Bash(node deploy.js public/pages/profesional/panel.php)"
     ]
   }
 }

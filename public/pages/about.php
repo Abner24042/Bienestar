@@ -128,7 +128,7 @@ require_once '../../app/config/config.php';
             <div class="team-grid">
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=75&auto=format" alt="Hannia Perez Trejo" loading="lazy" decoding="async" width="300" height="300">
+                        <img src="<?php echo asset('img/icons/HanniaPerez.jpeg'); ?>" alt="Hannia Perez Trejo" loading="lazy" decoding="async" width="300" height="300">
                     </div>
                     <h3>Hannia Perez Trejo</h3>
                     <p class="member-role">Coordinadora de Bienestar</p>
@@ -137,7 +137,7 @@ require_once '../../app/config/config.php';
 
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&q=75&auto=format" alt="Ana Paula Marin Granados" loading="lazy" decoding="async" width="300" height="300">
+                        <img src="<?php echo asset('img/icons/AnaPaula.jpeg'); ?>" alt="Ana Paula Marin Granados" loading="lazy" decoding="async" width="300" height="300">
                     </div>
                     <h3>Ana Paula Marin Granados</h3>
                     <p class="member-role">Especialista en Nutrición</p>
@@ -146,7 +146,7 @@ require_once '../../app/config/config.php';
 
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&q=75&auto=format" alt="Frida Isabel Azuara Salazar" loading="lazy" decoding="async" width="300" height="300">
+                        <img src="<?php echo asset('img/icons/FridaIsabel.jpeg'); ?>" alt="Frida Isabel Azuara Salazar" loading="lazy" decoding="async" width="300" height="300">
                     </div>
                     <h3>Frida Isabel Azuara Salazar</h3>
                     <p class="member-role">Coordinadora de Actividad Física</p>
@@ -155,7 +155,7 @@ require_once '../../app/config/config.php';
 
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=75&auto=format" alt="Abner Borrego Vargas" loading="lazy" decoding="async" width="300" height="300">
+                        <img src="<?php echo asset('img/icons/AbnerBorrego.jpeg'); ?>" alt="Abner Borrego Vargas" loading="lazy" decoding="async" width="300" height="300" style="object-position: center 30%;">
                     </div>
                     <h3>Abner Borrego Vargas</h3>
                     <p class="member-role">Director de Tecnología</p>

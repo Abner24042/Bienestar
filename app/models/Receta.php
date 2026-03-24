@@ -8,6 +8,19 @@ class Receta {
     public function __construct() {
         $database = new Database();
         $this->db = $database->getConnection();
+        $this->migrateCategoria();
+    }
+
+    private function migrateCategoria() {
+        try {
+            // Cambiar categoria a VARCHAR para soportar nuevas categorías
+            $col = $this->db->query("SHOW COLUMNS FROM {$this->table} LIKE 'categoria'")->fetch();
+            if ($col && strpos(strtolower($col['Type']), 'enum') !== false) {
+                $this->db->exec("ALTER TABLE {$this->table} MODIFY COLUMN categoria VARCHAR(50) NOT NULL DEFAULT 'comida'");
+            }
+        } catch (PDOException $e) {
+            // Silencioso
+        }
     }
 
     public function getActive() {

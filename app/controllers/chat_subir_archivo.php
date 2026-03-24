@@ -32,13 +32,24 @@ try {
     $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
     if (!in_array($ext, $allowedExt)) throw new Exception('Tipo de archivo no permitido');
 
-    $yo   = $authController->getCurrentUser();
-    $yoId = (int)$yo['id'];
+    $yo    = $authController->getCurrentUser();
+    $yoId  = (int)$yo['id'];
+    $yoRol = strtolower($yo['rol']);
 
     if ($yoId === $destinatarioId) throw new Exception('No puedes enviarte archivos a ti mismo');
 
-    $model = new Chat();
-    if (!$model->getRolDestinatario($destinatarioId)) throw new Exception('Usuario no encontrado');
+    $model   = new Chat();
+    $destRol = $model->getRolDestinatario($destinatarioId);
+    if (!$destRol) throw new Exception('Usuario no encontrado');
+
+    // Restricción: usuario no puede INICIAR conversación con admin
+    if ($yoRol === 'usuario' && strtolower($destRol) === 'administrador') {
+        $uid = min($yoId, $destinatarioId);
+        $pid = max($yoId, $destinatarioId);
+        if (!$model->existeConversacion($uid, $pid)) {
+            throw new Exception('No puedes iniciar una conversación con el administrador');
+        }
+    }
 
     // Save file
     $uploadDir = UPLOAD_PATH . '/chat/';

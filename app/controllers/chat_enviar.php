@@ -20,12 +20,24 @@ try {
     if (strlen($contenido) > 2000) throw new Exception('Mensaje demasiado largo (max 2000 caracteres)');
 
     $yo = $authController->getCurrentUser();
-    $yoId = (int)$yo['id'];
+    $yoId  = (int)$yo['id'];
+    $yoRol = strtolower($yo['rol']);
 
     if ($yoId === $destinatarioId) throw new Exception('No puedes enviarte mensajes a ti mismo');
 
     $model = new Chat();
-    if (!$model->getRolDestinatario($destinatarioId)) throw new Exception('Usuario no encontrado');
+    $destRol = $model->getRolDestinatario($destinatarioId);
+    if (!$destRol) throw new Exception('Usuario no encontrado');
+
+    // Restricción: usuario no puede INICIAR conversación con admin
+    // (sí puede responder si la conversación ya existe)
+    if ($yoRol === 'usuario' && strtolower($destRol) === 'administrador') {
+        $uid = min($yoId, $destinatarioId);
+        $pid = max($yoId, $destinatarioId);
+        if (!$model->existeConversacion($uid, $pid)) {
+            throw new Exception('No puedes iniciar una conversación con el administrador');
+        }
+    }
 
     // Orden consistente: menor ID = usuario_id, mayor ID = profesional_id
     $usuarioId     = min($yoId, $destinatarioId);

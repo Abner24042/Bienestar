@@ -118,9 +118,11 @@ $additionalCSS = ['admin.css'];
                             <label for="receta_categoria">Categoría <span class="req">*</span></label>
                             <select id="receta_categoria" name="categoria" required>
                                 <option value="desayuno">Desayuno</option>
+                                <option value="almuerzo">Almuerzo</option>
                                 <option value="comida">Comida</option>
+                                <option value="merienda">Merienda</option>
                                 <option value="cena">Cena</option>
-                                <option value="snack">Snack</option>
+                                <option value="snack">Snacks</option>
                                 <option value="postre">Postre</option>
                             </select>
                         </div>

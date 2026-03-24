@@ -566,7 +566,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <?php endif; ?>
 
         <!-- Gestión de Planes Personalizados -->
-        <div class="admin-section" style="width: 100%;">
+        <div class="admin-section" style="width: 100%; overflow: visible;">
             <h2>📋 Gestión de Planes Personalizados</h2>
             <div class="form-group" style="max-width:420px; margin-bottom:1.5rem; position:relative;">
                 <label>Buscar usuario</label>
