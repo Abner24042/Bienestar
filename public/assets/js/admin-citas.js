@@ -44,25 +44,44 @@ function renderAppointments(appointments) {
     }
 
     const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const today = new Date().toISOString().split('T')[0];
 
     tbody.innerHTML = appointments.map(apt => {
         const parts = apt.fecha.split('-');
         const fechaStr = `${parseInt(parts[2])} ${meses[parseInt(parts[1]) - 1]} ${parts[0]}`;
         const hora = apt.hora ? apt.hora.substring(0, 5) : '--:--';
         const paciente = apt.nombre || apt.correo || 'Desconocido';
+        const pacienteCorreo = apt.correo || '';
         const profesional = apt.profesional_correo || 'Sin asignar';
 
+        let estadoBadge;
+        if (apt.fecha < today) {
+            estadoBadge = '<span class="status-badge status-inactive">Pasada</span>';
+        } else if (apt.fecha === today) {
+            estadoBadge = '<span class="status-badge" style="background:#fff3e0;color:#e65100;">Hoy</span>';
+        } else {
+            estadoBadge = '<span class="status-badge status-active">Próxima</span>';
+        }
+
         return `<tr>
-            <td>${apt.id}</td>
-            <td>${escapeHtml(paciente)}</td>
-            <td>${escapeHtml(apt.titulo)}</td>
-            <td>${fechaStr}</td>
-            <td>${hora}</td>
-            <td class="text-small">${escapeHtml(profesional)}</td>
+            <td class="td-id">#${apt.id}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="adminCancelAppointment(${apt.id})">
-                    Cancelar
-                </button>
+                <div class="td-title">${escapeHtml(apt.titulo)}</div>
+            </td>
+            <td>
+                <div class="td-title">${escapeHtml(paciente)}</div>
+                ${pacienteCorreo ? `<div class="td-sub">${escapeHtml(pacienteCorreo)}</div>` : ''}
+            </td>
+            <td>
+                <div class="td-title">${fechaStr}</div>
+                <div class="td-sub">⏰ ${hora}</div>
+            </td>
+            <td class="td-sub">${escapeHtml(profesional)}</td>
+            <td>${estadoBadge}</td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn btn-danger btn-sm" onclick="adminCancelAppointment(${apt.id})">Cancelar</button>
+                </div>
             </td>
         </tr>`;
     }).join('');

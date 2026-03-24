@@ -40,7 +40,7 @@ $additionalCSS = ['admin.css'];
             </div>
             <div class="stat-card">
                 <div class="stat-icon" style="background: #e8f5e9;">
-                    <span style="font-size: 1.5rem;">📋</span>
+                    <span style="font-size: 1.5rem;">✅</span>
                 </div>
                 <div class="stat-content">
                     <h3>PRÓXIMAS</h3>
@@ -48,7 +48,7 @@ $additionalCSS = ['admin.css'];
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon" style="background: #e3f2fd;">
+                <div class="stat-icon" style="background: #fce4ec;">
                     <span style="font-size: 1.5rem;">📆</span>
                 </div>
                 <div class="stat-content">
@@ -60,19 +60,20 @@ $additionalCSS = ['admin.css'];
 
         <!-- Tabla de citas -->
         <div class="admin-section" style="width: 100%;">
-            <h2>Todas las Citas</h2>
-            <p>Lista de citas registradas en el sistema</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Todas las Citas</h2>
+            </div>
 
-            <div class="admin-table-wrapper" style="margin-top: 1.5rem;">
+            <div class="admin-table-wrapper">
                 <table class="admin-table">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Cita</th>
                             <th>Paciente</th>
-                            <th>Título</th>
                             <th>Fecha</th>
-                            <th>Hora</th>
                             <th>Profesional</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

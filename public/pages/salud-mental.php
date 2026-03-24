@@ -18,26 +18,66 @@ $additionalCSS = ['salud-mental.css'];
 
 <div class="content-wrapper">
     <div class="page-header">
-        <h1>Salud Mental <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></h1>
+        <h1>Salud Mental <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></h1>
         <p>Cuida tu bienestar emocional y mental</p>
     </div>
 
-    <!-- Test Destacado -->
-    <div class="featured-test">
-        <div class="test-content">
-            <h2>Test de Bienestar Mental</h2>
-            <p>Evalúa tu estado emocional actual con nuestro test científicamente validado</p>
-            <button class="btn btn-primary btn-large" data-modal-open="modalTest">Realizar Test</button>
+    <!-- Hero compacto: Test + Mood check -->
+    <div class="sm-hero">
+        <div class="sm-hero-left">
+            <span class="sm-hero-badge">Test de Bienestar Mental</span>
+            <h2>¿Cómo está tu salud mental hoy?</h2>
+            <p>Evalúa tu estado emocional con nuestro test validado y recibe recomendaciones personalizadas.</p>
+            <button class="btn btn-primary" data-modal-open="modalTest" style="font-size:1rem;padding:12px 28px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Realizar Test
+            </button>
+        </div>
+        <div class="sm-hero-right">
+            <p class="mood-label">¿Cómo te sientes ahora?</p>
+            <div class="mood-options">
+                <button class="mood-btn" data-mood="5" title="Muy bien">😄</button>
+                <button class="mood-btn" data-mood="4" title="Bien">🙂</button>
+                <button class="mood-btn" data-mood="3" title="Regular">😐</button>
+                <button class="mood-btn" data-mood="2" title="Mal">😔</button>
+                <button class="mood-btn" data-mood="1" title="Muy mal">😟</button>
+            </div>
+            <p class="mood-response" id="moodResponse"></p>
+        </div>
+    </div>
+
+    <!-- Widget de Respiración Guiada -->
+    <div class="breathing-widget sm-reveal">
+        <div class="breathing-info">
+            <div class="breathing-badge">Ejercicio interactivo</div>
+            <h3>Respiración 4-4-4</h3>
+            <p>Reduce el estrés en menos de 2 minutos. Sigue el ritmo del círculo.</p>
+            <div class="breathing-phase-label" id="breathingPhase">Presiona iniciar cuando estés listo</div>
+            <div class="breathing-counter" id="breathingCounter" style="display:none;">
+                <span id="breathingCount">4</span>
+            </div>
+            <button class="btn btn-outline breathing-btn" id="breathingBtn" onclick="toggleBreathing()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Iniciar
+            </button>
+        </div>
+        <div class="breathing-visual">
+            <div class="breathing-ring-outer"></div>
+            <div class="breathing-ring-mid"></div>
+            <div class="breathing-circle" id="breathingCircle">
+                <span id="breathingEmoji">🌬️</span>
+            </div>
         </div>
     </div>
 
     <!-- Recursos de Salud Mental -->
     <div class="mental-health-resources">
-        <h2>Recursos y Técnicas <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></h2>
+        <h2>Recursos y Técnicas <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></h2>
         <div class="resources-grid">
-            <!-- Recurso 1: Meditación -->
-            <div class="resource-card">
-                <div class="resource-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9c27b0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1"/><path d="M12 8c-2 2-4 3-4 6h8c0-3-2-4-4-6Z"/><path d="M8 14c0 3 1.5 5 4 5s4-2 4-5"/><path d="M6 14H4m14 0h2"/></svg></div>
+            <div class="resource-card sm-reveal">
+                <div class="resource-icon" style="color:#9c27b0;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1"/><path d="M12 8c-2 2-4 3-4 6h8c0-3-2-4-4-6Z"/><path d="M8 14c0 3 1.5 5 4 5s4-2 4-5"/><path d="M6 14H4m14 0h2"/></svg>
+                </div>
                 <h3>Meditación Guiada</h3>
                 <p>Técnicas de meditación para reducir el estrés y mejorar el enfoque</p>
                 <ul class="resource-list">
@@ -49,9 +89,10 @@ $additionalCSS = ['salud-mental.css'];
                 <button class="btn btn-outline" data-modal-open="modalMeditacion">Ver Técnicas</button>
             </div>
 
-            <!-- Recurso 2: Manejo del Estrés -->
-            <div class="resource-card">
-                <div class="resource-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 12H3"/><path d="M21 6H3"/><path d="M21 18H3"/></svg></div>
+            <div class="resource-card sm-reveal">
+                <div class="resource-icon" style="color:#2196f3;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 12H3"/><path d="M21 6H3"/><path d="M21 18H3"/></svg>
+                </div>
                 <h3>Manejo del Estrés</h3>
                 <p>Estrategias efectivas para manejar el estrés académico y personal</p>
                 <ul class="resource-list">
@@ -63,9 +104,10 @@ $additionalCSS = ['salud-mental.css'];
                 <button class="btn btn-outline" data-modal-open="modalEstres">Ver Estrategias</button>
             </div>
 
-            <!-- Recurso 3: Sueño Saludable -->
-            <div class="resource-card">
-                <div class="resource-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3f51b5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></div>
+            <div class="resource-card sm-reveal">
+                <div class="resource-icon" style="color:#3f51b5;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </div>
                 <h3>Sueño Saludable</h3>
                 <p>Mejora la calidad de tu sueño con hábitos saludables</p>
                 <ul class="resource-list">
@@ -77,9 +119,10 @@ $additionalCSS = ['salud-mental.css'];
                 <button class="btn btn-outline" data-modal-open="modalSueno">Ver Consejos</button>
             </div>
 
-            <!-- Recurso 4: Mindfulness -->
-            <div class="resource-card">
-                <div class="resource-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="resource-card sm-reveal">
+                <div class="resource-icon" style="color:#e91e63;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
                 <h3>Mindfulness</h3>
                 <p>Practica la atención plena en tu vida diaria</p>
                 <ul class="resource-list">
@@ -93,64 +136,71 @@ $additionalCSS = ['salud-mental.css'];
         </div>
     </div>
 
-    <!-- Consejos Rápidos -->
-    <div class="quick-tips">
-        <h2>Consejos para tu Bienestar <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></h2>
-        <div class="tips-container">
-            <div class="tip-item">
-                <div class="tip-number">1</div>
-                <div class="tip-content">
-                    <h3>Conexión Social</h3>
-                    <p>Mantén contacto regular con amigos y familia. Las relaciones sociales son fundamentales para la salud mental.</p>
-                </div>
+    <!-- Consejos — tarjetas horizontales -->
+    <div class="quick-tips sm-reveal">
+        <h2>Consejos para tu Bienestar <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" style="vertical-align:middle;margin-left:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></h2>
+        <div class="tips-scroll">
+            <div class="tip-card">
+                <div class="tip-icon">🤝</div>
+                <div class="tip-num">01</div>
+                <h3>Conexión Social</h3>
+                <p>Mantén contacto regular con amigos y familia. Las relaciones sociales son fundamentales para la salud mental.</p>
             </div>
-
-            <div class="tip-item">
-                <div class="tip-number">2</div>
-                <div class="tip-content">
-                    <h3>Actividad Física</h3>
-                    <p>El ejercicio regular libera endorfinas que mejoran el estado de ánimo y reducen el estrés.</p>
-                </div>
+            <div class="tip-card">
+                <div class="tip-icon">🏃</div>
+                <div class="tip-num">02</div>
+                <h3>Actividad Física</h3>
+                <p>El ejercicio regular libera endorfinas que mejoran el estado de ánimo y reducen el estrés.</p>
             </div>
-
-            <div class="tip-item">
-                <div class="tip-number">3</div>
-                <div class="tip-content">
-                    <h3>Establece Límites</h3>
-                    <p>Aprende a decir no y establece límites saludables en tu vida personal y académica.</p>
-                </div>
+            <div class="tip-card">
+                <div class="tip-icon">🛑</div>
+                <div class="tip-num">03</div>
+                <h3>Establece Límites</h3>
+                <p>Aprende a decir no y establece límites saludables en tu vida personal y académica.</p>
             </div>
-
-            <div class="tip-item">
-                <div class="tip-number">4</div>
-                <div class="tip-content">
-                    <h3>Busca Ayuda</h3>
-                    <p>No dudes en buscar apoyo profesional si lo necesitas. Pedir ayuda es un signo de fortaleza.</p>
-                </div>
+            <div class="tip-card">
+                <div class="tip-icon">💬</div>
+                <div class="tip-num">04</div>
+                <h3>Busca Ayuda</h3>
+                <p>No dudes en buscar apoyo profesional si lo necesitas. Pedir ayuda es un signo de fortaleza.</p>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">📖</div>
+                <div class="tip-num">05</div>
+                <h3>Desconéctate</h3>
+                <p>Tómate momentos sin pantallas. Leer, caminar o simplemente descansar recarga tu energía mental.</p>
             </div>
         </div>
     </div>
 
     <!-- Línea de Ayuda -->
-    <div class="help-line">
+    <div class="help-line sm-reveal">
         <div class="help-line-content">
-            <h2>¿Necesitas Hablar con Alguien?</h2>
-            <p>Si estás pasando por un momento difícil, recuerda que no estás solo.</p>
+            <div class="help-line-text">
+                <h2>¿Necesitas Hablar con Alguien?</h2>
+                <p>Si estás pasando por un momento difícil, recuerda que no estás solo.</p>
+            </div>
             <div class="help-contacts">
                 <div class="contact-item">
-                    <strong>Línea de Crisis 24/7:</strong>
-                    <a href="tel:8005553535">800-555-3535</a>
+                    <span class="contact-icon">📞</span>
+                    <div>
+                        <strong>Línea de Crisis 24/7</strong>
+                        <a href="tel:8005553535">800-555-3535</a>
+                    </div>
                 </div>
                 <div class="contact-item">
-                    <strong>Servicios Psicológicos IEST:</strong>
-                    <a href="mailto:psicologia@iest.edu.mx">psicologia@iest.edu.mx</a>
+                    <span class="contact-icon">✉️</span>
+                    <div>
+                        <strong>Psicología IEST</strong>
+                        <a href="mailto:psicologia@iest.edu.mx">psicologia@iest.edu.mx</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal: Meditación Guiada -->
+<!-- Modales (sin cambios) -->
 <?php
 $modalId = 'modalMeditacion';
 $modalTitle = 'Meditación Guiada';
@@ -160,7 +210,6 @@ $modalContent = '
     <div class="resource-modal-intro">
         <p>La meditación es una práctica que te ayuda a entrenar tu mente para enfocarte y redirigir tus pensamientos. Aquí tienes técnicas que puedes practicar en cualquier momento.</p>
     </div>
-
     <div class="technique-section">
         <h4>Meditación de 5 Minutos</h4>
         <p>Ideal para principiantes o cuando tienes poco tiempo.</p>
@@ -173,7 +222,6 @@ $modalContent = '
             <li>Continúa por 5 minutos</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Respiración Consciente (4-7-8)</h4>
         <p>Técnica poderosa para calmar el sistema nervioso rápidamente.</p>
@@ -185,7 +233,6 @@ $modalContent = '
             <li>Repite el ciclo 4 veces</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Escaneo Corporal</h4>
         <p>Conecta con tu cuerpo y libera la tensión acumulada.</p>
@@ -198,7 +245,6 @@ $modalContent = '
             <li>Finaliza con 3 respiraciones profundas</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Visualización Positiva</h4>
         <p>Usa el poder de tu imaginación para generar calma y bienestar.</p>
@@ -210,7 +256,6 @@ $modalContent = '
             <li>Antes de abrir los ojos, lleva esa sensación de paz contigo</li>
         </ol>
     </div>
-
     <div class="resource-tip">
         <strong>Consejo:</strong> Practica al menos una de estas técnicas diariamente durante 21 días para crear un hábito. Puedes empezar con solo 5 minutos al día.
     </div>
@@ -219,7 +264,6 @@ $modalContent = '
 include '../../app/views/components/modal.php';
 ?>
 
-<!-- Modal: Manejo del Estrés -->
 <?php
 $modalId = 'modalEstres';
 $modalTitle = 'Manejo del Estrés';
@@ -227,9 +271,8 @@ $modalSize = 'large';
 $modalContent = '
 <div class="resource-modal-content">
     <div class="resource-modal-intro">
-        <p>El estrés académico es una de las principales preocupaciones de los estudiantes universitarios. Aquí encontrarás estrategias probadas para manejarlo efectivamente.</p>
+        <p>El estrés es una respuesta natural. Aquí encontrarás estrategias probadas para manejarlo efectivamente.</p>
     </div>
-
     <div class="technique-section">
         <h4>Técnicas de Relajación Muscular Progresiva</h4>
         <p>Reduce la tensión física que acompaña al estrés.</p>
@@ -241,7 +284,6 @@ $modalContent = '
             <li>Termina tensando todo el cuerpo 5 segundos y soltando</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Organización del Tiempo</h4>
         <p>Planificar reduce la sensación de estar abrumado.</p>
@@ -252,37 +294,22 @@ $modalContent = '
             <li><strong>Planificación semanal:</strong> Dedica 15 minutos cada domingo a planear tu semana</li>
         </ul>
     </div>
-
     <div class="technique-section">
         <h4>Ejercicios de Respiración Anti-Estrés</h4>
-        <p>Respuestas rápidas cuando sientes que el estrés te supera.</p>
         <ul>
             <li><strong>Respiración cuadrada:</strong> Inhala 4s, sostén 4s, exhala 4s, sostén 4s</li>
             <li><strong>Suspiro fisiológico:</strong> Doble inhalación por nariz + exhalación larga por boca</li>
             <li><strong>Respiración abdominal:</strong> Pon la mano en el abdomen, respira para que se eleve (no el pecho)</li>
         </ul>
     </div>
-
-    <div class="technique-section">
-        <h4>Pausas Activas</h4>
-        <p>Rompe el ciclo de estrés con movimiento.</p>
-        <ul>
-            <li>Cada hora de estudio, levántate y estira por 5 minutos</li>
-            <li>Camina al aire libre por 10 minutos entre clases</li>
-            <li>Haz rotaciones de cuello y hombros cuando sientas tensión</li>
-            <li>Sacude manos y pies para liberar energía acumulada</li>
-        </ul>
-    </div>
-
     <div class="resource-tip">
-        <strong>Recuerda:</strong> El estrés moderado es normal y puede ser motivador. El objetivo no es eliminarlo, sino manejarlo para que no afecte tu bienestar.
+        <strong>Recuerda:</strong> El estrés moderado es normal y puede ser motivador. El objetivo no es eliminarlo, sino manejarlo.
     </div>
 </div>
 ';
 include '../../app/views/components/modal.php';
 ?>
 
-<!-- Modal: Sueño Saludable -->
 <?php
 $modalId = 'modalSueno';
 $modalTitle = 'Sueño Saludable';
@@ -290,12 +317,10 @@ $modalSize = 'large';
 $modalContent = '
 <div class="resource-modal-content">
     <div class="resource-modal-intro">
-        <p>Dormir bien es fundamental para el rendimiento académico, la memoria y la salud emocional. Un estudiante necesita entre 7 y 9 horas de sueño de calidad.</p>
+        <p>Dormir bien es fundamental para el rendimiento, la memoria y la salud emocional. Necesitas entre 7 y 9 horas de sueño de calidad.</p>
     </div>
-
     <div class="technique-section">
         <h4>Rutina de Sueño</h4>
-        <p>Crea un ritual nocturno que le indique a tu cuerpo que es hora de dormir.</p>
         <ol>
             <li>Establece una hora fija para dormir y despertar (incluso fines de semana)</li>
             <li>30 minutos antes: apaga pantallas (celular, laptop, TV)</li>
@@ -304,52 +329,24 @@ $modalContent = '
             <li>En la cama: practica respiración profunda o escaneo corporal</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Higiene del Sueño</h4>
-        <p>Hábitos diarios que mejoran la calidad de tu descanso.</p>
         <ul>
             <li><strong>Evita la cafeína</strong> después de las 2:00 PM</li>
             <li><strong>No hagas siestas</strong> mayores a 20 minutos después de las 3:00 PM</li>
             <li><strong>Haz ejercicio</strong> regularmente, pero no 3 horas antes de dormir</li>
             <li><strong>Evita comidas pesadas</strong> en las 2 horas previas a acostarte</li>
-            <li><strong>Limita el alcohol:</strong> aunque da sueño, reduce la calidad del descanso</li>
             <li><strong>Usa la cama solo para dormir:</strong> no estudies ni trabajes en ella</li>
         </ul>
     </div>
-
-    <div class="technique-section">
-        <h4>Relajación Nocturna</h4>
-        <p>Técnicas para calmar la mente antes de dormir.</p>
-        <ul>
-            <li><strong>Escritura terapéutica:</strong> Escribe tus preocupaciones en un cuaderno para "sacarlas" de tu mente</li>
-            <li><strong>Lista de gratitud:</strong> Anota 3 cosas buenas que pasaron hoy</li>
-            <li><strong>Meditación guiada:</strong> Usa una app de meditación para dormir (5-10 min)</li>
-            <li><strong>Relajación muscular:</strong> Tensa y relaja cada grupo muscular</li>
-        </ul>
-    </div>
-
-    <div class="technique-section">
-        <h4>Ambiente Óptimo para Dormir</h4>
-        <p>Tu espacio de descanso importa más de lo que crees.</p>
-        <ul>
-            <li><strong>Temperatura:</strong> Mantén el cuarto entre 18-22°C</li>
-            <li><strong>Oscuridad:</strong> Usa cortinas oscuras o antifaz</li>
-            <li><strong>Silencio:</strong> Usa tapones o sonidos blancos si hay ruido</li>
-            <li><strong>Orden:</strong> Un espacio limpio y organizado reduce la ansiedad</li>
-            <li><strong>Modo nocturno:</strong> Activa el filtro de luz azul en tus dispositivos</li>
-        </ul>
-    </div>
-
     <div class="resource-tip">
-        <strong>Dato:</strong> Después de 17 horas sin dormir, tu rendimiento cognitivo es equivalente a tener un nivel de alcohol en sangre de 0.05%. ¡Prioriza tu descanso!
+        <strong>Dato:</strong> Después de 17 horas sin dormir, tu rendimiento cognitivo es equivalente a un nivel de alcohol de 0.05%. ¡Prioriza tu descanso!
     </div>
 </div>
 ';
 include '../../app/views/components/modal.php';
 ?>
 
-<!-- Modal: Mindfulness -->
 <?php
 $modalId = 'modalMindfulness';
 $modalTitle = 'Mindfulness - Atención Plena';
@@ -357,23 +354,11 @@ $modalSize = 'large';
 $modalContent = '
 <div class="resource-modal-content">
     <div class="resource-modal-intro">
-        <p>El mindfulness o atención plena consiste en prestar atención al momento presente sin juzgar. Esta práctica reduce la ansiedad, mejora la concentración y aumenta el bienestar general.</p>
+        <p>El mindfulness consiste en prestar atención al momento presente sin juzgar. Reduce la ansiedad, mejora la concentración y aumenta el bienestar general.</p>
     </div>
-
-    <div class="technique-section">
-        <h4>Ejercicios Diarios de Mindfulness</h4>
-        <p>Incorpora la atención plena en actividades cotidianas.</p>
-        <ul>
-            <li><strong>Comer consciente:</strong> En una comida al día, come sin distracciones. Observa colores, texturas, sabores y aromas</li>
-            <li><strong>Caminar consciente:</strong> Al caminar a clase, nota cada paso, la temperatura del aire, los sonidos a tu alrededor</li>
-            <li><strong>Escucha activa:</strong> En una conversación, enfócate completamente en lo que la otra persona dice sin planear tu respuesta</li>
-            <li><strong>Ducha consciente:</strong> Siente el agua, la temperatura, los aromas del jabón, las sensaciones en tu piel</li>
-        </ul>
-    </div>
-
     <div class="technique-section">
         <h4>Atención al Presente (Técnica 5-4-3-2-1)</h4>
-        <p>Cuando te sientas ansioso o desconectado, usa tus sentidos para anclarte al presente.</p>
+        <p>Cuando te sientas ansioso, usa tus sentidos para anclarte al presente.</p>
         <ol>
             <li>Nombra <strong>5 cosas</strong> que puedes <strong>ver</strong></li>
             <li>Nombra <strong>4 cosas</strong> que puedes <strong>tocar</strong></li>
@@ -382,32 +367,26 @@ $modalContent = '
             <li>Nombra <strong>1 cosa</strong> que puedes <strong>saborear</strong></li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Aceptación Emocional</h4>
-        <p>Aprende a estar con tus emociones sin luchar contra ellas.</p>
         <ol>
             <li><strong>Reconoce:</strong> "Estoy sintiendo [emoción]" - ponle nombre</li>
             <li><strong>Permite:</strong> No intentes eliminar la emoción, déjala estar</li>
-            <li><strong>Observa:</strong> ¿Dónde la sientes en tu cuerpo? ¿Tiene forma, color, temperatura?</li>
+            <li><strong>Observa:</strong> ¿Dónde la sientes en tu cuerpo?</li>
             <li><strong>Respira:</strong> Dirige tu respiración hacia esa sensación</li>
-            <li><strong>Suelta:</strong> Con cada exhalación, imagina que la intensidad disminuye naturalmente</li>
+            <li><strong>Suelta:</strong> Con cada exhalación, la intensidad disminuye</li>
         </ol>
     </div>
-
     <div class="technique-section">
         <h4>Práctica de Gratitud Diaria</h4>
-        <p>La gratitud entrena tu cerebro para enfocarse en lo positivo.</p>
         <ul>
             <li>Cada mañana, piensa en 3 cosas por las que estás agradecido</li>
             <li>Sé específico: no solo "mi familia", sino "la llamada que tuve con mi mamá ayer"</li>
-            <li>Incluye cosas pequeñas: un buen café, una sonrisa de alguien, el clima agradable</li>
-            <li>Antes de dormir, repasa los mejores momentos del día</li>
+            <li>Incluye cosas pequeñas: un buen café, una sonrisa, el clima agradable</li>
         </ul>
     </div>
-
     <div class="resource-tip">
-        <strong>Dato científico:</strong> Estudios demuestran que practicar mindfulness por 8 semanas cambia físicamente las áreas del cerebro asociadas con la memoria, la empatía y el estrés.
+        <strong>Dato científico:</strong> Practicar mindfulness por 8 semanas cambia físicamente las áreas del cerebro asociadas con la memoria, la empatía y el estrés.
     </div>
 </div>
 ';
@@ -436,7 +415,6 @@ $modalContent = '
             <label><input type="radio" name="q1" value="4"> Siempre</label>
         </div>
     </div>
-
     <div class="test-question">
         <h4>2. ¿Has tenido dificultad para concentrarte?</h4>
         <div class="test-options">
@@ -447,7 +425,6 @@ $modalContent = '
             <label><input type="radio" name="q2" value="4"> Siempre</label>
         </div>
     </div>
-
     <div class="test-question">
         <h4>3. ¿Te has sentido triste o decaído?</h4>
         <div class="test-options">
@@ -458,7 +435,6 @@ $modalContent = '
             <label><input type="radio" name="q3" value="4"> Siempre</label>
         </div>
     </div>
-
     <div class="test-question">
         <h4>4. ¿Has tenido problemas para dormir?</h4>
         <div class="test-options">
@@ -469,7 +445,6 @@ $modalContent = '
             <label><input type="radio" name="q4" value="4"> Siempre</label>
         </div>
     </div>
-
     <div class="test-question">
         <h4>5. ¿Te sientes optimista sobre el futuro?</h4>
         <div class="test-options">
@@ -480,7 +455,6 @@ $modalContent = '
             <label><input type="radio" name="q5" value="0"> Nunca</label>
         </div>
     </div>
-
     <div class="test-actions">
         <button type="submit" class="btn btn-primary btn-block btn-large">Ver Resultados</button>
     </div>

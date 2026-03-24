@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('formReceta').reset();
         document.getElementById('receta_id').value = '';
         document.getElementById('receta_imagen_preview').style.display = 'none';
+        document.getElementById('receta_preview_wrap').style.display = 'none';
         document.getElementById('modalReceta').style.display = 'flex';
     });
 
@@ -24,15 +25,20 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('receta_imagen').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('receta_imagen_preview');
+        const wrap = document.getElementById('receta_preview_wrap');
+        const nameEl = document.getElementById('receta_preview_name');
         if (file) {
             const reader = new FileReader();
             reader.onload = function(ev) {
                 preview.src = ev.target.result;
                 preview.style.display = 'block';
+                wrap.style.display = 'flex';
+                if (nameEl) nameEl.textContent = file.name;
             };
             reader.readAsDataURL(file);
         } else {
             preview.style.display = 'none';
+            wrap.style.display = 'none';
         }
     });
 });
@@ -47,37 +53,25 @@ async function cargarRecetas() {
             recetasData = data.recetas;
             tbody.innerHTML = data.recetas.map(receta => `
                 <tr>
-                    <td>${receta.id}</td>
+                    <td class="td-id">#${receta.id}</td>
+                    <td>${receta.imagen
+                        ? `<img src="${escapar(receta.imagen)}" alt="Imagen" class="table-thumb">`
+                        : '<div class="table-thumb-placeholder">🍽️</div>'}</td>
                     <td>
-                        ${receta.imagen
-                            ? `<img src="${escapar(receta.imagen)}" alt="Imagen" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">`
-                            : '<span style="color: #999;">Sin imagen</span>'}
+                        <div class="td-title">${escapar(receta.titulo)}</div>
+                        ${receta.tiempo_preparacion ? `<div class="td-sub">⏱ ${receta.tiempo_preparacion} min</div>` : ''}
                     </td>
-                    <td>${escapar(receta.titulo)}</td>
+                    <td><span class="rol-badge" style="background:${getCategoriaColor(receta.categoria)};">${getCategoriaLabel(receta.categoria)}</span></td>
+                    <td>${receta.calorias ? receta.calorias + ' kcal' : '—'}</td>
+                    <td><span class="rol-badge" style="background:${receta.activo == 1 ? '#34A853' : '#9e9e9e'};">${receta.activo == 1 ? 'Activo' : 'Inactivo'}</span></td>
                     <td>
-                        <span class="rol-badge" style="background: ${getCategoriaColor(receta.categoria)};">
-                            ${getCategoriaLabel(receta.categoria)}
-                        </span>
-                    </td>
-                    <td>${receta.calorias ? receta.calorias + ' kcal' : 'N/A'}</td>
-                    <td>
-                        <span class="rol-badge" style="background: ${receta.activo == 1 ? '#34A853' : '#EA4335'};">
-                            ${receta.activo == 1 ? 'Activo' : 'Inactivo'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm" onclick="editarReceta(${receta.id})">
-                            Editar
-                        </button>
-                        <button class="btn btn-sm" style="background: ${receta.activo == 1 ? '#EA4335' : '#34A853'}; color: white; border: none; margin-left: 4px;"
-                                onclick="toggleReceta(${receta.id}, ${receta.activo == 1 ? 0 : 1})">
-                            ${receta.activo == 1 ? 'Desactivar' : 'Activar'}
-                        </button>
-                        <button class="btn btn-sm"
-                                style="background: #c0392b; color: white; border: none; margin-left: 4px;"
-                                onclick="eliminarReceta(${receta.id}, '${escapar(receta.titulo)}')">
-                            Eliminar
-                        </button>
+                        <div class="action-btns">
+                            <button class="btn btn-secondary btn-sm" onclick="editarReceta(${receta.id})">Editar</button>
+                            <button class="btn btn-sm" style="background:${receta.activo == 1 ? '#EA4335' : '#34A853'};color:white;"
+                                    onclick="toggleReceta(${receta.id}, ${receta.activo == 1 ? 0 : 1})">${receta.activo == 1 ? 'Desactivar' : 'Activar'}</button>
+                            <button class="btn btn-sm" style="background:#c0392b;color:white;"
+                                    onclick="eliminarReceta(${receta.id}, '${escapar(receta.titulo)}')">Eliminar</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -132,11 +126,16 @@ function editarReceta(id) {
 
     // Show existing image preview
     const preview = document.getElementById('receta_imagen_preview');
+    const wrap = document.getElementById('receta_preview_wrap');
+    const nameEl = document.getElementById('receta_preview_name');
     if (receta.imagen) {
         preview.src = receta.imagen;
         preview.style.display = 'block';
+        wrap.style.display = 'flex';
+        if (nameEl) nameEl.textContent = 'Imagen actual';
     } else {
         preview.style.display = 'none';
+        wrap.style.display = 'none';
     }
 
     // Reset file input

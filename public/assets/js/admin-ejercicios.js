@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('formEjercicio').reset();
         document.getElementById('ejercicio_id').value = '';
         document.getElementById('ejercicio_imagen_preview').style.display = 'none';
+        document.getElementById('ejercicio_preview_wrap').style.display = 'none';
         document.getElementById('modalEjercicio').style.display = 'flex';
     });
 
@@ -24,15 +25,20 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('ejercicio_imagen').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('ejercicio_imagen_preview');
+        const wrap = document.getElementById('ejercicio_preview_wrap');
+        const nameEl = document.getElementById('ejercicio_preview_name');
         if (file) {
             const reader = new FileReader();
             reader.onload = function(ev) {
                 preview.src = ev.target.result;
                 preview.style.display = 'block';
+                wrap.style.display = 'flex';
+                if (nameEl) nameEl.textContent = file.name;
             };
             reader.readAsDataURL(file);
         } else {
             preview.style.display = 'none';
+            wrap.style.display = 'none';
         }
     });
 });
@@ -47,44 +53,26 @@ async function cargarEjercicios() {
             ejerciciosData = data.ejercicios;
             tbody.innerHTML = data.ejercicios.map(ej => `
                 <tr>
-                    <td>${ej.id}</td>
+                    <td class="td-id">#${ej.id}</td>
+                    <td>${ej.imagen
+                        ? `<img src="${escapar(ej.imagen)}" alt="img" class="table-thumb">`
+                        : '<div class="table-thumb-placeholder">🏋️</div>'}</td>
                     <td>
-                        ${ej.imagen
-                            ? `<img src="${escapar(ej.imagen)}" alt="img" style="width:50px; height:50px; object-fit:cover; border-radius:6px;">`
-                            : '<span style="color:#aaa;">Sin imagen</span>'}
+                        <div class="td-title">${escapar(ej.titulo)}</div>
+                        ${ej.duracion ? `<div class="td-sub">⏱ ${ej.duracion} min</div>` : ''}
                     </td>
-                    <td>${escapar(ej.titulo)}</td>
+                    <td><span class="rol-badge" style="background:#4285F4;">${escapar(ej.tipo)}</span></td>
+                    <td><span class="rol-badge" style="background:${getNivelColor(ej.nivel)};">${escapar(ej.nivel)}</span></td>
+                    <td>${ej.calorias_quemadas ? ej.calorias_quemadas + ' kcal' : '—'}</td>
+                    <td><span class="rol-badge" style="background:${ej.activo == 1 ? '#34A853' : '#9e9e9e'};">${ej.activo == 1 ? 'Activo' : 'Inactivo'}</span></td>
                     <td>
-                        <span class="rol-badge" style="background: #4285F4;">
-                            ${escapar(ej.tipo)}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="rol-badge" style="background: ${getNivelColor(ej.nivel)};">
-                            ${escapar(ej.nivel)}
-                        </span>
-                    </td>
-                    <td>${ej.duracion ? ej.duracion + ' min' : 'N/A'}</td>
-                    <td>
-                        <span class="rol-badge" style="background: ${ej.activo == 1 ? '#34A853' : '#EA4335'};">
-                            ${ej.activo == 1 ? 'Activo' : 'Inactivo'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm"
-                                onclick="editarEjercicio(${ej.id})">
-                            Editar
-                        </button>
-                        <button class="btn btn-sm"
-                                style="background: ${ej.activo == 1 ? '#EA4335' : '#34A853'}; color: white; border: none; margin-left: 4px;"
-                                onclick="toggleEjercicio(${ej.id}, ${ej.activo == 1 ? 0 : 1})">
-                            ${ej.activo == 1 ? 'Desactivar' : 'Activar'}
-                        </button>
-                        <button class="btn btn-sm"
-                                style="background: #c0392b; color: white; border: none; margin-left: 4px;"
-                                onclick="eliminarEjercicio(${ej.id}, '${escapar(ej.titulo)}')">
-                            Eliminar
-                        </button>
+                        <div class="action-btns">
+                            <button class="btn btn-secondary btn-sm" onclick="editarEjercicio(${ej.id})">Editar</button>
+                            <button class="btn btn-sm" style="background:${ej.activo == 1 ? '#EA4335' : '#34A853'};color:white;"
+                                    onclick="toggleEjercicio(${ej.id}, ${ej.activo == 1 ? 0 : 1})">${ej.activo == 1 ? 'Desactivar' : 'Activar'}</button>
+                            <button class="btn btn-sm" style="background:#c0392b;color:white;"
+                                    onclick="eliminarEjercicio(${ej.id}, '${escapar(ej.titulo)}')">Eliminar</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -129,11 +117,16 @@ function editarEjercicio(id) {
 
     // Show existing image preview
     const preview = document.getElementById('ejercicio_imagen_preview');
+    const wrap = document.getElementById('ejercicio_preview_wrap');
+    const nameEl = document.getElementById('ejercicio_preview_name');
     if (ej.imagen) {
         preview.src = ej.imagen;
         preview.style.display = 'block';
+        wrap.style.display = 'flex';
+        if (nameEl) nameEl.textContent = 'Imagen actual';
     } else {
         preview.style.display = 'none';
+        wrap.style.display = 'none';
     }
 
     document.getElementById('ejercicio_imagen').value = '';

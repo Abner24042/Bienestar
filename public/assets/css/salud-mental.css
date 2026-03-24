@@ -1,121 +1,315 @@
 /**
- * BIENIESTAR - Estilos de Salud Mental
+ * BIENIESTAR - Estilos de Salud Mental (rediseño)
  */
 
-/* Test Destacado */
-.featured-test {
+/* =====================
+   HERO COMPACTO
+   ===================== */
+.sm-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
     background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
     border-radius: 20px;
-    padding: 60px;
-    margin-bottom: 60px;
-    color: white;
-    text-align: center;
+    overflow: hidden;
+    margin-bottom: 36px;
+    animation: cardEnter 0.5s cubic-bezier(0.22,1,0.36,1) both;
 }
 
-.test-content {
-    text-align: center;
+.sm-hero-left {
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
 }
 
-.test-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+.sm-hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    width: fit-content;
 }
 
-.test-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: white;
+.sm-hero-left h2 {
+    font-size: 1.75rem;
+    color: #fff;
+    margin: 0;
+    line-height: 1.3;
 }
 
-.test-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+.sm-hero-left p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.95rem;
     line-height: 1.6;
+    margin: 0;
 }
 
-.test-emoji-single {
-    font-size: 22rem;
+.sm-hero-right {
+    background: rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+    gap: 16px;
+}
+
+.mood-label {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.mood-options {
+    display: flex;
+    gap: 10px;
+}
+
+.mood-btn {
+    font-size: 2rem;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: floatEmoji 3s ease-in-out infinite;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s, border-color 0.2s;
+    line-height: 1;
 }
 
-@keyframes floatEmoji {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+.mood-btn:hover {
+    transform: scale(1.2) translateY(-3px);
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.6);
 }
 
-/* Recursos de Salud Mental */
-.mental-health-resources {
-    margin-bottom: 60px;
+.mood-btn.selected {
+    transform: scale(1.25);
+    background: rgba(255,255,255,0.4);
+    border-color: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 
-.mental-health-resources h2 {
-    font-size: 2rem;
-    margin-bottom: 40px;
+.mood-response {
+    color: #fff;
+    font-size: 0.88rem;
     text-align: center;
+    margin: 0;
+    min-height: 1.4em;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.mood-response.visible {
+    opacity: 1;
+}
+
+/* =====================
+   WIDGET DE RESPIRACIÓN
+   ===================== */
+.breathing-widget {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    background: white;
+    border-radius: 20px;
+    padding: 36px 40px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    margin-bottom: 36px;
+    align-items: center;
+}
+
+.breathing-badge {
+    display: inline-block;
+    background: rgba(255,107,53,0.1);
+    color: #ff6b35;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.breathing-info h3 {
+    font-size: 1.4rem;
+    margin: 0 0 8px 0;
+    color: #111;
+}
+
+.breathing-info p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 18px 0;
+}
+
+.breathing-phase-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ff6b35;
+    margin-bottom: 16px;
+    min-height: 1.5em;
+    transition: opacity 0.3s ease;
+}
+
+.breathing-counter {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ff6b35;
+    margin-bottom: 14px;
+    line-height: 1;
+}
+
+.breathing-btn {
+    font-size: 0.9rem;
+    padding: 10px 24px;
+    width: fit-content;
+}
+
+.breathing-visual {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.breathing-ring-outer,
+.breathing-ring-mid {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(255,107,53,0.15);
+    animation: breathRingPulse 4s ease-in-out infinite;
+}
+
+.breathing-ring-outer {
+    width: 160px;
+    height: 160px;
+}
+
+.breathing-ring-mid {
+    width: 120px;
+    height: 120px;
+    animation-delay: 0.5s;
+    border-color: rgba(255,107,53,0.25);
+}
+
+@keyframes breathRingPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%        { transform: scale(1.08); opacity: 1; }
+}
+
+.breathing-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 6px 24px rgba(255,107,53,0.4);
+    transition: transform 0.05s linear;
+    z-index: 1;
+}
+
+.breathing-circle.animating {
+    transition: transform var(--breath-duration, 4s) ease-in-out;
+}
+
+/* =====================
+   RECURSOS
+   ===================== */
+.mental-health-resources {
+    margin-bottom: 36px;
+}
+
+.mental-health-resources h2,
+.quick-tips h2 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
     color: #111;
 }
 
 .resources-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
 }
 
 .resource-card {
     background: white;
-    padding: 40px 30px;
+    padding: 32px 24px;
     border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .resource-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.13);
 }
 
 .resource-icon {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-    text-align: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 }
 
 .resource-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.1rem;
+    margin: 0 0 8px 0;
     color: #111;
-    text-align: center;
 }
 
 .resource-card > p {
     color: #666;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.6;
-    margin-bottom: 20px;
-    text-align: center;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .resource-list {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
 }
 
 .resource-list li {
-    padding: 10px 0;
-    padding-left: 25px;
+    padding: 8px 0 8px 22px;
     position: relative;
     color: #666;
-    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.88rem;
+    border-bottom: 1px solid #f5f5f5;
 }
 
-.resource-list li:last-child {
-    border-bottom: none;
-}
+.resource-list li:last-child { border-bottom: none; }
 
 .resource-list li::before {
     content: "✓";
@@ -130,6 +324,8 @@
     border: 2px solid #ff6b35;
     color: #ff6b35;
     width: 100%;
+    margin-top: auto;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .btn-outline:hover {
@@ -137,114 +333,171 @@
     color: white;
 }
 
-/* Consejos Rápidos */
+/* =====================
+   CONSEJOS HORIZONTALES
+   ===================== */
 .quick-tips {
     background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 60px;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+    margin-bottom: 36px;
+    overflow: hidden;
 }
 
-.quick-tips h2 {
-    font-size: 2rem;
-    margin-bottom: 40px;
-    text-align: center;
-    color: #111;
-}
-
-.tips-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.tip-item {
+.tips-scroll {
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #ff6b35 #f5f5f5;
 }
 
-.tip-number {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 700;
+.tips-scroll::-webkit-scrollbar { height: 4px; }
+.tips-scroll::-webkit-scrollbar-track { background: #f5f5f5; border-radius: 2px; }
+.tips-scroll::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 2px; }
+
+.tip-card {
+    min-width: 220px;
+    max-width: 240px;
     flex-shrink: 0;
+    background: #fafafa;
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    border: 2px solid #f0f0f0;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
 }
 
-.tip-content h3 {
-    font-size: 1.2rem;
+.tip-card:hover {
+    transform: translateY(-5px);
+    border-color: #ff6b35;
+    box-shadow: 0 8px 20px rgba(255,107,53,0.12);
+}
+
+.tip-icon {
+    font-size: 2rem;
     margin-bottom: 10px;
+    display: block;
+}
+
+.tip-num {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: rgba(255,107,53,0.08);
+    line-height: 1;
+    user-select: none;
+}
+
+.tip-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
     color: #111;
+    margin: 0 0 8px 0;
 }
 
-.tip-content p {
+.tip-card p {
     color: #666;
-    line-height: 1.6;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 0;
 }
 
-/* Línea de Ayuda */
+/* =====================
+   HELP LINE
+   ===================== */
 .help-line {
     background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
-    padding: 50px;
-    border-radius: 16px;
-    text-align: center;
-    color: white;
-}
-
-.help-line-content h2 {
-    font-size: 2rem;
+    padding: 36px 40px;
+    border-radius: 20px;
     margin-bottom: 20px;
-    color: white;
 }
 
-.help-line-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+.help-line-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.help-line-text h2 {
+    font-size: 1.4rem;
+    color: white;
+    margin: 0 0 6px 0;
+}
+
+.help-line-text p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.95rem;
+    margin: 0;
 }
 
 .help-contacts {
     display: flex;
-    justify-content: center;
-    gap: 40px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
 .contact-item {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 20px 30px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px);
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: background 0.2s;
 }
+
+.contact-item:hover { background: rgba(255,255,255,0.28); }
+
+.contact-icon { font-size: 1.6rem; }
 
 .contact-item strong {
     display: block;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.8rem;
+    margin-bottom: 3px;
 }
 
 .contact-item a {
     color: white;
     text-decoration: none;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
     transition: opacity 0.2s;
 }
 
-.contact-item a:hover {
-    opacity: 0.8;
+.contact-item a:hover { opacity: 0.8; }
+
+/* =====================
+   SCROLL REVEAL
+   ===================== */
+.sm-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
-/* Test Modal */
+.sm-reveal.sm-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.resources-grid .resource-card.sm-reveal:nth-child(2) { transition-delay: 0.08s; }
+.resources-grid .resource-card.sm-reveal:nth-child(3) { transition-delay: 0.16s; }
+.resources-grid .resource-card.sm-reveal:nth-child(4) { transition-delay: 0.24s; }
+
+/* =====================
+   TEST MODAL (sin cambios)
+   ===================== */
 .test-intro {
     background: #f8f9fa;
     padding: 20px;
@@ -252,15 +505,9 @@
     margin-bottom: 30px;
 }
 
-.test-intro p {
-    margin-bottom: 10px;
-    line-height: 1.6;
-    color: #666;
-}
+.test-intro p { margin-bottom: 10px; line-height: 1.6; color: #666; }
 
-.mental-test-form {
-    max-width: 800px;
-}
+.mental-test-form { max-width: 800px; }
 
 .test-question {
     margin-bottom: 35px;
@@ -268,9 +515,7 @@
     border-bottom: 2px solid #f0f0f0;
 }
 
-.test-question:last-of-type {
-    border-bottom: none;
-}
+.test-question:last-of-type { border-bottom: none; }
 
 .test-question h4 {
     font-size: 1.1rem;
@@ -295,9 +540,7 @@
     transition: all 0.2s;
 }
 
-.test-options label:hover {
-    background: #e9ecef;
-}
+.test-options label:hover { background: #e9ecef; }
 
 .test-options input[type="radio"] {
     margin-right: 12px;
@@ -312,28 +555,17 @@
     font-weight: 600;
 }
 
-.test-actions {
-    margin-top: 40px;
-}
+.test-actions { margin-top: 40px; }
 
-/* Resultados del Test */
-.test-results {
-    text-align: center;
-}
+.test-results { text-align: center; }
 
-.test-results h3 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    color: #111;
-}
+.test-results h3 { font-size: 2rem; margin-bottom: 30px; color: #111; }
 
-.result-score {
-    margin-bottom: 40px;
-}
+.result-score { margin-bottom: 40px; }
 
 .score-circle {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     margin: 0 auto;
     border-radius: 50%;
     background: linear-gradient(135deg, #ff6b35 0%, #e55a00 100%);
@@ -342,62 +574,37 @@
     align-items: center;
     justify-content: center;
     color: white;
-    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+    animation: cardEnter 0.5s ease both;
 }
 
-.score-value {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.score-max {
-    font-size: 1.5rem;
-    opacity: 0.8;
-}
+.score-value { font-size: 3.5rem; font-weight: 700; line-height: 1; }
+.score-max   { font-size: 1.3rem; opacity: 0.8; }
 
 .result-interpretation {
     background: #f8f9fa;
-    padding: 30px;
+    padding: 24px;
     border-radius: 12px;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
     text-align: left;
 }
 
-.result-interpretation h4 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #111;
-}
-
-.result-interpretation p {
-    color: #666;
-    line-height: 1.8;
-    font-size: 1.05rem;
-}
+.result-interpretation h4 { font-size: 1.3rem; margin-bottom: 10px; color: #111; }
+.result-interpretation p  { color: #666; line-height: 1.8; }
 
 .result-recommendations {
     background: #fff9f5;
     border-left: 4px solid #ff6b35;
-    padding: 30px;
+    padding: 24px;
     border-radius: 8px;
     text-align: left;
 }
 
-.result-recommendations h4 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: #111;
-}
-
-.result-recommendations ul {
-    list-style: none;
-    padding: 0;
-}
+.result-recommendations h4 { font-size: 1.2rem; margin-bottom: 12px; color: #111; }
+.result-recommendations ul { list-style: none; padding: 0; }
 
 .result-recommendations li {
-    padding: 10px 0;
-    padding-left: 30px;
+    padding: 8px 0 8px 28px;
     position: relative;
     color: #666;
     line-height: 1.6;
@@ -409,241 +616,117 @@
     left: 0;
     color: #ff6b35;
     font-weight: bold;
-    font-size: 1.2rem;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-    .featured-test {
-        grid-template-columns: 1fr;
-        padding: 40px;
-    }
-    
-    .test-illustration {
-        height: 300px;
-    }
-    
-    .tips-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .featured-test {
-        padding: 30px 20px;
-    }
-    
-    .test-content h2 {
-        font-size: 2rem;
-    }
-    
-    .resources-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .help-contacts {
-        flex-direction: column;
-        gap: 20px;
-    }
-    
-    .score-circle {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .score-value {
-        font-size: 3rem;
-    }
-}
-
-/* ===========================================
-   DARK MODE - Salud Mental
-   =========================================== */
-[data-theme="dark"] .mental-health-resources h2 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .resource-card {
-    background: #1e1e1e;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .resource-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="dark"] .resource-card h3 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .resource-card > p {
-    color: #aaa;
-}
-
-[data-theme="dark"] .resource-list li {
-    color: #aaa;
-    border-bottom-color: #333;
-}
-
-[data-theme="dark"] .quick-tips {
-    background: #1e1e1e;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .quick-tips h2 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .tip-content h3 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .tip-content p {
-    color: #aaa;
-}
-
-[data-theme="dark"] .test-intro {
-    background: #2a2a2a;
-}
-
-[data-theme="dark"] .test-intro p {
-    color: #aaa;
-}
-
-[data-theme="dark"] .test-question {
-    border-bottom-color: #333;
-}
-
-[data-theme="dark"] .test-question h4 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .test-options label {
-    background: #2a2a2a;
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .test-options label:hover {
-    background: #333;
-}
-
-[data-theme="dark"] .test-results h3 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .result-interpretation {
-    background: #2a2a2a;
-}
-
-[data-theme="dark"] .result-interpretation h4 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .result-interpretation p {
-    color: #aaa;
-}
-
-[data-theme="dark"] .result-recommendations {
-    background: #2a2200;
-}
-
-[data-theme="dark"] .result-recommendations h4 {
-    color: #e8e8e8;
-}
-
-[data-theme="dark"] .result-recommendations li {
-    color: #aaa;
-}
-
-/* Resource Modal Content */
-.resource-modal-content {
-    max-width: 800px;
-}
+/* Resource modals */
+.resource-modal-content { max-width: 800px; }
 
 .resource-modal-intro {
     background: #f8f9fa;
     padding: 20px;
     border-radius: 12px;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
-.resource-modal-intro p {
-    color: #555;
-    line-height: 1.7;
-    font-size: 1.05rem;
-    margin: 0;
-}
+.resource-modal-intro p { color: #555; line-height: 1.7; margin: 0; }
 
 .technique-section {
-    margin-bottom: 30px;
-    padding-bottom: 25px;
+    margin-bottom: 28px;
+    padding-bottom: 22px;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.technique-section:last-of-type {
-    border-bottom: none;
-}
-
-.technique-section h4 {
-    font-size: 1.2rem;
-    color: #111;
-    margin-bottom: 10px;
-}
-
-.technique-section > p {
-    color: #666;
-    margin-bottom: 15px;
-    line-height: 1.6;
-}
-
+.technique-section:last-of-type { border-bottom: none; }
+.technique-section h4  { font-size: 1.1rem; color: #111; margin-bottom: 8px; }
+.technique-section > p { color: #666; margin-bottom: 12px; line-height: 1.6; }
 .technique-section ol,
-.technique-section ul {
-    padding-left: 20px;
-    margin: 0;
-}
-
-.technique-section li {
-    padding: 6px 0;
-    color: #555;
-    line-height: 1.6;
-}
+.technique-section ul  { padding-left: 20px; margin: 0; }
+.technique-section li  { padding: 5px 0; color: #555; line-height: 1.6; }
 
 .resource-tip {
     background: #fff9f5;
     border-left: 4px solid #ff6b35;
-    padding: 20px;
+    padding: 18px 20px;
     border-radius: 8px;
-    margin-top: 10px;
     color: #555;
     line-height: 1.6;
+    margin-top: 10px;
 }
 
-/* Dark Mode - Resource Modals */
-[data-theme="dark"] .resource-modal-intro {
-    background: #2a2a2a;
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 900px) {
+    .sm-hero { grid-template-columns: 1fr; }
+    .sm-hero-right { padding: 28px 30px 32px; }
+    .breathing-widget { grid-template-columns: 1fr; text-align: center; }
+    .breathing-visual { margin: 0 auto; }
+    .breathing-badge { margin: 0 auto 10px; }
+    .breathing-btn { margin: 0 auto; }
+    .help-line-content { flex-direction: column; align-items: flex-start; }
 }
 
-[data-theme="dark"] .resource-modal-intro p {
-    color: #bbb;
+@media (max-width: 640px) {
+    .sm-hero-left  { padding: 28px 24px; }
+    .sm-hero-left h2 { font-size: 1.4rem; }
+    .resources-grid { grid-template-columns: 1fr; }
+    .help-contacts { flex-direction: column; }
+    .mood-btn { width: 48px; height: 48px; font-size: 1.6rem; }
 }
 
-[data-theme="dark"] .technique-section {
-    border-bottom-color: #333;
+/* =====================
+   DARK MODE
+   ===================== */
+[data-theme="dark"] .breathing-widget,
+[data-theme="dark"] .resource-card,
+[data-theme="dark"] .quick-tips {
+    background: #1e1e1e;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-[data-theme="dark"] .technique-section h4 {
+[data-theme="dark"] .breathing-info h3,
+[data-theme="dark"] .mental-health-resources h2,
+[data-theme="dark"] .quick-tips h2,
+[data-theme="dark"] .resource-card h3,
+[data-theme="dark"] .tip-card h3 {
     color: #e8e8e8;
 }
 
-[data-theme="dark"] .technique-section > p {
+[data-theme="dark"] .breathing-info p,
+[data-theme="dark"] .resource-card > p,
+[data-theme="dark"] .resource-list li,
+[data-theme="dark"] .tip-card p {
     color: #aaa;
 }
 
-[data-theme="dark"] .technique-section li {
-    color: #bbb;
+[data-theme="dark"] .resource-icon { background: rgba(255,255,255,0.06); }
+
+[data-theme="dark"] .tip-card {
+    background: #252525;
+    border-color: #333;
 }
 
-[data-theme="dark"] .resource-tip {
-    background: #2a2200;
-    color: #bbb;
-}
+[data-theme="dark"] .tip-card:hover { border-color: #ff6b35; }
+
+[data-theme="dark"] .tips-scroll { scrollbar-color: #ff6b35 #333; }
+
+[data-theme="dark"] .resource-modal-intro { background: #2a2a2a; }
+[data-theme="dark"] .resource-modal-intro p { color: #bbb; }
+[data-theme="dark"] .technique-section { border-bottom-color: #333; }
+[data-theme="dark"] .technique-section h4 { color: #e8e8e8; }
+[data-theme="dark"] .technique-section > p,
+[data-theme="dark"] .technique-section li { color: #aaa; }
+[data-theme="dark"] .resource-tip { background: #2a2200; color: #bbb; }
+[data-theme="dark"] .test-intro { background: #2a2a2a; }
+[data-theme="dark"] .test-intro p { color: #aaa; }
+[data-theme="dark"] .test-question { border-bottom-color: #333; }
+[data-theme="dark"] .test-question h4 { color: #e8e8e8; }
+[data-theme="dark"] .test-options label { background: #2a2a2a; color: #e8e8e8; }
+[data-theme="dark"] .test-options label:hover { background: #333; }
+[data-theme="dark"] .test-results h3 { color: #e8e8e8; }
+[data-theme="dark"] .result-interpretation { background: #2a2a2a; }
+[data-theme="dark"] .result-interpretation h4 { color: #e8e8e8; }
+[data-theme="dark"] .result-interpretation p  { color: #aaa; }
+[data-theme="dark"] .result-recommendations { background: #2a2200; }
+[data-theme="dark"] .result-recommendations h4 { color: #e8e8e8; }
+[data-theme="dark"] .result-recommendations li { color: #aaa; }

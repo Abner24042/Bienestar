@@ -26,80 +26,93 @@ $additionalCSS = ['perfil.css'];
     </div>
 
     <div class="profile-container">
-        <!-- Card de información personal -->
+        <!-- Card principal -->
         <div class="profile-card">
-            <div class="profile-avatar-section">
-                <img src="<?php echo !empty($user['foto']) ? $user['foto'] : asset('img/icons/default-avatar.svg'); ?>"
-                     alt="Avatar"
-                     class="profile-avatar-large"
-                     crossorigin="anonymous"
-                     onerror="console.error('Error loading image:', this.src); this.onerror=null; this.src='<?php echo asset('img/icons/default-avatar.svg'); ?>';">
+
+            <!-- Sidebar izquierda -->
+            <div class="profile-left">
+                <div class="profile-avatar-wrap">
+                    <img src="<?php echo !empty($user['foto']) ? $user['foto'] : asset('img/icons/default-avatar.svg'); ?>"
+                         alt="Avatar"
+                         class="profile-avatar"
+                         crossorigin="anonymous"
+                         onerror="this.onerror=null; this.src='<?php echo asset('img/icons/default-avatar.svg'); ?>';">
+                </div>
+
+                <h2 class="profile-name"><?php echo htmlspecialchars($user['nombre']); ?></h2>
+
+                <?php
+                $rolClass = match(strtolower($user['rol'])) {
+                    'usuario'       => 'role-usuario',
+                    'coach'         => 'role-coach',
+                    'nutriologo'    => 'role-nutriologo',
+                    'psicologo'     => 'role-psicologo',
+                    default         => ''
+                };
+                ?>
+                <span class="profile-role-badge <?php echo $rolClass; ?>"><?php echo htmlspecialchars($user['rol']); ?></span>
+
+                <?php if ($user['area']): ?>
+                <p class="profile-area-text"><?php echo htmlspecialchars($user['area']); ?></p>
+                <?php endif; ?>
+
                 <?php if (!isset($_SESSION['login_method']) || $_SESSION['login_method'] !== 'google'): ?>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                    <button class="btn btn-primary btn-change-photo" data-modal-open="modalChangePhoto">
-                        Cambiar Foto
-                    </button>
+                <div class="profile-photo-actions">
+                    <button class="btn btn-secondary" data-modal-open="modalChangePhoto">📷 Cambiar foto</button>
                     <?php if ($user['foto']): ?>
-                    <button class="btn btn-secondary" id="btnRemovePhoto">
-                        Quitar Foto
-                    </button>
+                    <button class="btn btn-secondary" id="btnRemovePhoto">Quitar</button>
                     <?php endif; ?>
                 </div>
                 <?php else: ?>
-                <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">
-                    Foto sincronizada desde Google
-                </p>
+                <p class="profile-google-note">Foto sincronizada desde Google</p>
                 <?php endif; ?>
-            </div>
-            
-            <div class="profile-info">
-                <div class="info-row">
-                    <label>Nombre Completo</label>
-                    <p><?php echo htmlspecialchars($user['nombre']); ?></p>
-                </div>
-                
-                <div class="info-row">
-                    <label>Correo Electrónico</label>
-                    <p><?php echo htmlspecialchars($user['correo']); ?></p>
-                </div>
-                
-                <div class="info-row">
-                    <label>Rol</label>
-                    <p>
-                        <span class="badge badge-<?php echo $user['rol'] === 'Administrador' ? 'primary' : 'secondary'; ?>">
-                            <?php echo htmlspecialchars($user['rol']); ?>
-                        </span>
-                    </p>
-                </div>
-                
-                <?php if ($user['area']): ?>
-                <div class="info-row">
-                    <label>Área</label>
-                    <p><?php echo htmlspecialchars($user['area']); ?></p>
-                </div>
-                <?php endif; ?>
-                
-                <div class="info-row">
-                    <label>Miembro desde</label>
-                    <p><?php echo date('d/m/Y', strtotime($user['fecha'])); ?></p>
-                </div>
-                
-                <div class="profile-actions">
-                    <?php if ($user['rol'] === 'Administrador'): ?>
-                    <button class="btn btn-primary" data-modal-open="modalEditProfile">
-                        Editar Perfil
-                    </button>
 
+                <?php if ($user['rol'] === 'Administrador'): ?>
+                <div class="profile-action-btns">
+                    <button class="btn btn-primary" data-modal-open="modalEditProfile">✏️ Editar perfil</button>
                     <?php if (!isset($_SESSION['login_method']) || $_SESSION['login_method'] !== 'google'): ?>
-                    <button class="btn btn-secondary" data-modal-open="modalChangePassword">
-                        Cambiar Contraseña
-                    </button>
+                    <button class="btn btn-secondary" data-modal-open="modalChangePassword">🔒 Contraseña</button>
                     <?php else: ?>
-                    <p style="color: #666; font-size: 0.9rem;">
-                        La contraseña se gestiona desde tu cuenta de Google
-                    </p>
+                    <p class="profile-google-password-note">Contraseña gestionada desde Google</p>
                     <?php endif; ?>
+                </div>
+                <?php endif; ?>
+
+                <p class="profile-since">📅 Miembro desde <?php echo date('M Y', strtotime($user['fecha'])); ?></p>
+            </div>
+
+            <!-- Panel derecho -->
+            <div class="profile-right">
+                <p class="profile-section-label">Información de la cuenta</p>
+                <div class="profile-fields">
+                    <div class="profile-field">
+                        <label>Nombre completo</label>
+                        <div class="field-value"><?php echo htmlspecialchars($user['nombre']); ?></div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Correo electrónico</label>
+                        <div class="field-value"><?php echo htmlspecialchars($user['correo']); ?></div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Rol en el sistema</label>
+                        <div class="field-value"><?php echo htmlspecialchars($user['rol']); ?></div>
+                    </div>
+                    <?php if ($user['area']): ?>
+                    <div class="profile-field">
+                        <label>Área</label>
+                        <div class="field-value"><?php echo htmlspecialchars($user['area']); ?></div>
+                    </div>
                     <?php endif; ?>
+                    <div class="profile-field">
+                        <label>Fecha de registro</label>
+                        <div class="field-value"><?php echo date('d/m/Y', strtotime($user['fecha'])); ?></div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Método de acceso</label>
+                        <div class="field-value">
+                            <?php echo (isset($_SESSION['login_method']) && $_SESSION['login_method'] === 'google') ? '🔵 Google' : '🔑 Correo y contraseña'; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,34 +120,45 @@ $additionalCSS = ['perfil.css'];
         <?php if ($user['rol'] === 'Administrador'): ?>
         <!-- Panel de Administrador -->
         <div class="admin-panel">
-            <h3>⚙️ Panel de Administrador</h3>
-            <p class="admin-description">Acceso a funciones administrativas del sistema</p>
-
+            <div class="admin-panel-header">
+                <h3>⚙️ Acceso rápido — Administrador</h3>
+            </div>
             <div class="admin-actions">
                 <a href="<?php echo url('admin'); ?>" class="admin-link">
                     <div class="admin-icon">👥</div>
                     <div>
-                        <strong>Gestionar Usuarios</strong>
-                        <span>Ver y administrar usuarios</span>
+                        <strong>Usuarios</strong>
+                        <span>Gestionar cuentas</span>
                     </div>
                 </a>
-
                 <a href="<?php echo url('admin/citas'); ?>" class="admin-link">
                     <div class="admin-icon">📅</div>
                     <div>
-                        <strong>Ver Todas las Citas</strong>
-                        <span>Administrar citas del sistema</span>
+                        <strong>Citas</strong>
+                        <span>Ver todas las citas</span>
                     </div>
                 </a>
-
-                <a href="<?php echo url('admin'); ?>" class="admin-link">
-                    <div class="admin-icon">📊</div>
+                <a href="<?php echo url('admin/recetas'); ?>" class="admin-link">
+                    <div class="admin-icon">🍽️</div>
                     <div>
-                        <strong>Reportes</strong>
-                        <span>Estadísticas y análisis</span>
+                        <strong>Recetas</strong>
+                        <span>Gestionar recetas</span>
                     </div>
                 </a>
-
+                <a href="<?php echo url('admin/ejercicios'); ?>" class="admin-link">
+                    <div class="admin-icon">💪</div>
+                    <div>
+                        <strong>Ejercicios</strong>
+                        <span>Gestionar ejercicios</span>
+                    </div>
+                </a>
+                <a href="<?php echo url('admin/noticias'); ?>" class="admin-link">
+                    <div class="admin-icon">📰</div>
+                    <div>
+                        <strong>Noticias</strong>
+                        <span>Gestionar noticias</span>
+                    </div>
+                </a>
                 <a href="<?php echo url('admin/configuracion'); ?>" class="admin-link">
                     <div class="admin-icon">⚙️</div>
                     <div>

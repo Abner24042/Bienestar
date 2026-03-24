@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('noticia_id').value = '';
         document.getElementById('noticia_imagen_preview').style.display = 'none';
         document.getElementById('noticia_imagen_preview').src = '';
+        document.getElementById('noticia_preview_wrap').style.display = 'none';
         document.getElementById('modalNoticia').style.display = 'flex';
     });
 
@@ -25,16 +26,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('noticia_imagen').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('noticia_imagen_preview');
+        const wrap = document.getElementById('noticia_preview_wrap');
+        const nameEl = document.getElementById('noticia_preview_name');
         if (file) {
             const reader = new FileReader();
             reader.onload = function(ev) {
                 preview.src = ev.target.result;
                 preview.style.display = 'block';
+                wrap.style.display = 'flex';
+                if (nameEl) nameEl.textContent = file.name;
             };
             reader.readAsDataURL(file);
         } else {
             preview.style.display = 'none';
             preview.src = '';
+            wrap.style.display = 'none';
         }
     });
 });
@@ -49,42 +55,28 @@ async function cargarNoticias() {
             noticiasData = data.noticias;
             tbody.innerHTML = data.noticias.map(noticia => `
                 <tr>
-                    <td>${noticia.id}</td>
+                    <td class="td-id">#${noticia.id}</td>
+                    <td>${noticia.imagen
+                        ? `<img src="${escapar(noticia.imagen)}" alt="Imagen" class="table-thumb">`
+                        : '<div class="table-thumb-placeholder">📰</div>'}</td>
                     <td>
-                        ${noticia.imagen
-                            ? `<img src="${escapar(noticia.imagen)}" alt="Imagen" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">`
-                            : '<span style="color: #999;">Sin imagen</span>'}
+                        <div class="td-title">${escapar(noticia.titulo)}</div>
+                        ${noticia.autor ? `<div class="td-sub">✍️ ${escapar(noticia.autor)}</div>` : ''}
                     </td>
-                    <td>${escapar(noticia.titulo)}</td>
+                    <td><span class="rol-badge" style="background:${getCategoriaColor(noticia.categoria)};">${getCategoriaLabel(noticia.categoria)}</span></td>
+                    <td><span class="rol-badge" style="background:${noticia.publicado == 1 ? '#34A853' : '#9e9e9e'};">${noticia.publicado == 1 ? 'Publicado' : 'Borrador'}</span></td>
+                    <td>${noticia.destacado == 1
+                        ? '<span class="rol-badge" style="background:#f59e0b;">⭐ Destacada</span>'
+                        : '<span style="color:#ccc;">—</span>'}</td>
                     <td>
-                        <span class="rol-badge" style="background: ${getCategoriaColor(noticia.categoria)};">
-                            ${getCategoriaLabel(noticia.categoria)}
-                        </span>
-                    </td>
-                    <td>${escapar(noticia.autor || 'N/A')}</td>
-                    <td>
-                        <span class="rol-badge" style="background: ${noticia.publicado == 1 ? '#34A853' : '#999'};">
-                            ${noticia.publicado == 1 ? 'Publicado' : 'Borrador'}
-                        </span>
-                    </td>
-                    <td>
-                        ${noticia.destacado == 1
-                            ? '<span class="rol-badge" style="background: #f59e0b;">⭐ Destacada</span>'
-                            : '<span style="color:#ccc; font-size:0.8rem;">—</span>'}
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary btn-sm" onclick="editarNoticia(${noticia.id})">
-                            Editar
-                        </button>
-                        <button class="btn btn-sm" style="background: ${noticia.publicado == 1 ? '#999' : '#34A853'}; color: white; border: none; margin-left: 4px;"
-                                onclick="toggleNoticia(${noticia.id}, ${noticia.publicado})">
-                            ${noticia.publicado == 1 ? 'Ocultar' : 'Publicar'}
-                        </button>
-                        <button class="btn btn-sm" style="background: ${noticia.destacado == 1 ? '#d97706' : '#f59e0b'}; color: white; border: none; margin-left: 4px;"
-                                onclick="destacarNoticia(${noticia.id})"
-                                ${noticia.destacado == 1 ? 'disabled title="Ya es la destacada"' : ''}>
-                            ⭐ Destacar
-                        </button>
+                        <div class="action-btns">
+                            <button class="btn btn-secondary btn-sm" onclick="editarNoticia(${noticia.id})">Editar</button>
+                            <button class="btn btn-sm" style="background:${noticia.publicado == 1 ? '#9e9e9e' : '#34A853'};color:white;"
+                                    onclick="toggleNoticia(${noticia.id}, ${noticia.publicado})">${noticia.publicado == 1 ? 'Ocultar' : 'Publicar'}</button>
+                            <button class="btn btn-sm" style="background:${noticia.destacado == 1 ? '#d97706' : '#f59e0b'};color:white;"
+                                    onclick="destacarNoticia(${noticia.id})"
+                                    ${noticia.destacado == 1 ? 'disabled title="Ya es la destacada"' : ''}>⭐ Destacar</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -136,12 +128,17 @@ function editarNoticia(id) {
     document.getElementById('noticia_imagen').value = '';
 
     const preview = document.getElementById('noticia_imagen_preview');
+    const wrap = document.getElementById('noticia_preview_wrap');
+    const nameEl = document.getElementById('noticia_preview_name');
     if (noticia.imagen) {
         preview.src = noticia.imagen;
         preview.style.display = 'block';
+        wrap.style.display = 'flex';
+        if (nameEl) nameEl.textContent = 'Imagen actual';
     } else {
         preview.src = '';
         preview.style.display = 'none';
+        wrap.style.display = 'none';
     }
 
     document.getElementById('modalNoticia').style.display = 'flex';

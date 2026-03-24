@@ -41,11 +41,11 @@ $additionalCSS = ['admin.css'];
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Imagen</th>
-                            <th>Título</th>
+                            <th></th>
+                            <th>Receta</th>
                             <th>Categoría</th>
                             <th>Calorías</th>
-                            <th>Activo</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -73,61 +73,77 @@ $additionalCSS = ['admin.css'];
             <form id="formReceta">
                 <input type="hidden" id="receta_id" name="id">
 
-                <div class="form-group">
-                    <label for="receta_titulo">Título</label>
-                    <input type="text" id="receta_titulo" name="titulo" required>
+                <div class="form-section">
+                    <div class="form-section-title">🍽️ Información básica</div>
+                    <div class="form-group">
+                        <label for="receta_titulo">Título <span class="req">*</span></label>
+                        <input type="text" id="receta_titulo" name="titulo" placeholder="Ej. Ensalada mediterránea" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="receta_descripcion">Descripción</label>
+                        <textarea id="receta_descripcion" name="descripcion" rows="2" placeholder="Breve descripción de la receta…"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="receta_descripcion">Descripción</label>
-                    <textarea id="receta_descripcion" name="descripcion" rows="3"></textarea>
+                <div class="form-section">
+                    <div class="form-section-title">📝 Ingredientes e instrucciones</div>
+                    <div class="form-group">
+                        <label for="receta_ingredientes">Ingredientes</label>
+                        <textarea id="receta_ingredientes" name="ingredientes" rows="3" placeholder="Un ingrediente por línea…"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="receta_instrucciones">Instrucciones</label>
+                        <textarea id="receta_instrucciones" name="instrucciones" rows="3" placeholder="Una instrucción por línea…"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="receta_ingredientes">Ingredientes</label>
-                    <textarea id="receta_ingredientes" name="ingredientes" rows="4" placeholder="Un ingrediente por línea"></textarea>
+                <div class="form-section">
+                    <div class="form-section-title">📊 Detalles nutricionales</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receta_tiempo_preparacion">Tiempo (min)</label>
+                            <input type="number" id="receta_tiempo_preparacion" name="tiempo_preparacion" placeholder="30" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="receta_porciones">Porciones</label>
+                            <input type="number" id="receta_porciones" name="porciones" placeholder="4" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receta_calorias">Calorías (kcal)</label>
+                            <input type="number" id="receta_calorias" name="calorias" placeholder="350" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="receta_categoria">Categoría <span class="req">*</span></label>
+                            <select id="receta_categoria" name="categoria" required>
+                                <option value="desayuno">Desayuno</option>
+                                <option value="comida">Comida</option>
+                                <option value="cena">Cena</option>
+                                <option value="snack">Snack</option>
+                                <option value="postre">Postre</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="receta_instrucciones">Instrucciones</label>
-                    <textarea id="receta_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="receta_tiempo_preparacion">Tiempo de Preparación (minutos)</label>
-                    <input type="number" id="receta_tiempo_preparacion" name="tiempo_preparacion" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="receta_porciones">Porciones</label>
-                    <input type="number" id="receta_porciones" name="porciones" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="receta_calorias">Calorías</label>
-                    <input type="number" id="receta_calorias" name="calorias" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="receta_categoria">Categoría</label>
-                    <select id="receta_categoria" name="categoria" required>
-                        <option value="desayuno">Desayuno</option>
-                        <option value="comida">Comida</option>
-                        <option value="cena">Cena</option>
-                        <option value="snack">Snack</option>
-                        <option value="postre">Postre</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="receta_imagen">Imagen</label>
-                    <input type="file" id="receta_imagen" name="imagen" accept="image/*">
-                    <img id="receta_imagen_preview" src="" alt="Vista previa" style="display: none; margin-top: 0.5rem; width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                <div class="form-section">
+                    <div class="form-section-title">🖼️ Imagen</div>
+                    <div class="file-upload-zone">
+                        <span class="upload-icon">📁</span>
+                        <div>Haz clic o arrastra una imagen aquí</div>
+                        <div class="file-upload-hint">JPG, PNG, WebP — máx. 5 MB</div>
+                        <input type="file" id="receta_imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="file-upload-preview" id="receta_preview_wrap" style="display:none;">
+                        <img id="receta_imagen_preview" src="" alt="Vista previa">
+                        <span id="receta_preview_name" style="font-size:0.85rem;color:#666;"></span>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="cerrarModalReceta()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Receta</button>
                 </div>
             </form>
         </div>

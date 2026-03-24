@@ -41,8 +41,7 @@ $additionalCSS = ['admin.css'];
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Correo</th>
+                            <th>Usuario</th>
                             <th>Rol</th>
                             <th>Fecha Registro</th>
                             <th>Acciones</th>
@@ -50,7 +49,7 @@ $additionalCSS = ['admin.css'];
                     </thead>
                     <tbody id="usuariosTableBody">
                         <tr>
-                            <td colspan="6" class="empty-message">
+                            <td colspan="5" class="empty-message">
                                 Cargando usuarios...
                             </td>
                         </tr>
@@ -72,41 +71,50 @@ $additionalCSS = ['admin.css'];
             <form id="formUsuario">
                 <input type="hidden" id="usuario_id" name="id">
 
-                <div class="form-group">
-                    <label for="usuario_nombre">Nombre Completo</label>
-                    <input type="text" id="usuario_nombre" name="nombre" required>
+                <div class="form-section">
+                    <div class="form-section-title">👤 Información personal</div>
+                    <div class="form-group">
+                        <label for="usuario_nombre">Nombre Completo <span class="req">*</span></label>
+                        <input type="text" id="usuario_nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario_correo">Correo Electrónico <span class="req">*</span></label>
+                        <input type="email" id="usuario_correo" name="correo" placeholder="correo@ejemplo.com" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="usuario_correo">Correo Electrónico</label>
-                    <input type="email" id="usuario_correo" name="correo" required>
+                <div class="form-section">
+                    <div class="form-section-title">🏷️ Rol y área</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usuario_rol">Rol <span class="req">*</span></label>
+                            <select id="usuario_rol" name="rol" required>
+                                <option value="usuario">Usuario</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="coach">Coach</option>
+                                <option value="nutriologo">Nutriólogo</option>
+                                <option value="psicologo">Psicólogo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="usuario_area">Área</label>
+                            <input type="text" id="usuario_area" name="area" placeholder="Ej. Deportes">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="usuario_rol">Rol</label>
-                    <select id="usuario_rol" name="rol" required>
-                        <option value="usuario">Usuario</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="coach">Coach</option>
-                        <option value="nutriologo">Nutriologo</option>
-                        <option value="psicologo">Psicologo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="usuario_area">Área</label>
-                    <input type="text" id="usuario_area" name="area">
-                </div>
-
-                <div class="form-group" id="passwordGroup">
-                    <label for="usuario_password">Contraseña</label>
-                    <input type="password" id="usuario_password" name="password" minlength="6">
-                    <small>Dejar en blanco para mantener la contraseña actual (solo al editar)</small>
+                <div class="form-section" id="passwordGroup">
+                    <div class="form-section-title">🔒 Seguridad</div>
+                    <div class="form-group">
+                        <label for="usuario_password">Contraseña</label>
+                        <input type="password" id="usuario_password" name="password" minlength="6" placeholder="Mínimo 6 caracteres">
+                        <small>Dejar en blanco para mantener la contraseña actual (solo al editar)</small>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="cerrarModalUsuario()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Usuario</button>
                 </div>
             </form>
         </div>

@@ -27,20 +27,18 @@ async function cargarUsuarios() {
         if (data.success && data.users.length > 0) {
             tbody.innerHTML = data.users.map(user => `
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.nombre}</td>
-                    <td>${user.correo}</td>
+                    <td class="td-id">#${user.id}</td>
                     <td>
-                        <span class="rol-badge" style="background: ${getRolColor(user.rol)};">
-                            ${getRolLabel(user.rol)}
-                        </span>
+                        <div class="td-title">${user.nombre}</div>
+                        <div class="td-sub">${user.correo}</div>
                     </td>
-                    <td>${user.fecha || 'N/A'}</td>
+                    <td><span class="rol-badge" style="background:${getRolColor(user.rol)};">${getRolLabel(user.rol)}</span></td>
+                    <td class="td-sub">${user.fecha || '—'}</td>
                     <td>
-                        <button class="btn btn-secondary btn-sm"
-                                onclick="editarUsuario(${user.id}, '${escapar(user.nombre)}', '${escapar(user.correo)}', '${user.rol}', '${escapar(user.area || '')}')">
-                            Editar
-                        </button>
+                        <div class="action-btns">
+                            <button class="btn btn-secondary btn-sm"
+                                    onclick="editarUsuario(${user.id}, '${escapar(user.nombre)}', '${escapar(user.correo)}', '${user.rol}', '${escapar(user.area || '')}')">Editar</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');

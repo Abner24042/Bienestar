@@ -72,7 +72,6 @@ $additionalCSS = ['admin.css'];
                 <p>Administrar cuentas de usuario del sistema</p>
                 <div class="section-actions">
                     <button class="btn btn-primary" id="btnVerUsuarios">Ver Todos los Usuarios</button>
-                    <button class="btn btn-secondary" id="btnAgregarUsuario">Agregar Usuario</button>
                     <button class="btn btn-secondary" onclick="descargarCSV('usuarios')" style="background:#2d6a4f;">⬇️ Exportar</button>
                 </div>
             </div>

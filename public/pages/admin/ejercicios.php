@@ -41,12 +41,12 @@ $additionalCSS = ['admin.css'];
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Imagen</th>
-                            <th>Título</th>
+                            <th></th>
+                            <th>Ejercicio</th>
                             <th>Tipo</th>
                             <th>Nivel</th>
-                            <th>Duración</th>
-                            <th>Activo</th>
+                            <th>Calorías</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -65,7 +65,7 @@ $additionalCSS = ['admin.css'];
 
 <!-- Modal: Nuevo/Editar Ejercicio -->
 <div id="modalEjercicio" class="modal" style="display: none;">
-    <div class="modal-content">
+    <div class="modal-content modal-lg">
         <div class="modal-header">
             <h3 id="modalEjercicioTitle">Nuevo Ejercicio</h3>
             <button class="modal-close" onclick="cerrarModalEjercicio()">&times;</button>
@@ -74,79 +74,98 @@ $additionalCSS = ['admin.css'];
             <form id="formEjercicio">
                 <input type="hidden" id="ejercicio_id" name="id">
 
-                <div class="form-group">
-                    <label for="ejercicio_titulo">Título</label>
-                    <input type="text" id="ejercicio_titulo" name="titulo" required>
+                <div class="form-section">
+                    <div class="form-section-title">💪 Información básica</div>
+                    <div class="form-group">
+                        <label for="ejercicio_titulo">Título <span class="req">*</span></label>
+                        <input type="text" id="ejercicio_titulo" name="titulo" placeholder="Ej. Press de banca" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ejercicio_descripcion">Descripción</label>
+                        <textarea id="ejercicio_descripcion" name="descripcion" rows="2" placeholder="Breve descripción del ejercicio…"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ejercicio_descripcion">Descripción</label>
-                    <textarea id="ejercicio_descripcion" name="descripcion" rows="3"></textarea>
+                <div class="form-section">
+                    <div class="form-section-title">📊 Detalles</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ejercicio_tipo">Tipo <span class="req">*</span></label>
+                            <select id="ejercicio_tipo" name="tipo" required>
+                                <option value="cardio">Cardio</option>
+                                <option value="fuerza">Fuerza</option>
+                                <option value="flexibilidad">Flexibilidad</option>
+                                <option value="equilibrio">Equilibrio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ejercicio_nivel">Nivel <span class="req">*</span></label>
+                            <select id="ejercicio_nivel" name="nivel" required>
+                                <option value="principiante">Principiante</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ejercicio_duracion">Duración (min)</label>
+                            <input type="number" id="ejercicio_duracion" name="duracion" placeholder="30" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="ejercicio_calorias">Calorías quemadas</label>
+                            <input type="number" id="ejercicio_calorias" name="calorias_quemadas" placeholder="200" min="0">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ejercicio_duracion">Duración</label>
-                    <input type="number" id="ejercicio_duracion" name="duracion" placeholder="minutos" min="1">
+                <div class="form-section">
+                    <div class="form-section-title">🦵 Músculos y equipamiento</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ejercicio_musculo">Músculo objetivo</label>
+                            <input type="text" id="ejercicio_musculo" name="musculo_objetivo" placeholder="Ej. Pecho, Cuádriceps">
+                        </div>
+                        <div class="form-group">
+                            <label for="ejercicio_secundarios">Músculos secundarios</label>
+                            <input type="text" id="ejercicio_secundarios" name="musculos_secundarios" placeholder="Ej. Tríceps, Glúteos">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ejercicio_equipamiento">Equipamiento</label>
+                        <input type="text" id="ejercicio_equipamiento" name="equipamiento" placeholder="Ej. Mancuernas, Sin equipo…">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ejercicio_nivel">Nivel</label>
-                    <select id="ejercicio_nivel" name="nivel" required>
-                        <option value="principiante">Principiante</option>
-                        <option value="intermedio">Intermedio</option>
-                        <option value="avanzado">Avanzado</option>
-                    </select>
+                <div class="form-section">
+                    <div class="form-section-title">📋 Instrucciones y video</div>
+                    <div class="form-group">
+                        <label for="ejercicio_instrucciones">Instrucciones</label>
+                        <textarea id="ejercicio_instrucciones" name="instrucciones" rows="3" placeholder="Una instrucción por línea…"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ejercicio_video">URL del Video</label>
+                        <input type="url" id="ejercicio_video" name="video_url" placeholder="https://youtube.com/…">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ejercicio_tipo">Tipo</label>
-                    <select id="ejercicio_tipo" name="tipo" required>
-                        <option value="cardio">Cardio</option>
-                        <option value="fuerza">Fuerza</option>
-                        <option value="flexibilidad">Flexibilidad</option>
-                        <option value="equilibrio">Equilibrio</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_calorias">Calorías Quemadas</label>
-                    <input type="number" id="ejercicio_calorias" name="calorias_quemadas" min="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_video">URL del Video</label>
-                    <input type="url" id="ejercicio_video" name="video_url" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_musculo">Músculo objetivo</label>
-                    <input type="text" id="ejercicio_musculo" name="musculo_objetivo" placeholder="ej. Pecho, Cuádriceps...">
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_secundarios">Músculos secundarios</label>
-                    <input type="text" id="ejercicio_secundarios" name="musculos_secundarios" placeholder="ej. Tríceps, Glúteos...">
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_equipamiento">Equipamiento</label>
-                    <input type="text" id="ejercicio_equipamiento" name="equipamiento" placeholder="ej. Mancuernas, Sin equipo...">
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_instrucciones">Instrucciones</label>
-                    <textarea id="ejercicio_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="ejercicio_imagen">Imagen</label>
-                    <input type="file" id="ejercicio_imagen" name="imagen" accept="image/*">
-                    <img id="ejercicio_imagen_preview" src="" alt="Preview" style="display: none; width: 80px; height: 80px; object-fit: cover; margin-top: 0.5rem; border-radius: 6px;">
+                <div class="form-section">
+                    <div class="form-section-title">🖼️ Imagen</div>
+                    <div class="file-upload-zone">
+                        <span class="upload-icon">📁</span>
+                        <div>Haz clic o arrastra una imagen aquí</div>
+                        <div class="file-upload-hint">JPG, PNG, WebP — máx. 5 MB</div>
+                        <input type="file" id="ejercicio_imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="file-upload-preview" id="ejercicio_preview_wrap" style="display:none;">
+                        <img id="ejercicio_imagen_preview" src="" alt="Preview">
+                        <span id="ejercicio_preview_name" style="font-size:0.85rem;color:#666;"></span>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="cerrarModalEjercicio()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Ejercicio</button>
                 </div>
             </form>
         </div>

@@ -5,7 +5,12 @@
       "WebSearch",
       "WebFetch(domain:foursquare.com)",
       "WebFetch(domain:www.anahuac.mx)",
-      "Bash(node deploy.js --full)"
+      "Bash(node deploy.js --full)",
+      "Bash(node deploy.js public/assets/css/main.css public/assets/css/dashboard.css public/assets/css/ejercicio.css public/assets/css/noticias.css public/assets/css/mi-plan.css public/assets/css/favoritos.css public/assets/js/main.js public/assets/js/alimentacion.js public/assets/js/ejercicio.js public/assets/js/noticias.js public/assets/js/mi-plan.js public/assets/js/favoritos.js app/views/layouts/footer.php)",
+      "Bash(node deploy.js public/pages/admin/panel.php)",
+      "Bash(node deploy.js public/assets/css/admin.css public/assets/js/admin-citas.js public/pages/admin/citas.php)",
+      "Bash(node deploy.js public/assets/css/admin.css public/assets/css/profesional.css public/assets/css/salud-mental.css public/assets/js/admin-citas.js public/assets/js/admin-ejercicios.js public/assets/js/admin-noticias.js public/assets/js/admin-recetas.js public/assets/js/admin-usuarios.js public/assets/js/salud-mental.js public/pages/admin/citas.php public/pages/admin/ejercicios.php public/pages/admin/noticias.php public/pages/admin/panel.php public/pages/admin/recetas.php public/pages/admin/usuarios.php public/pages/salud-mental.php)",
+      "Bash(node deploy.js public/assets/css/perfil.css public/pages/perfil.php)"
     ]
   }
 }

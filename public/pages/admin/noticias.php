@@ -41,18 +41,17 @@ $additionalCSS = ['admin.css'];
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Imagen</th>
-                            <th>Título</th>
+                            <th></th>
+                            <th>Noticia</th>
                             <th>Categoría</th>
-                            <th>Autor</th>
-                            <th>Publicado</th>
+                            <th>Estado</th>
                             <th>Destacado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="noticiasTableBody">
                         <tr>
-                            <td colspan="8" class="empty-message">
+                            <td colspan="7" class="empty-message">
                                 Cargando noticias...
                             </td>
                         </tr>
@@ -74,51 +73,66 @@ $additionalCSS = ['admin.css'];
             <form id="formNoticia">
                 <input type="hidden" id="noticia_id" name="id">
 
-                <div class="form-group">
-                    <label for="noticia_titulo">Título</label>
-                    <input type="text" id="noticia_titulo" name="titulo" required>
+                <div class="form-section">
+                    <div class="form-section-title">📰 Información básica</div>
+                    <div class="form-group">
+                        <label for="noticia_titulo">Título <span class="req">*</span></label>
+                        <input type="text" id="noticia_titulo" name="titulo" placeholder="Título de la noticia" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="noticia_resumen">Resumen <small>(máx. 500 caracteres)</small></label>
+                        <textarea id="noticia_resumen" name="resumen" maxlength="500" rows="2" placeholder="Resumen breve que aparecerá en la lista…"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="noticia_resumen">Resumen <small>(máx. 500 caracteres)</small></label>
-                    <textarea id="noticia_resumen" name="resumen" maxlength="500" rows="3"></textarea>
+                <div class="form-section">
+                    <div class="form-section-title">📄 Contenido</div>
+                    <div class="form-group">
+                        <label for="noticia_contenido">Contenido completo <span class="req">*</span></label>
+                        <textarea id="noticia_contenido" name="contenido" required rows="7" style="min-height:160px;" placeholder="Escribe aquí el artículo completo…"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="noticia_contenido">Contenido</label>
-                    <textarea id="noticia_contenido" name="contenido" required style="min-height: 200px;" rows="8"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="noticia_categoria">Categoría</label>
-                    <select id="noticia_categoria" name="categoria" required>
-                        <option value="alimentacion">Alimentación</option>
-                        <option value="ejercicio">Ejercicio</option>
-                        <option value="salud-mental">Salud Mental</option>
-                        <option value="general">General</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="noticia_autor">Autor</label>
-                    <input type="text" id="noticia_autor" name="autor">
-                </div>
-
-                <div class="form-group">
-                    <label for="noticia_publicado">
-                        <input type="checkbox" id="noticia_publicado" name="publicado" value="1"> Publicado
+                <div class="form-section">
+                    <div class="form-section-title">🏷️ Detalles y publicación</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="noticia_categoria">Categoría <span class="req">*</span></label>
+                            <select id="noticia_categoria" name="categoria" required>
+                                <option value="alimentacion">Alimentación</option>
+                                <option value="ejercicio">Ejercicio</option>
+                                <option value="salud-mental">Salud Mental</option>
+                                <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="noticia_autor">Autor</label>
+                            <input type="text" id="noticia_autor" name="autor" placeholder="Nombre del autor">
+                        </div>
+                    </div>
+                    <label class="form-check">
+                        <input type="checkbox" id="noticia_publicado" name="publicado" value="1">
+                        <span class="form-check-label">Publicar inmediatamente</span>
                     </label>
                 </div>
 
-                <div class="form-group">
-                    <label for="noticia_imagen">Imagen</label>
-                    <input type="file" id="noticia_imagen" name="imagen" accept="image/*">
-                    <img id="noticia_imagen_preview" src="" alt="Preview" style="max-width: 150px; max-height: 100px; margin-top: 0.5rem; display: none; border-radius: 4px;">
+                <div class="form-section">
+                    <div class="form-section-title">🖼️ Imagen destacada</div>
+                    <div class="file-upload-zone">
+                        <span class="upload-icon">📁</span>
+                        <div>Haz clic o arrastra una imagen aquí</div>
+                        <div class="file-upload-hint">JPG, PNG, WebP — máx. 5 MB</div>
+                        <input type="file" id="noticia_imagen" name="imagen" accept="image/*">
+                    </div>
+                    <div class="file-upload-preview" id="noticia_preview_wrap" style="display:none;">
+                        <img id="noticia_imagen_preview" src="" alt="Preview">
+                        <span id="noticia_preview_name" style="font-size:0.85rem;color:#666;"></span>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="cerrarModalNoticia()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Noticia</button>
                 </div>
             </form>
         </div>
