@@ -106,7 +106,7 @@ function renderEjerciciosPaginated() {
         return;
     }
 
-    let html = visible.map(e => renderEjercicioCard(e)).join('');
+    let html = visible.map((e, i) => renderEjercicioCard(e, i)).join('');
 
     if (exerciseVisible < filteredExercises.length) {
         const restantes = filteredExercises.length - exerciseVisible;
@@ -125,11 +125,12 @@ function mostrarMasEjercicios() {
     renderEjerciciosPaginated();
 }
 
-function renderEjercicioCard(e) {
+function renderEjercicioCard(e, idx = 0) {
     const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
     const tipo       = capitalize(e.tipo || 'cardio');
     const nivel      = capitalize(e.nivel || 'principiante');
     const levelClass = 'level-' + (e.nivel || 'principiante');
+    const delay      = (idx * 0.07).toFixed(2);
 
     const duracionStat = e.duracion ? `
         <div class="meta-item">
@@ -154,7 +155,7 @@ function renderEjercicioCard(e) {
         : '';
 
     return `<div class="exercise-card" data-type="${escapeHtml(e.tipo)}" data-level="${escapeHtml(e.nivel)}"
-        onclick="showExerciseModal(${e.id})" style="cursor:pointer;">
+        onclick="showExerciseModal(${e.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
         <div class="exercise-image">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(e.titulo)}"
                  loading="lazy" decoding="async"

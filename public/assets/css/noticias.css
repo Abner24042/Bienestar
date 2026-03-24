@@ -15,6 +15,7 @@
     background: white;
     cursor: pointer;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    animation: cardEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .featured-news:hover {

@@ -58,13 +58,15 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     transition: box-shadow 0.15s ease;
     display: flex;
     flex-direction: column;
 }
 
 .exercise-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .exercise-image {
@@ -79,6 +81,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.35s ease;
 }
 
 .exercise-badges {
@@ -142,6 +145,10 @@
 
 .exercise-card:hover .play-button {
     opacity: 1;
+}
+
+.exercise-card:hover .exercise-image img {
+    transform: scale(1.08);
 }
 
 .play-button:hover {

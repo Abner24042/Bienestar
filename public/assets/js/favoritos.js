@@ -49,10 +49,11 @@ function renderFavRecetas() {
         return;
     }
 
-    grid.innerHTML = favRecetas.map(r => {
-        const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
-        const cat = favCapitalize(r.categoria || 'comida');
-        return `<div class="recipe-card" onclick="favShowRecipeModal(${r.id})" style="cursor:pointer;">
+    grid.innerHTML = favRecetas.map((r, i) => {
+        const img   = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
+        const cat   = favCapitalize(r.categoria || 'comida');
+        const delay = (i * 0.07).toFixed(2);
+        return `<div class="recipe-card" onclick="favShowRecipeModal(${r.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
             <div class="recipe-image" style="position:relative;">
                 <img src="${favEsc(img)}" alt="${favEsc(r.titulo)}"
                      onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
@@ -146,18 +147,19 @@ function renderFavEjercicios() {
         return;
     }
 
-    grid.innerHTML = favEjercicios.map(e => {
+    grid.innerHTML = favEjercicios.map((e, i) => {
         const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
         const tipo       = favCapitalize(e.tipo || 'cardio');
         const nivel      = favCapitalize(e.nivel || 'principiante');
         const levelClass = 'level-' + (e.nivel || 'principiante');
+        const delay      = (i * 0.07).toFixed(2);
 
         const duracionStat = e.duracion ? `<div class="meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2"/></svg><span>${e.duracion} min</span></div>` : '';
         const caloriasStat = e.calorias_quemadas ? `<div class="meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2"/></svg><span>${e.calorias_quemadas} kcal</span></div>` : '';
         const statsSection = (duracionStat || caloriasStat) ? `<div class="exercise-stats">${duracionStat}${caloriasStat}</div>` : '';
 
         return `<div class="exercise-card" data-type="${favEsc(e.tipo)}" data-level="${favEsc(e.nivel)}"
-            onclick="favShowExerciseModal(${e.id})" style="cursor:pointer;">
+            onclick="favShowExerciseModal(${e.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
             <div class="exercise-image" style="position:relative;">
                 <img src="${favEsc(img)}" alt="${favEsc(e.titulo)}" loading="lazy" onerror="this.style.display='none'">
                 <div class="exercise-badges">

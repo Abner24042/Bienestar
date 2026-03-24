@@ -63,7 +63,7 @@ function renderNoticiasPaginated() {
         return;
     }
 
-    let html = visible.map(n => renderNoticiaCard(n)).join('');
+    let html = visible.map((n, i) => renderNoticiaCard(n, i)).join('');
 
     if (newsVisible < filteredNews.length) {
         const restantes = filteredNews.length - newsVisible;
@@ -82,11 +82,12 @@ function mostrarMasNoticias() {
     renderNoticiasPaginated();
 }
 
-function renderNoticiaCard(n) {
-    const img = n.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80';
-    const cat = capitalize(n.categoria || 'general');
+function renderNoticiaCard(n, idx = 0) {
+    const img   = n.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80';
+    const cat   = capitalize(n.categoria || 'general');
+    const delay = (idx * 0.08).toFixed(2);
     return `<article class="news-card" data-category="${escapeHtml(n.categoria)}"
-        onclick="showNewsModal(${n.id})" style="cursor:pointer;">
+        onclick="showNewsModal(${n.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
         <div class="news-image" style="position:relative;">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80'">
             <div class="news-category-badge">${escapeHtml(cat)}</div>

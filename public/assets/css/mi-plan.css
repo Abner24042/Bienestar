@@ -74,7 +74,12 @@
 
 .plan-section.active {
     display: block;
+    animation: tabFadeIn 0.3s ease both;
 }
+
+.plan-summary-card:nth-child(1) { animation: cardEnter 0.4s ease 0.05s both; }
+.plan-summary-card:nth-child(2) { animation: cardEnter 0.4s ease 0.12s both; }
+.plan-summary-card:nth-child(3) { animation: cardEnter 0.4s ease 0.19s both; }
 
 /* Grid de tarjetas */
 .plan-grid {
@@ -99,17 +104,23 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    transition: box-shadow 0.15s;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .plan-card:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.13);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+}
+
+.plan-card:hover .plan-card-image {
+    transform: scale(1.06);
 }
 
 .plan-card-image {
     width: 100%;
     height: 180px;
     object-fit: cover;
+    transition: transform 0.35s ease;
     display: block;
 }
 

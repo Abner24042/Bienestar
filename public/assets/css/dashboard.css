@@ -100,7 +100,7 @@ body {
 .sidebar {
     grid-area: sidebar;
     background-color: white;
-    padding: 8px 0;
+    padding: 30px 0;
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 70px;
@@ -118,40 +118,40 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 10px 30px;
+    padding: 15px 30px;
     color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color var(--transition-fast);
-    position: relative;
-    z-index: 1;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+    animation: slideInLeft 0.3s ease both;
+}
+
+.nav-item:nth-child(1)  { animation-delay: 0.04s; }
+.nav-item:nth-child(2)  { animation-delay: 0.08s; }
+.nav-item:nth-child(3)  { animation-delay: 0.12s; }
+.nav-item:nth-child(4)  { animation-delay: 0.16s; }
+.nav-item:nth-child(5)  { animation-delay: 0.20s; }
+.nav-item:nth-child(6)  { animation-delay: 0.24s; }
+.nav-item:nth-child(7)  { animation-delay: 0.28s; }
+.nav-item:nth-child(8)  { animation-delay: 0.32s; }
+.nav-item:nth-child(9)  { animation-delay: 0.36s; }
+.nav-item:nth-child(10) { animation-delay: 0.40s; }
+
+/* Pulse en badge de notificaciones */
+.chat-nav-badge:not(:empty) {
+    animation: badgePulse 2.5s ease infinite;
 }
 
 .nav-item:hover {
+    background-color: var(--color-bg-secondary);
     color: var(--color-primary);
 }
 
-/* Fallback siempre legible */
 .nav-item.active {
-    color: var(--color-primary);
     background-color: rgba(255, 107, 53, 0.1);
-    font-weight: 600;
-}
-
-/* Blob sobre el item activo: fondo transparente + texto blanco */
-.sidebar-nav.liquid-ready .nav-item.active {
-    background-color: transparent;
-    color: #fff;
-}
-
-/* Blob se alejó del activo (hover en otro item): activo vuelve a colores legibles */
-.sidebar-nav.liquid-ready.blob-away .nav-item.active {
-    background-color: rgba(255, 107, 53, 0.12);
     color: var(--color-primary);
-}
-
-/* Item hover con blob encima: texto blanco */
-.sidebar-nav.liquid-ready .nav-item:not(.active):hover {
-    color: #fff;
+    border-left-color: var(--color-primary);
+    font-weight: 600;
 }
 
 .nav-item svg {
@@ -200,6 +200,7 @@ body {
     padding: 25px;
     display: flex;
     gap: 20px;
+    animation: cardEnter 0.4s ease both;
     align-items: flex-start;
     box-shadow: var(--shadow-sm);
     transition: transform var(--transition-fast);
@@ -210,6 +211,21 @@ body {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md);
 }
+
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.12s; }
+.stat-card:nth-child(3) { animation-delay: 0.19s; }
+.stat-card:nth-child(4) { animation-delay: 0.26s; }
+
+.action-card {
+    animation: cardEnter 0.4s ease both;
+}
+.action-card:nth-child(1) { animation-delay: 0.1s; }
+.action-card:nth-child(2) { animation-delay: 0.17s; }
+.action-card:nth-child(3) { animation-delay: 0.24s; }
+.action-card:nth-child(4) { animation-delay: 0.31s; }
+.action-card:nth-child(5) { animation-delay: 0.38s; }
+.action-card:nth-child(6) { animation-delay: 0.45s; }
 
 .stat-icon {
     width: 60px;
@@ -502,17 +518,12 @@ body {
 }
 
 [data-theme="dark"] .nav-item:hover {
+    background-color: #2a2a2a;
     color: var(--color-primary);
 }
 
 [data-theme="dark"] .nav-item.active {
-    color: var(--color-primary);
     background-color: rgba(255, 107, 53, 0.15);
-}
-
-[data-theme="dark"] .sidebar-nav.liquid-ready .nav-item.active {
-    background-color: transparent;
-    color: #fff;
 }
 
 [data-theme="dark"] .stat-card,

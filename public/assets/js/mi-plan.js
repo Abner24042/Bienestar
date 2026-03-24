@@ -50,17 +50,17 @@ function renderPlan(plan) {
         // Layout nuevo: filas horizontales + columna lateral
         const rowE = document.getElementById('planEjerciciosRow');
         rowE.innerHTML = plan.ejercicios.length
-            ? plan.ejercicios.map(e => ejercicioCard(e)).join('')
+            ? plan.ejercicios.map((e, i) => ejercicioCard(e, i)).join('')
             : '<p class="plan-empty">No tienes ejercicios asignados aún.</p>';
 
         const rowR = document.getElementById('planRecetasRow');
         rowR.innerHTML = plan.recetas.length
-            ? plan.recetas.map(r => recetaCard(r)).join('')
+            ? plan.recetas.map((r, i) => recetaCard(r, i)).join('')
             : '<p class="plan-empty">No tienes recetas asignadas aún.</p>';
 
         const colRec = document.getElementById('planRecomendacionesCol');
         colRec.innerHTML = plan.recomendaciones.length
-            ? plan.recomendaciones.map(r => recomendacionCard(r)).join('')
+            ? plan.recomendaciones.map((r, i) => recomendacionCard(r, i)).join('')
             : '<p class="plan-empty">No hay recomendaciones aún.</p>';
     } else {
         // Layout dashboard: grids con tabs
@@ -123,13 +123,14 @@ async function planToggleFav(tipo, id, btn) {
     } catch (e) {}
 }
 
-function ejercicioCard(e) {
+function ejercicioCard(e, idx = 0) {
     const img   = e.imagen ? `<img src="${esc(e.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
     const nivel = cap(e.nivel || 'principiante');
     const tipo  = cap(e.tipo  || 'ejercicio');
     const notas = e.notas ? `<div class="plan-card-notas">📝 ${esc(e.notas)}</div>` : '';
+    const delay = (idx * 0.07).toFixed(2);
     return `
-    <div class="plan-card" onclick="openEjercicioModal(${e.id})" style="position:relative;">
+    <div class="plan-card" onclick="openEjercicioModal(${e.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
         ${planFavStarBtn('ejercicio', e.id)}
         ${img}
         <div class="plan-card-body">
@@ -145,12 +146,13 @@ function ejercicioCard(e) {
     </div>`;
 }
 
-function recetaCard(r) {
+function recetaCard(r, idx = 0) {
     const img  = r.imagen ? `<img src="${esc(r.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
     const cat  = cap(r.categoria || 'receta');
     const notas = r.notas ? `<div class="plan-card-notas">📝 ${esc(r.notas)}</div>` : '';
+    const delay = (idx * 0.07).toFixed(2);
     return `
-    <div class="plan-card" onclick="openRecetaModal(${r.id})" style="position:relative;">
+    <div class="plan-card" onclick="openRecetaModal(${r.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
         ${planFavStarBtn('receta', r.id)}
         ${img}
         <div class="plan-card-body">
@@ -164,11 +166,12 @@ function recetaCard(r) {
     </div>`;
 }
 
-function recomendacionCard(r) {
+function recomendacionCard(r, idx = 0) {
     const tipoColor = { psicologia:'#9c27b0', ejercicio:'#ff6b35', alimentacion:'#4caf50', general:'#2196f3' };
     const color = tipoColor[r.tipo] || tipoColor.general;
+    const delay = (idx * 0.09).toFixed(2);
     return `
-    <div class="recomendacion-card" style="border-left-color:${color}">
+    <div class="recomendacion-card" style="border-left-color:${color};animation:cardEnter 0.4s ease ${delay}s both;">
         <div class="recomendacion-tipo" style="color:${color};">${esc(cap(r.tipo))}</div>
         <div class="recomendacion-titulo">${esc(r.titulo)}</div>
         ${r.contenido ? `<div class="recomendacion-contenido">${esc(r.contenido)}</div>` : ''}

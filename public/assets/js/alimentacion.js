@@ -127,7 +127,7 @@ function renderRecetasPaginated() {
         return;
     }
 
-    let html = visible.map(r => renderRecetaCard(r)).join('');
+    let html = visible.map((r, i) => renderRecetaCard(r, i)).join('');
 
     if (recipeVisible < filteredRecipes.length) {
         const restantes = filteredRecipes.length - recipeVisible;
@@ -146,11 +146,12 @@ function mostrarMasRecetas() {
     renderRecetasPaginated();
 }
 
-function renderRecetaCard(r) {
+function renderRecetaCard(r, idx = 0) {
     const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
     const cat = capitalize(r.categoria || 'comida');
+    const delay = (idx * 0.07).toFixed(2);
 
-    return `<div class="recipe-card" data-category="${escapeHtml(r.categoria)}" onclick="showRecipeModal(${r.id})" style="cursor:pointer;">
+    return `<div class="recipe-card" data-category="${escapeHtml(r.categoria)}" onclick="showRecipeModal(${r.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
         <div class="recipe-image" style="position:relative;">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(r.titulo)}"
                  onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
