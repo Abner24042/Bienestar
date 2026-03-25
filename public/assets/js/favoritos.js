@@ -53,7 +53,8 @@ function renderFavRecetas() {
         const img   = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
         const cat   = favCapitalize(r.categoria || 'comida');
         const delay = (i * 0.07).toFixed(2);
-        return `<div class="recipe-card" onclick="favShowRecipeModal(${r.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
+        return `<div class="recipe-card" tabindex="0" role="button" aria-label="${favEsc(r.titulo)}"
+            onclick="favShowRecipeModal(${r.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
             <div class="recipe-image" style="position:relative;">
                 <img src="${favEsc(img)}" alt="${favEsc(r.titulo)}"
                      onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
@@ -159,6 +160,7 @@ function renderFavEjercicios() {
         const statsSection = (duracionStat || caloriasStat) ? `<div class="exercise-stats">${duracionStat}${caloriasStat}</div>` : '';
 
         return `<div class="exercise-card" data-type="${favEsc(e.tipo)}" data-level="${favEsc(e.nivel)}"
+            tabindex="0" role="button" aria-label="${favEsc(e.titulo)}"
             onclick="favShowExerciseModal(${e.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
             <div class="exercise-image" style="position:relative;">
                 <img src="${favEsc(img)}" alt="${favEsc(e.titulo)}" loading="lazy" onerror="this.style.display='none'">

@@ -130,7 +130,8 @@ function ejercicioCard(e, idx = 0) {
     const notas = e.notas ? `<div class="plan-card-notas">📝 ${esc(e.notas)}</div>` : '';
     const delay = (idx * 0.07).toFixed(2);
     return `
-    <div class="plan-card" onclick="openEjercicioModal(${e.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
+    <div class="plan-card" tabindex="0" role="button" aria-label="${esc(e.titulo)}"
+        onclick="openEjercicioModal(${e.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
         ${planFavStarBtn('ejercicio', e.id)}
         ${img}
         <div class="plan-card-body">
@@ -152,7 +153,8 @@ function recetaCard(r, idx = 0) {
     const notas = r.notas ? `<div class="plan-card-notas">📝 ${esc(r.notas)}</div>` : '';
     const delay = (idx * 0.07).toFixed(2);
     return `
-    <div class="plan-card" onclick="openRecetaModal(${r.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
+    <div class="plan-card" tabindex="0" role="button" aria-label="${esc(r.titulo)}"
+        onclick="openRecetaModal(${r.id})" style="position:relative;animation:cardEnter 0.35s ease ${delay}s both;">
         ${planFavStarBtn('receta', r.id)}
         ${img}
         <div class="plan-card-body">

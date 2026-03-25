@@ -35,6 +35,7 @@ if (!isset($pageTitle)) {
     <script defer src="<?php echo asset('js/emailConfigLoader.php'); ?>"></script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Saltar al contenido</a>
 <script>
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const API_URL  = BASE_URL + '/api';
@@ -274,6 +275,7 @@ if (!isset($pageTitle)) {
 <!-- Scripts -->
 <script src="<?php echo asset('js/main.js'); ?>"></script>
 <script src="<?php echo asset('js/mobile-menu.js'); ?>"></script>
+<script defer src="<?php echo asset('js/keyboard-nav.js'); ?>"></script>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">

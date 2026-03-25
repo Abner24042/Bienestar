@@ -155,6 +155,7 @@ function renderEjercicioCard(e, idx = 0) {
         : '';
 
     return `<div class="exercise-card" data-type="${escapeHtml(e.tipo)}" data-level="${escapeHtml(e.nivel)}"
+        tabindex="0" role="button" aria-label="${escapeHtml(e.titulo)}"
         onclick="showExerciseModal(${e.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
         <div class="exercise-image">
             <img src="${escapeHtml(img)}" alt="${escapeHtml(e.titulo)}"
