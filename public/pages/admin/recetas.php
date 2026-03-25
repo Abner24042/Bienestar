@@ -98,15 +98,15 @@ $additionalCSS = ['admin.css'];
                 </div>
 
                 <div class="form-section">
-                    <div class="form-section-title">📊 Detalles nutricionales</div>
+                    <div class="form-section-title">⏱️ Datos generales</div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="receta_tiempo_preparacion">Tiempo (min)</label>
+                            <label for="receta_tiempo_preparacion">Tiempo de preparación (min)</label>
                             <input type="number" id="receta_tiempo_preparacion" name="tiempo_preparacion" placeholder="30" min="0">
                         </div>
                         <div class="form-group">
                             <label for="receta_porciones">Porciones</label>
-                            <input type="number" id="receta_porciones" name="porciones" placeholder="4" min="0">
+                            <input type="number" id="receta_porciones" name="porciones" placeholder="4" min="1">
                         </div>
                     </div>
                     <div class="form-row">
@@ -125,6 +125,30 @@ $additionalCSS = ['admin.css'];
                                 <option value="snack">Snacks</option>
                                 <option value="postre">Postre</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">📊 Macronutrientes por porción <span style="font-weight:400;font-size:0.8rem;color:#aaa;">(opcional)</span></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receta_proteinas">Proteínas (g)</label>
+                            <input type="number" step="0.1" id="receta_proteinas" name="proteinas" placeholder="Ej. 28">
+                        </div>
+                        <div class="form-group">
+                            <label for="receta_carbohidratos">Carbohidratos (g)</label>
+                            <input type="number" step="0.1" id="receta_carbohidratos" name="carbohidratos" placeholder="Ej. 45">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="receta_grasas">Grasas (g)</label>
+                            <input type="number" step="0.1" id="receta_grasas" name="grasas" placeholder="Ej. 12">
+                        </div>
+                        <div class="form-group">
+                            <label for="receta_fibra">Fibra (g)</label>
+                            <input type="number" step="0.1" id="receta_fibra" name="fibra" placeholder="Ej. 5">
                         </div>
                     </div>
                 </div>

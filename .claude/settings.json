@@ -16,7 +16,11 @@
       "Bash(node deploy.js public/pages/admin/recetas.php)",
       "Bash(node deploy.js app/models/Receta.php public/assets/js/admin-recetas.js public/pages/admin/recetas.php)",
       "Bash(node deploy.js app/controllers/chat_get_usuarios_disponibles.php app/controllers/chat_enviar.php app/controllers/chat_subir_archivo.php app/models/Chat.php)",
-      "Bash(node deploy.js public/pages/profesional/panel.php)"
+      "Bash(node deploy.js public/pages/profesional/panel.php)",
+      "Read(//c/Users/abner/AppData/Local/Temp/claude/c--xampp-htdocs-a-Bienestar/tasks/**)",
+      "Bash(git add public/assets/css/main.css app/views/layouts/header.php public/assets/js/keyboard-nav.js public/assets/js/ejercicio.js public/assets/js/alimentacion.js public/assets/js/noticias.js public/assets/js/mi-plan.js public/assets/js/favoritos.js public/pages/dashboard.php)",
+      "Bash(node deploy.js app/controllers/pro_delete_receta.php)",
+      "Bash(node deploy.js public/pages/admin/recetas.php public/pages/profesional/panel.php public/assets/js/admin-recetas.js public/assets/js/profesional-recetas.js app/controllers/admin_save_receta.php)"
     ]
   }
 }

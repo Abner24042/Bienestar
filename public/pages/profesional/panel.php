@@ -270,42 +270,115 @@ $additionalCSS = ['admin.css', 'profesional.css'];
 
         <!-- Modal Receta Pro -->
         <div id="modalRecetaPro" class="modal" style="display:none;">
-            <div class="modal-content">
+            <div class="modal-content modal-lg">
                 <div class="modal-header">
-                    <h3 id="modalRecetaProTitle">Nueva Receta</h3>
+                    <h3 id="modalRecetaProTitle">🍽️ Nueva Receta</h3>
                     <button class="modal-close" onclick="document.getElementById('modalRecetaPro').style.display='none'">&times;</button>
                 </div>
                 <div class="modal-body">
                     <form id="formRecetaPro">
                         <input type="hidden" id="pro_receta_id" name="id">
-                        <div class="form-group"><label>Título</label><input type="text" id="pro_receta_titulo" name="titulo" required></div>
-                        <div class="form-group"><label>Descripción</label><textarea id="pro_receta_descripcion" name="descripcion" rows="2"></textarea></div>
-                        <div class="form-group"><label>Ingredientes</label><textarea id="pro_receta_ingredientes" name="ingredientes" rows="4" placeholder="Un ingrediente por línea"></textarea></div>
-                        <div class="form-group"><label>Instrucciones</label><textarea id="pro_receta_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea"></textarea></div>
-                        <div class="form-group"><label>Tiempo (min)</label><input type="number" id="pro_receta_tiempo" name="tiempo_preparacion"></div>
-                        <div class="form-group"><label>Porciones</label><input type="number" id="pro_receta_porciones" name="porciones"></div>
-                        <div class="form-group"><label>Calorías (kcal)</label><input type="number" step="0.1" id="pro_receta_calorias" name="calorias"></div>
-                        <div class="form-group" style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.75rem;margin-top:0.25rem;">
-                            <p style="font-size:0.78rem;color:#999;margin-bottom:0.5rem;">Datos nutricionales por porción — opcionales (déjalos vacíos si no aplica)</p>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🍽️ Información básica</div>
+                            <div class="form-group">
+                                <label>Título <span class="req">*</span></label>
+                                <input type="text" id="pro_receta_titulo" name="titulo" placeholder="Ej. Ensalada mediterránea" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                <textarea id="pro_receta_descripcion" name="descripcion" rows="2" placeholder="Breve descripción de la receta…"></textarea>
+                            </div>
                         </div>
-                        <div class="form-group"><label>Proteínas (g)</label><input type="number" step="0.1" id="pro_receta_proteinas" name="proteinas" placeholder="Opcional"></div>
-                        <div class="form-group"><label>Carbohidratos (g)</label><input type="number" step="0.1" id="pro_receta_carbohidratos" name="carbohidratos" placeholder="Opcional"></div>
-                        <div class="form-group"><label>Grasas (g)</label><input type="number" step="0.1" id="pro_receta_grasas" name="grasas" placeholder="Opcional"></div>
-                        <div class="form-group"><label>Fibra (g)</label><input type="number" step="0.1" id="pro_receta_fibra" name="fibra" placeholder="Opcional"></div>
-                        <div class="form-group">
-                            <label>Categoría</label>
-                            <select id="pro_receta_categoria" name="categoria">
-                                <option value="desayuno">Desayuno</option>
-                                <option value="comida">Comida</option>
-                                <option value="cena">Cena</option>
-                                <option value="snack">Snack</option>
-                                <option value="postre">Postre</option>
-                            </select>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📝 Ingredientes e instrucciones</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Ingredientes</label>
+                                    <textarea id="pro_receta_ingredientes" name="ingredientes" rows="5" placeholder="Un ingrediente por línea&#10;Ej: 200g pollo&#10;1 taza arroz"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Instrucciones</label>
+                                    <textarea id="pro_receta_instrucciones" name="instrucciones" rows="5" placeholder="Una instrucción por línea&#10;1. Lavar y cortar...&#10;2. Cocinar a fuego..."></textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group"><label>Imagen</label><input type="file" id="pro_receta_imagen" name="imagen" accept="image/*"></div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">⏱️ Datos generales</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Tiempo de preparación (min)</label>
+                                    <input type="number" id="pro_receta_tiempo" name="tiempo_preparacion" placeholder="30" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Porciones</label>
+                                    <input type="number" id="pro_receta_porciones" name="porciones" placeholder="4" min="1">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Calorías (kcal)</label>
+                                    <input type="number" step="0.1" id="pro_receta_calorias" name="calorias" placeholder="350" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Categoría <span class="req">*</span></label>
+                                    <select id="pro_receta_categoria" name="categoria">
+                                        <option value="desayuno">Desayuno</option>
+                                        <option value="almuerzo">Almuerzo</option>
+                                        <option value="comida">Comida</option>
+                                        <option value="merienda">Merienda</option>
+                                        <option value="cena">Cena</option>
+                                        <option value="snack">Snacks</option>
+                                        <option value="postre">Postre</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📊 Macronutrientes por porción <span style="font-weight:400;font-size:0.8rem;color:#aaa;">(opcional)</span></div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Proteínas (g)</label>
+                                    <input type="number" step="0.1" id="pro_receta_proteinas" name="proteinas" placeholder="Ej. 28">
+                                </div>
+                                <div class="form-group">
+                                    <label>Carbohidratos (g)</label>
+                                    <input type="number" step="0.1" id="pro_receta_carbohidratos" name="carbohidratos" placeholder="Ej. 45">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Grasas (g)</label>
+                                    <input type="number" step="0.1" id="pro_receta_grasas" name="grasas" placeholder="Ej. 12">
+                                </div>
+                                <div class="form-group">
+                                    <label>Fibra (g)</label>
+                                    <input type="number" step="0.1" id="pro_receta_fibra" name="fibra" placeholder="Ej. 5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🖼️ Imagen</div>
+                            <div class="file-upload-zone">
+                                <span class="upload-icon">📁</span>
+                                <div>Haz clic o arrastra una imagen aquí</div>
+                                <div class="file-upload-hint">JPG, PNG, WebP — máx. 5 MB</div>
+                                <input type="file" id="pro_receta_imagen" name="imagen" accept="image/*"
+                                       onchange="proRecetaPreviewImagen(this)">
+                            </div>
+                            <div class="file-upload-preview" id="pro_receta_preview_wrap" style="display:none;">
+                                <img id="pro_receta_imagen_preview" src="" alt="Vista previa">
+                                <span id="pro_receta_preview_name" style="font-size:0.85rem;color:#666;"></span>
+                            </div>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalRecetaPro').style.display='none'">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Receta</button>
                         </div>
                     </form>
                 </div>

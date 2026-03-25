@@ -129,6 +129,10 @@ function editarReceta(id) {
     document.getElementById('receta_porciones').value = receta.porciones || '';
     document.getElementById('receta_calorias').value = receta.calorias || '';
     document.getElementById('receta_categoria').value = receta.categoria || 'desayuno';
+    document.getElementById('receta_proteinas').value = receta.proteinas || '';
+    document.getElementById('receta_carbohidratos').value = receta.carbohidratos || '';
+    document.getElementById('receta_grasas').value = receta.grasas || '';
+    document.getElementById('receta_fibra').value = receta.fibra || '';
 
     // Show existing image preview
     const preview = document.getElementById('receta_imagen_preview');
@@ -161,6 +165,10 @@ async function guardarReceta() {
     formData.append('porciones', document.getElementById('receta_porciones').value);
     formData.append('calorias', document.getElementById('receta_calorias').value);
     formData.append('categoria', document.getElementById('receta_categoria').value);
+    formData.append('proteinas', document.getElementById('receta_proteinas').value);
+    formData.append('carbohidratos', document.getElementById('receta_carbohidratos').value);
+    formData.append('grasas', document.getElementById('receta_grasas').value);
+    formData.append('fibra', document.getElementById('receta_fibra').value);
 
     const imagenInput = document.getElementById('receta_imagen');
     if (imagenInput.files.length > 0) {

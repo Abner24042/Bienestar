@@ -23,7 +23,11 @@ try {
         'tiempo_preparacion' => $_POST['tiempo_preparacion'] ?? null,
         'porciones' => $_POST['porciones'] ?? null,
         'calorias' => $_POST['calorias'] ?? null,
-        'categoria' => $_POST['categoria'] ?? 'comida'
+        'categoria' => $_POST['categoria'] ?? 'comida',
+        'proteinas' => $_POST['proteinas'] !== '' ? ($_POST['proteinas'] ?? null) : null,
+        'carbohidratos' => $_POST['carbohidratos'] !== '' ? ($_POST['carbohidratos'] ?? null) : null,
+        'grasas' => $_POST['grasas'] !== '' ? ($_POST['grasas'] ?? null) : null,
+        'fibra' => $_POST['fibra'] !== '' ? ($_POST['fibra'] ?? null) : null,
     ];
 
     if (empty($data['titulo'])) {

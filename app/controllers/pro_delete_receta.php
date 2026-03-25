@@ -23,7 +23,15 @@ try {
     $model = new Receta();
     $existing = $model->findById($data['id']);
 
-    if (!$existing || $existing['creado_por'] !== $user['correo']) {
+    if (!$existing) {
+        throw new Exception('Receta no encontrada');
+    }
+
+    $esMia      = $existing['creado_por'] === $user['correo'];
+    $esPending  = !empty($existing['auto_generada']) && empty($existing['aprobada']);
+    $esNutri    = $user['rol'] === 'nutriologo';
+
+    if (!$esMia && !($esPending && $esNutri)) {
         throw new Exception('No tienes permiso para eliminar esta receta');
     }
 

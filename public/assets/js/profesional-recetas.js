@@ -306,6 +306,26 @@ async function eliminarProReceta(id) {
     }
 }
 
+function proRecetaPreviewImagen(input) {
+    const preview = document.getElementById('pro_receta_imagen_preview');
+    const wrap = document.getElementById('pro_receta_preview_wrap');
+    const nameEl = document.getElementById('pro_receta_preview_name');
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            wrap.style.display = 'flex';
+            if (nameEl) nameEl.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+        wrap.style.display = 'none';
+    }
+}
+
 function esc(str) {
     if (!str) return '';
     const div = document.createElement('div');
