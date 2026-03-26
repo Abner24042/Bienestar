@@ -211,3 +211,6 @@ class RecetaController extends BaseController
         $this->success([], 'Receta aprobada');
     }
 }
+
+//este codigo fue echo para poder bajar la cantidad de archivos de el proyecto y para que no tuviera el DRY, profe si ve esto 
+//sigue en proceso de ser terminado para hacerlo como a usted le gustaria :D
