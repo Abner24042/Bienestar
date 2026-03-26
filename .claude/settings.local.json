@@ -55,7 +55,9 @@
       "Bash(node deploy.js public/assets/js/mi-plan.js)",
       "Bash(grep -rn \"Gestión de Planes\\\\|Selecciona un usuario\\\\|select.*usuario\\\\|profesional.*plan\" \"c:\\\\xampp\\\\htdocs\\\\a\\\\Bienestar\\\\public\\\\pages\"\" --include=\"*.php \" -l)",
       "Bash(\"c:/xampp/htdocs/a/Bienestar/public/assets/css/mi-plan.css\":*)",
-      "Bash(node deploy.js public/assets/js/mi-plan.js public/assets/css/mi-plan.css public/pages/profesional/panel.php public/assets/js/profesional-planes.js public/assets/css/profesional.css)"
+      "Bash(node deploy.js public/assets/js/mi-plan.js public/assets/css/mi-plan.css public/pages/profesional/panel.php public/assets/js/profesional-planes.js public/assets/css/profesional.css)",
+      "Bash(node deploy.js \"app/controllers/BaseController.php\" \"public/pages/profesional/panel.php\")",
+      "Bash(node deploy.js \"app/controllers/EjercicioController.php\" \"public/assets/js/admin-ejercicios.js\" \"public/assets/js/profesional-ejercicios.js\" \"public/pages/profesional/panel.php\" \"public/index.php\")"
     ]
   }
 }

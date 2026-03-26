@@ -151,6 +151,18 @@ class Ejercicio {
         }
     }
 
+    // Todos los ejercicios manuales (auto_generado=0): manuales + aprobados
+    public function getForCoach() {
+        try {
+            $query = "SELECT * FROM {$this->table} WHERE activo = 1 AND auto_generado = 0 AND solo_asignado = 0 ORDER BY titulo ASC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     // ── ExerciseDB integration ──────────────────────────────────────────────
 
     // Guarda un ejercicio de la API; retorna id insertado, false=duplicado, 'ERROR:msg'=error

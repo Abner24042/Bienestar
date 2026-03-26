@@ -2,7 +2,9 @@
  * BIENIESTAR - Profesional: Gestión de Recetas (Nutriólogo)
  */
 
-let proRecetasData = [];
+let proRecetasData       = [];
+let proRecetasFiltrados  = [];
+let proRecetasVisible    = 8;
 let allPendingRecetas = [];
 let pendingFiltrados  = [];
 let pendingVisible    = 4;
@@ -34,29 +36,48 @@ async function cargarProRecetas() {
     try {
         const response = await fetch(API_URL + '/pro/recetas');
         const data = await response.json();
-        const tbody = document.getElementById('proRecetasBody');
-
-        if (data.success && data.recetas.length > 0) {
-            proRecetasData = data.recetas;
-            tbody.innerHTML = data.recetas.map(r => `
-                <tr>
-                    <td>${esc(r.titulo)}</td>
-                    <td>${cap(r.categoria || 'comida')}</td>
-                    <td>${r.calorias || '-'} kcal</td>
-                    <td><span style="color:${r.activo == 1 ? '#34A853' : '#999'};font-weight:600;">${r.activo == 1 ? 'Activa' : 'Inactiva'}</span></td>
-                    <td style="display:flex;gap:0.4rem;">
-                        <button class="btn btn-secondary btn-sm" onclick="editarProReceta(${r.id})">Editar</button>
-                        <button class="btn btn-sm" style="background:#F44336;color:white;" onclick="eliminarProReceta(${r.id})">Eliminar</button>
-                    </td>
-                </tr>
-            `).join('');
-        } else {
-            proRecetasData = [];
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-message">No tienes recetas aún. ¡Crea tu primera!</td></tr>';
-        }
+        proRecetasData      = (data.success ? data.recetas : []) || [];
+        proRecetasFiltrados = proRecetasData;
+        proRecetasVisible   = 8;
+        renderProRecetasTable();
     } catch (error) {
         console.error('Error:', error);
+        document.getElementById('proRecetasBody').innerHTML =
+            '<tr><td colspan="5" class="empty-message">Error al cargar recetas.</td></tr>';
     }
+}
+
+function renderProRecetasTable() {
+    const tbody = document.getElementById('proRecetasBody');
+    const wrap  = document.getElementById('proRecetasMostrarMasWrap');
+    if (!proRecetasFiltrados.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-message">No hay recetas.</td></tr>';
+        if (wrap) wrap.innerHTML = '';
+        return;
+    }
+    tbody.innerHTML = proRecetasFiltrados.slice(0, proRecetasVisible).map(r => `
+        <tr>
+            <td>${esc(r.titulo)}</td>
+            <td>${cap(r.categoria || 'comida')}</td>
+            <td>${r.calorias || '-'} kcal</td>
+            <td><span style="color:${r.activo == 1 ? '#34A853' : '#999'};font-weight:600;">${r.activo == 1 ? 'Activa' : 'Inactiva'}</span></td>
+            <td style="display:flex;gap:0.4rem;">
+                <button class="btn btn-secondary btn-sm" onclick="editarProReceta(${r.id})">Editar</button>
+                <button class="btn btn-sm" style="background:#F44336;color:white;" onclick="eliminarProReceta(${r.id})">Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+    if (wrap) {
+        const remaining = proRecetasFiltrados.length - proRecetasVisible;
+        wrap.innerHTML = remaining > 0
+            ? `<button class="btn btn-secondary" style="margin-top:0.75rem;" onclick="mostrarMasProRecetas()">Mostrar más (${remaining})</button>`
+            : '';
+    }
+}
+
+function mostrarMasProRecetas() {
+    proRecetasVisible += 8;
+    renderProRecetasTable();
 }
 
 function editarProReceta(id) {
@@ -217,10 +238,8 @@ function cerrarDetallePending() {
 
 async function aprobarReceta(id) {
     try {
-        const res    = await fetch(API_URL + '/pro/recetas/approve', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
+        const res    = await fetch(API_URL + `/pro/recetas/${id}/approve`, {
+            method: 'POST'
         });
         const result = await res.json();
         if (result.success) {
@@ -237,10 +256,8 @@ async function aprobarReceta(id) {
 async function rechazarReceta(id) {
     if (!confirm('¿Eliminar esta receta?')) return;
     try {
-        const res    = await fetch(API_URL + '/pro/recetas/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
+        const res    = await fetch(API_URL + `/pro/recetas/${id}`, {
+            method: 'DELETE'
         });
         const result = await res.json();
         if (result.success) {
@@ -255,10 +272,12 @@ async function rechazarReceta(id) {
 }
 
 function filtrarProRecetas() {
-    const q = document.getElementById('proRecetasSearch')?.value.toLowerCase().trim() || '';
-    document.querySelectorAll('#proRecetasBody tr').forEach(tr => {
-        tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
+    const q = (document.getElementById('proRecetasSearch')?.value || '').toLowerCase().trim();
+    proRecetasFiltrados = !q ? proRecetasData : proRecetasData.filter(r =>
+        (r.titulo || '').toLowerCase().includes(q) || (r.categoria || '').toLowerCase().includes(q)
+    );
+    proRecetasVisible = 8;
+    renderProRecetasTable();
 }
 
 async function guardarProReceta() {
@@ -266,7 +285,7 @@ async function guardarProReceta() {
     const formData = new FormData(form);
 
     try {
-        const response = await fetch(API_URL + '/pro/recetas/save', {
+        const response = await fetch(API_URL + '/pro/recetas', {
             method: 'POST',
             body: formData
         });
@@ -288,10 +307,8 @@ async function eliminarProReceta(id) {
     if (!confirm('¿Estás seguro de que quieres eliminar esta receta?')) return;
 
     try {
-        const response = await fetch(API_URL + '/pro/recetas/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
+        const response = await fetch(API_URL + `/pro/recetas/${id}`, {
+            method: 'DELETE'
         });
         const result = await response.json();
 

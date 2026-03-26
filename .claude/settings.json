@@ -23,7 +23,14 @@
       "Bash(node deploy.js public/pages/admin/recetas.php public/pages/profesional/panel.php public/assets/js/admin-recetas.js public/assets/js/profesional-recetas.js app/controllers/admin_save_receta.php)",
       "Bash(node deploy.js public/assets/js/favoritos.js app/models/Favorito.php app/controllers/favoritos_toggle.php)",
       "Bash(node deploy.js app/views/layouts/header.php)",
-      "Bash(node deploy.js public/pages/favoritos.php public/assets/js/favoritos.js)"
+      "Bash(node deploy.js public/pages/favoritos.php public/assets/js/favoritos.js)",
+      "Bash(node /c/xampp/htdocs/a/Bienestar/deploy.js)",
+      "Bash(git add public/assets/css/profesional.css public/assets/js/profesional-planes-alimenticios.js public/assets/js/profesional-rutinas.js app/controllers/pro_get_recetas.php)",
+      "Bash(git commit:*)",
+      "Bash(node deploy.js \"public/assets/js/item-picker.js\" \"public/assets/js/profesional-planes-alimenticios.js\" \"public/pages/profesional/panel.php\")",
+      "Bash(node deploy.js \"app/models/RateLimiter.php\" \"app/config/config.php\" \"public/index.php\")",
+      "Bash(node deploy.js \"app/Router.php\" \"app/controllers/BaseController.php\" \"app/controllers/RecetaController.php\" \"public/assets/js/api.js\" \"public/index.php\")",
+      "Bash(node deploy.js \"app/controllers/RecetaController.php\" \"public/assets/js/admin-recetas.js\" \"public/assets/js/profesional-recetas.js\" \"public/index.php\")"
     ]
   }
 }

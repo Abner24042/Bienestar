@@ -189,7 +189,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <!-- Mis Recetas (manuales y aprobadas) -->
         <div class="admin-section" style="width: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>🍽️ Mis Recetas</h2>
+                <h2>🍽️ Recetas Registradas</h2>
                 <button class="btn btn-primary" id="btnNuevaRecetaPro">+ Nueva Receta</button>
             </div>
             <div style="margin-bottom:1rem;">
@@ -212,6 +212,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                     </tbody>
                 </table>
             </div>
+            <div id="proRecetasMostrarMasWrap" style="text-align:center;"></div>
         </div>
 
         <!-- Mis Planes Alimenticios -->
@@ -277,7 +278,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                 </div>
                 <div class="modal-body">
                     <form id="formRecetaPro">
-                        <input type="hidden" id="pro_receta_id" name="id">
+                        <input type="hidden" id="pro_receta_id" name="pro_receta_id">
 
                         <div class="form-section">
                             <div class="form-section-title">🍽️ Información básica</div>
@@ -452,7 +453,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <!-- Mis Ejercicios -->
         <div class="admin-section" style="width: 100%;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2>💪 Mis Ejercicios</h2>
+                <h2>💪 Ejercicios Registrados</h2>
                 <button class="btn btn-primary" id="btnNuevoEjercicioPro">+ Nuevo Ejercicio</button>
             </div>
             <div class="admin-table-wrapper">
@@ -471,48 +472,110 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                     </tbody>
                 </table>
             </div>
+            <div id="proEjerciciosMostrarMasWrap" style="text-align:center;"></div>
         </div>
 
         <!-- Modal Ejercicio Pro -->
         <div id="modalEjercicioPro" class="modal" style="display:none;">
-            <div class="modal-content">
+            <div class="modal-content modal-lg">
                 <div class="modal-header">
-                    <h3 id="modalEjercicioProTitle">Nuevo Ejercicio</h3>
+                    <h3 id="modalEjercicioProTitle">💪 Nuevo Ejercicio</h3>
                     <button class="modal-close" onclick="document.getElementById('modalEjercicioPro').style.display='none'">&times;</button>
                 </div>
                 <div class="modal-body">
                     <form id="formEjercicioPro">
-                        <input type="hidden" id="pro_ejercicio_id" name="id">
-                        <div class="form-group"><label>Título</label><input type="text" id="pro_ejercicio_titulo" name="titulo" required></div>
-                        <div class="form-group"><label>Descripción</label><textarea id="pro_ejercicio_descripcion" name="descripcion" rows="2"></textarea></div>
-                        <div class="form-group"><label>Duración (min)</label><input type="number" id="pro_ejercicio_duracion" name="duracion"></div>
+                        <input type="hidden" id="pro_ejercicio_id" name="pro_ejercicio_id">
+
                         <div class="form-group">
-                            <label>Nivel</label>
-                            <select id="pro_ejercicio_nivel" name="nivel">
-                                <option value="principiante">Principiante</option>
-                                <option value="intermedio">Intermedio</option>
-                                <option value="avanzado">Avanzado</option>
-                            </select>
+                            <label>Título <span class="req">*</span></label>
+                            <input type="text" id="pro_ejercicio_titulo" name="titulo" required placeholder="Ej. Press de banca">
                         </div>
                         <div class="form-group">
-                            <label>Tipo</label>
-                            <select id="pro_ejercicio_tipo" name="tipo">
-                                <option value="cardio">Cardio</option>
-                                <option value="fuerza">Fuerza</option>
-                                <option value="flexibilidad">Flexibilidad</option>
-                                <option value="equilibrio">Equilibrio</option>
-                            </select>
+                            <label>Descripción</label>
+                            <textarea id="pro_ejercicio_descripcion" name="descripcion" rows="2" placeholder="Breve descripción del ejercicio..."></textarea>
                         </div>
-                        <div class="form-group"><label>Calorías quemadas</label><input type="number" id="pro_ejercicio_calorias" name="calorias_quemadas"></div>
-                        <div class="form-group"><label>Músculo objetivo</label><input type="text" id="pro_ejercicio_musculo" name="musculo_objetivo" placeholder="Ej: Pectorales, Bíceps..."></div>
-                        <div class="form-group"><label>Equipamiento</label><input type="text" id="pro_ejercicio_equipamiento" name="equipamiento" placeholder="Ej: Mancuernas, Barra, Sin equipo..."></div>
-                        <div class="form-group"><label>Músculos secundarios</label><input type="text" id="pro_ejercicio_secundarios" name="musculos_secundarios" placeholder="Separados por coma: Tríceps, Deltoides..."></div>
-                        <div class="form-group"><label>URL de Video</label><input type="url" id="pro_ejercicio_video" name="video_url" placeholder="https://..."></div>
-                        <div class="form-group"><label>Instrucciones</label><textarea id="pro_ejercicio_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea"></textarea></div>
-                        <div class="form-group"><label>Imagen</label><input type="file" id="pro_ejercicio_imagen" name="imagen" accept="image/*"></div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📋 Detalles</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Tipo <span class="req">*</span></label>
+                                    <select id="pro_ejercicio_tipo" name="tipo">
+                                        <option value="cardio">Cardio</option>
+                                        <option value="fuerza">Fuerza</option>
+                                        <option value="flexibilidad">Flexibilidad</option>
+                                        <option value="equilibrio">Equilibrio</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nivel <span class="req">*</span></label>
+                                    <select id="pro_ejercicio_nivel" name="nivel">
+                                        <option value="principiante">Principiante</option>
+                                        <option value="intermedio">Intermedio</option>
+                                        <option value="avanzado">Avanzado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Duración (min)</label>
+                                    <input type="number" id="pro_ejercicio_duracion" name="duracion" placeholder="30" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Calorías quemadas</label>
+                                    <input type="number" id="pro_ejercicio_calorias" name="calorias_quemadas" placeholder="200" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🦾 Músculos y equipamiento</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Músculo objetivo</label>
+                                    <input type="text" id="pro_ejercicio_musculo" name="musculo_objetivo" placeholder="Ej. Pecho, Cuádriceps">
+                                </div>
+                                <div class="form-group">
+                                    <label>Músculos secundarios</label>
+                                    <input type="text" id="pro_ejercicio_secundarios" name="musculos_secundarios" placeholder="Ej. Tríceps, Glúteos">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Equipamiento</label>
+                                <input type="text" id="pro_ejercicio_equipamiento" name="equipamiento" placeholder="Ej. Mancuernas, Barra, Sin equipo...">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">📝 Instrucciones y medios</div>
+                            <div class="form-group">
+                                <label>URL de Video</label>
+                                <input type="url" id="pro_ejercicio_video" name="video_url" placeholder="https://youtube.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>Instrucciones</label>
+                                <textarea id="pro_ejercicio_instrucciones" name="instrucciones" rows="4" placeholder="Una instrucción por línea&#10;1. Posición inicial...&#10;2. Movimiento..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">🖼️ Imagen</div>
+                            <div class="file-upload-zone">
+                                <span class="upload-icon">📁</span>
+                                <div>Haz clic o arrastra una imagen aquí</div>
+                                <div class="file-upload-hint">JPG, PNG, WebP — máx. 5 MB</div>
+                                <input type="file" id="pro_ejercicio_imagen" name="imagen" accept="image/*"
+                                       onchange="proEjercicioPreviewImagen(this)">
+                            </div>
+                            <div class="file-upload-preview" id="pro_ejercicio_preview_wrap" style="display:none;">
+                                <img id="pro_ejercicio_imagen_preview" src="" alt="Vista previa">
+                                <span id="pro_ejercicio_preview_name" style="font-size:0.85rem;color:#666;"></span>
+                            </div>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalEjercicioPro').style.display='none'">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Ejercicio</button>
                         </div>
                     </form>
                 </div>
@@ -822,6 +885,9 @@ const PROFESSIONAL_USER = {
 
 <?php
 $additionalJS = ['emailConfig.js', 'googleCalendar.js', 'profesional.js', 'profesional-planes.js'];
+if (in_array($user['rol'], ['nutriologo', 'coach'])) {
+    $additionalJS[] = 'item-picker.js';
+}
 if ($user['rol'] === 'nutriologo') {
     $additionalJS[] = 'profesional-recetas.js';
     $additionalJS[] = 'profesional-planes-alimenticios.js';

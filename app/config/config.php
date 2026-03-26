@@ -83,4 +83,7 @@ function asset($path = '') {
 // Clave de encriptación para mensajes de chat (AES-256-CBC, 32 bytes)
 define('CHAT_ENCRYPTION_KEY', hash('sha256', 'bieniestar_chat_secret_k3y_2026', true));
 
+// Secreto para el hash HMAC de IPs en el rate limiter (nunca se almacena la IP real)
+define('RATE_LIMIT_SECRET', $_ENV['RATE_LIMIT_SECRET'] ?? 'bienestar_rl_s3cr3t_2026_x9z');
+
 // FIN DEL ARCHIVO - NO AGREGAR MÁS FUNCIONES AQUÍ

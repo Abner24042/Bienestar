@@ -176,7 +176,7 @@ async function guardarReceta() {
     }
 
     try {
-        const response = await fetch(API_URL + '/admin/recetas/save', {
+        const response = await fetch(API_URL + '/admin/recetas', {
             method: 'POST',
             body: formData
         });
@@ -196,10 +196,10 @@ async function guardarReceta() {
 
 async function toggleReceta(id, activo) {
     try {
-        const response = await fetch(API_URL + '/admin/recetas/delete', {
+        const response = await fetch(API_URL + `/admin/recetas/${id}/toggle`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, action: 'toggle', activo: activo })
+            body: JSON.stringify({ activo: activo })
         });
         const result = await response.json();
 
@@ -218,10 +218,8 @@ async function eliminarReceta(id, titulo) {
     if (!confirm(`¿Eliminar la receta "${titulo}"?\nEsta acción no se puede deshacer.`)) return;
 
     try {
-        const response = await fetch(API_URL + '/admin/recetas/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, action: 'delete' })
+        const response = await fetch(API_URL + `/admin/recetas/${id}`, {
+            method: 'DELETE'
         });
         const result = await response.json();
 

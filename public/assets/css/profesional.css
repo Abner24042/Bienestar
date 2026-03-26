@@ -307,8 +307,8 @@
 .picker-row-orange { background: rgba(255,107,53,0.06); border: 1px solid rgba(255,107,53,0.18); }
 
 /* Dark mode picker */
-[data-theme="dark"] #itemPickerPanel { background: #1e2128; border-color: rgba(255,255,255,0.12); }
-[data-theme="dark"] .ip-search { background: #252830; color: #fff; border-color: rgba(255,255,255,0.12); }
+[data-theme="dark"] #itemPickerPanel { background: #1e1e1e; border-color: rgba(255,255,255,0.10); }
+[data-theme="dark"] .ip-search { background: #2a2a2a; color: #fff; border-color: rgba(255,255,255,0.10); }
 [data-theme="dark"] .ip-search-wrap { border-bottom-color: rgba(255,255,255,0.07); }
 [data-theme="dark"] .ip-filters { border-bottom-color: rgba(255,255,255,0.06); }
 [data-theme="dark"] .ip-filter { border-color: rgba(255,255,255,0.15); color: #aaa; }

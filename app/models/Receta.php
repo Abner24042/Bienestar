@@ -71,6 +71,19 @@ class Receta {
         }
     }
 
+    // Retorna recetas ingresadas manualmente (auto_generada=0) + aprobadas
+    // "aprobada" pone auto_generada=0, así que auto_generada=0 cubre ambos casos
+    public function getForProfessional() {
+        try {
+            $query = "SELECT * FROM {$this->table} WHERE activo = 1 AND auto_generada = 0 ORDER BY titulo ASC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     public function getByCreator($email) {
         try {
             $query = "SELECT * FROM {$this->table} WHERE creado_por = :email AND activo = 1 ORDER BY created_at DESC";
