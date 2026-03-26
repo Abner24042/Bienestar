@@ -1,7 +1,7 @@
 <?php
 $pageTitle    = 'Favoritos';
 $currentPage  = 'favoritos';
-$additionalCSS = ['alimentacion.css', 'ejercicio.css', 'favoritos.css'];
+$additionalCSS = ['filters.css', 'alimentacion.css', 'ejercicio.css', 'favoritos.css'];
 
 require_once '../../app/config/config.php';
 require_once '../../app/controllers/AuthController.php';
@@ -37,11 +37,36 @@ include '../../app/views/layouts/header.php';
         </button>
     </div>
 
+    <!-- Filtros recetas -->
+    <div id="favFiltrosRecetas" class="filters-section" style="margin-top:1rem;">
+        <div class="filter-group">
+            <button class="filter-btn active" data-fav-cat="all">Todas</button>
+            <button class="filter-btn" data-fav-cat="desayuno">Desayuno</button>
+            <button class="filter-btn" data-fav-cat="almuerzo">Almuerzo</button>
+            <button class="filter-btn" data-fav-cat="comida">Comida</button>
+            <button class="filter-btn" data-fav-cat="merienda">Merienda</button>
+            <button class="filter-btn" data-fav-cat="cena">Cena</button>
+            <button class="filter-btn" data-fav-cat="snack">Snacks</button>
+            <button class="filter-btn" data-fav-cat="postre">Postre</button>
+        </div>
+    </div>
+
     <!-- Grid recetas -->
-    <div id="favGridRecetas" class="recipes-grid" style="margin-top:1.5rem;"></div>
+    <div id="favGridRecetas" class="recipes-grid" style="margin-top:1rem;"></div>
+
+    <!-- Filtros ejercicios -->
+    <div id="favFiltrosEjercicios" class="filters-section" style="margin-top:1rem;display:none;">
+        <div class="filter-group">
+            <button class="filter-btn active" data-fav-tipo="all">Todos</button>
+            <button class="filter-btn" data-fav-tipo="cardio">Cardio</button>
+            <button class="filter-btn" data-fav-tipo="fuerza">Fuerza</button>
+            <button class="filter-btn" data-fav-tipo="flexibilidad">Flexibilidad</button>
+            <button class="filter-btn" data-fav-tipo="equilibrio">Equilibrio</button>
+        </div>
+    </div>
 
     <!-- Grid ejercicios -->
-    <div id="favGridEjercicios" class="exercises-grid" style="margin-top:1.5rem;display:none;"></div>
+    <div id="favGridEjercicios" class="exercises-grid" style="margin-top:1rem;display:none;"></div>
 </div>
 
 <!-- Modal Receta -->

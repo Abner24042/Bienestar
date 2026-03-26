@@ -8,6 +8,7 @@ class Favorito {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->ensureTable();
+        $this->ensureColumns();
     }
 
     private function ensureTable() {
@@ -24,7 +25,16 @@ class Favorito {
         } catch (PDOException $e) {}
     }
 
-    public function toggle($userId, $tipo, $referenciaId) {
+    private function ensureColumns() {
+        try {
+            $cols = $this->db->query("SHOW COLUMNS FROM favoritos LIKE 'snapshot_data'")->fetchAll();
+            if (empty($cols)) {
+                $this->db->exec("ALTER TABLE favoritos ADD COLUMN snapshot_data LONGTEXT NULL");
+            }
+        } catch (PDOException $e) {}
+    }
+
+    public function toggle($userId, $tipo, $referenciaId, $snapshotData = null) {
         try {
             $stmt = $this->db->prepare("SELECT id FROM favoritos WHERE usuario_id = :uid AND tipo = :tipo AND referencia_id = :rid");
             $stmt->execute([':uid' => $userId, ':tipo' => $tipo, ':rid' => $referenciaId]);
@@ -33,8 +43,9 @@ class Favorito {
                          ->execute([':uid' => $userId, ':tipo' => $tipo, ':rid' => $referenciaId]);
                 return 'removed';
             } else {
-                $this->db->prepare("INSERT INTO favoritos (usuario_id, tipo, referencia_id) VALUES (:uid, :tipo, :rid)")
-                         ->execute([':uid' => $userId, ':tipo' => $tipo, ':rid' => $referenciaId]);
+                $snap = $snapshotData ? json_encode($snapshotData, JSON_UNESCAPED_UNICODE) : null;
+                $this->db->prepare("INSERT INTO favoritos (usuario_id, tipo, referencia_id, snapshot_data) VALUES (:uid, :tipo, :rid, :snap)")
+                         ->execute([':uid' => $userId, ':tipo' => $tipo, ':rid' => $referenciaId, ':snap' => $snap]);
                 return 'added';
             }
         } catch (PDOException $e) {
@@ -61,14 +72,34 @@ class Favorito {
 
     public function getWithData($userId) {
         try {
+            // LEFT JOIN: muestra recetas aunque hayan sido borradas (usa snapshot)
             $stmt = $this->db->prepare("
-                SELECT r.*, f.created_at AS fav_at FROM recetas r
-                JOIN favoritos f ON f.referencia_id = r.id AND f.tipo = 'receta'
-                WHERE f.usuario_id = :uid AND r.activo = 1
+                SELECT r.*, f.created_at AS fav_at, f.snapshot_data, f.referencia_id AS fav_ref_id
+                FROM favoritos f
+                LEFT JOIN recetas r ON r.id = f.referencia_id
+                WHERE f.usuario_id = :uid AND f.tipo = 'receta'
                 ORDER BY f.created_at DESC
             ");
             $stmt->execute([':uid' => $userId]);
-            $recetas = $stmt->fetchAll();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $recetas = [];
+            foreach ($rows as $row) {
+                if ($row['id'] === null) {
+                    // Receta eliminada — reconstruir desde snapshot
+                    $snap = !empty($row['snapshot_data']) ? json_decode($row['snapshot_data'], true) : null;
+                    if ($snap) {
+                        $snap['id']       = (int)$row['fav_ref_id'];
+                        $snap['fav_at']   = $row['fav_at'];
+                        $snap['_deleted'] = true;
+                        $recetas[] = $snap;
+                    }
+                    // Si no hay snapshot, simplemente no se muestra
+                } else {
+                    $row['_deleted'] = false;
+                    $recetas[] = $row;
+                }
+            }
 
             $stmt = $this->db->prepare("
                 SELECT e.*, f.created_at AS fav_at FROM ejercicios e

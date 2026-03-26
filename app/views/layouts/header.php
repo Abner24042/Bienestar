@@ -35,7 +35,6 @@ if (!isset($pageTitle)) {
     <script defer src="<?php echo asset('js/emailConfigLoader.php'); ?>"></script>
 </head>
 <body>
-<a href="#main-content" class="skip-link">Saltar al contenido</a>
 <script>
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const API_URL  = BASE_URL + '/api';

@@ -5,9 +5,31 @@
 let favRecetas    = [];
 let favEjercicios = [];
 let favTabActual  = 'recetas';
+let favCatActual  = 'all';
+let favTipoActual = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarFavoritos();
+
+    // Filtros recetas
+    document.querySelectorAll('[data-fav-cat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-fav-cat]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            favCatActual = btn.dataset.favCat;
+            renderFavRecetas();
+        });
+    });
+
+    // Filtros ejercicios
+    document.querySelectorAll('[data-fav-tipo]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-fav-tipo]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            favTipoActual = btn.dataset.favTipo;
+            renderFavEjercicios();
+        });
+    });
 });
 
 async function cargarFavoritos() {
@@ -34,8 +56,13 @@ function favCambiarTab(tab, btn) {
     document.querySelectorAll('.fav-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    document.getElementById('favGridRecetas').style.display    = tab === 'recetas'    ? '' : 'none';
-    document.getElementById('favGridEjercicios').style.display = tab === 'ejercicios' ? '' : 'none';
+    const isRecetas    = tab === 'recetas';
+    const isEjercicios = tab === 'ejercicios';
+
+    document.getElementById('favGridRecetas').style.display       = isRecetas    ? '' : 'none';
+    document.getElementById('favFiltrosRecetas').style.display    = isRecetas    ? '' : 'none';
+    document.getElementById('favGridEjercicios').style.display    = isEjercicios ? '' : 'none';
+    document.getElementById('favFiltrosEjercicios').style.display = isEjercicios ? '' : 'none';
 }
 
 /* ── Recetas ────────────────────────────────────────────────────────── */
@@ -49,18 +76,34 @@ function renderFavRecetas() {
         return;
     }
 
-    grid.innerHTML = favRecetas.map((r, i) => {
-        const img   = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
-        const cat   = favCapitalize(r.categoria || 'comida');
-        const delay = (i * 0.07).toFixed(2);
+    const filtered = favCatActual === 'all'
+        ? favRecetas
+        : favRecetas.filter(r => (r.categoria || '').toLowerCase() === favCatActual);
+
+    if (!filtered.length) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#999;padding:3rem 0;">No tienes recetas en esta categoría.</p>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map((r, i) => {
+        const img      = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
+        const cat      = favCapitalize(r.categoria || 'comida');
+        const delay    = (i * 0.07).toFixed(2);
+        const deleted  = r._deleted === true;
+        const cardStyle = `cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;${deleted ? 'opacity:0.72;' : ''}`;
+        const deletedBadge = deleted
+            ? `<span style="position:absolute;top:8px;left:8px;background:rgba(180,0,0,0.82);color:#fff;font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;">Eliminada</span>`
+            : '';
+
         return `<div class="recipe-card" tabindex="0" role="button" aria-label="${favEsc(r.titulo)}"
-            onclick="favShowRecipeModal(${r.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
+            onclick="favShowRecipeModal(${r.id})" style="${cardStyle}">
             <div class="recipe-image" style="position:relative;">
                 <img src="${favEsc(img)}" alt="${favEsc(r.titulo)}"
                      onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'">
                 <span class="recipe-badge">${favEsc(cat)}</span>
+                ${deletedBadge}
                 <button class="fav-btn fav-active" title="Quitar de favoritos"
-                        onclick="event.stopPropagation(); favQuitarReceta(${r.id}, this)">
+                        onclick="event.stopPropagation(); favQuitarReceta(${r.id}, this, ${deleted})">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
@@ -86,7 +129,11 @@ function renderFavRecetas() {
     }).join('');
 }
 
-async function favQuitarReceta(id, btn) {
+async function favQuitarReceta(id, btn, isDeleted) {
+    if (isDeleted) {
+        const ok = confirm('Esta receta ya no está en la base de datos. Si la quita de favoritos ya no la podrá recuperar. ¿Seguro que la quiere quitar?');
+        if (!ok) return;
+    }
     await toggleFavoritoPage('receta', id, btn);
     favRecetas = favRecetas.filter(r => r.id != id);
     renderFavRecetas();
@@ -148,7 +195,16 @@ function renderFavEjercicios() {
         return;
     }
 
-    grid.innerHTML = favEjercicios.map((e, i) => {
+    const filtered = favTipoActual === 'all'
+        ? favEjercicios
+        : favEjercicios.filter(e => (e.tipo || '').toLowerCase() === favTipoActual);
+
+    if (!filtered.length) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#999;padding:3rem 0;">No tienes ejercicios de este tipo.</p>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map((e, i) => {
         const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
         const tipo       = favCapitalize(e.tipo || 'cardio');
         const nivel      = favCapitalize(e.nivel || 'principiante');

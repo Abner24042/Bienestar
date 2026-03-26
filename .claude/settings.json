@@ -20,7 +20,10 @@
       "Read(//c/Users/abner/AppData/Local/Temp/claude/c--xampp-htdocs-a-Bienestar/tasks/**)",
       "Bash(git add public/assets/css/main.css app/views/layouts/header.php public/assets/js/keyboard-nav.js public/assets/js/ejercicio.js public/assets/js/alimentacion.js public/assets/js/noticias.js public/assets/js/mi-plan.js public/assets/js/favoritos.js public/pages/dashboard.php)",
       "Bash(node deploy.js app/controllers/pro_delete_receta.php)",
-      "Bash(node deploy.js public/pages/admin/recetas.php public/pages/profesional/panel.php public/assets/js/admin-recetas.js public/assets/js/profesional-recetas.js app/controllers/admin_save_receta.php)"
+      "Bash(node deploy.js public/pages/admin/recetas.php public/pages/profesional/panel.php public/assets/js/admin-recetas.js public/assets/js/profesional-recetas.js app/controllers/admin_save_receta.php)",
+      "Bash(node deploy.js public/assets/js/favoritos.js app/models/Favorito.php app/controllers/favoritos_toggle.php)",
+      "Bash(node deploy.js app/views/layouts/header.php)",
+      "Bash(node deploy.js public/pages/favoritos.php public/assets/js/favoritos.js)"
     ]
   }
 }
