@@ -1,8 +1,5 @@
-/**
- * BIENIESTAR - Panel Profesional
- */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadUsersList();
     loadProfessionalAppointments();
 

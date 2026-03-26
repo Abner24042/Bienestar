@@ -1,15 +1,12 @@
-/**
- * BIENIESTAR - Profesional: Gestión de Ejercicios (Coach)
- */
 
-let proEjerciciosData      = [];
+let proEjerciciosData = [];
 let proEjerciciosFiltrados = [];
-let proEjerciciosVisible   = 8;
+let proEjerciciosVisible = 8;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     cargarProEjercicios();
 
-    document.getElementById('btnNuevoEjercicioPro').addEventListener('click', function() {
+    document.getElementById('btnNuevoEjercicioPro').addEventListener('click', function () {
         document.getElementById('modalEjercicioProTitle').textContent = '💪 Nuevo Ejercicio';
         document.getElementById('formEjercicioPro').reset();
         document.getElementById('pro_ejercicio_id').value = '';
@@ -18,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalEjercicioPro').style.display = 'flex';
     });
 
-    document.getElementById('formEjercicioPro').addEventListener('submit', function(e) {
+    document.getElementById('formEjercicioPro').addEventListener('submit', function (e) {
         e.preventDefault();
         guardarProEjercicio();
     });
@@ -28,9 +25,9 @@ async function cargarProEjercicios() {
     try {
         const response = await fetch(API_URL + '/pro/ejercicios');
         const data = await response.json();
-        proEjerciciosData      = (data.success ? data.ejercicios : []) || [];
+        proEjerciciosData = (data.success ? data.ejercicios : []) || [];
         proEjerciciosFiltrados = proEjerciciosData;
-        proEjerciciosVisible   = 8;
+        proEjerciciosVisible = 8;
         renderProEjerciciosTable();
     } catch (error) {
         console.error('Error:', error);
@@ -41,7 +38,7 @@ async function cargarProEjercicios() {
 
 function renderProEjerciciosTable() {
     const tbody = document.getElementById('proEjerciciosBody');
-    const wrap  = document.getElementById('proEjerciciosMostrarMasWrap');
+    const wrap = document.getElementById('proEjerciciosMostrarMasWrap');
     if (!proEjerciciosFiltrados.length) {
         tbody.innerHTML = '<tr><td colspan="5" class="empty-message">No hay ejercicios disponibles.</td></tr>';
         if (wrap) wrap.innerHTML = '';
@@ -137,12 +134,12 @@ async function eliminarProEjercicio(id) {
 
 function proEjercicioPreviewImagen(input) {
     const preview = document.getElementById('pro_ejercicio_imagen_preview');
-    const wrap    = document.getElementById('pro_ejercicio_preview_wrap');
-    const nameEl  = document.getElementById('pro_ejercicio_preview_name');
+    const wrap = document.getElementById('pro_ejercicio_preview_wrap');
+    const nameEl = document.getElementById('pro_ejercicio_preview_name');
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             if (preview) { preview.src = e.target.result; preview.style.display = 'block'; }
             if (wrap) wrap.style.display = 'flex';
             if (nameEl) nameEl.textContent = file.name;

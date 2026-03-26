@@ -1,10 +1,3 @@
-/**
- * BIENIESTAR - JavaScript de Perfil
- */
-
-// ============================================
-// FUNCIONES AUXILIARES
-// ============================================
 
 /**
  * Validar email
@@ -34,9 +27,9 @@ function showToast(message, type = 'info') {
     toast.style.opacity = '1';
 
     // Ocultar después de 3 segundos
-    setTimeout(function() {
+    setTimeout(function () {
         toast.style.opacity = '0';
-        setTimeout(function() {
+        setTimeout(function () {
             toast.style.display = 'none';
         }, 300);
     }, 3000);
@@ -204,37 +197,37 @@ function initUserMenu() {
         let menuTimeout;
 
         // Mostrar menú al hacer hover en el usuario
-        headerUser.addEventListener('mouseenter', function() {
+        headerUser.addEventListener('mouseenter', function () {
             clearTimeout(menuTimeout);
             userMenu.style.display = 'block';
-            setTimeout(function() {
+            setTimeout(function () {
                 userMenu.style.opacity = '1';
                 userMenu.style.transform = 'translateY(0)';
             }, 10);
         });
 
         // Ocultar menú con delay al salir del usuario
-        headerUser.addEventListener('mouseleave', function() {
-            menuTimeout = setTimeout(function() {
+        headerUser.addEventListener('mouseleave', function () {
+            menuTimeout = setTimeout(function () {
                 userMenu.style.opacity = '0';
                 userMenu.style.transform = 'translateY(-10px)';
-                setTimeout(function() {
+                setTimeout(function () {
                     userMenu.style.display = 'none';
                 }, 200);
             }, 300); // 300ms de delay antes de cerrar
         });
 
         // Mantener abierto si el cursor está sobre el menú
-        userMenu.addEventListener('mouseenter', function() {
+        userMenu.addEventListener('mouseenter', function () {
             clearTimeout(menuTimeout);
         });
 
         // Cerrar cuando el cursor sale del menú
-        userMenu.addEventListener('mouseleave', function() {
-            menuTimeout = setTimeout(function() {
+        userMenu.addEventListener('mouseleave', function () {
+            menuTimeout = setTimeout(function () {
                 userMenu.style.opacity = '0';
                 userMenu.style.transform = 'translateY(-10px)';
-                setTimeout(function() {
+                setTimeout(function () {
                     userMenu.style.display = 'none';
                 }, 200);
             }, 200);
@@ -246,7 +239,7 @@ function initUserMenu() {
 // INICIALIZACIÓN
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initProfileForms();
     initUserMenu();
 });

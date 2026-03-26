@@ -1,32 +1,29 @@
-/**
- * BIENIESTAR - Profesional: Gestión de Recetas (Nutriólogo)
- */
 
-let proRecetasData       = [];
-let proRecetasFiltrados  = [];
-let proRecetasVisible    = 8;
+let proRecetasData = [];
+let proRecetasFiltrados = [];
+let proRecetasVisible = 8;
 let allPendingRecetas = [];
-let pendingFiltrados  = [];
-let pendingVisible    = 4;
+let pendingFiltrados = [];
+let pendingVisible = 4;
 
 function porFilaP() {
     const el = document.getElementById('pendingRecetasGrid');
-    const w  = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
+    const w = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
     return Math.max(1, Math.floor((w + 16) / (220 + 16)));
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     cargarProRecetas();
     cargarPendingRecetas();
 
-    document.getElementById('btnNuevaRecetaPro').addEventListener('click', function() {
+    document.getElementById('btnNuevaRecetaPro').addEventListener('click', function () {
         document.getElementById('modalRecetaProTitle').textContent = 'Nueva Receta';
         document.getElementById('formRecetaPro').reset();
         document.getElementById('pro_receta_id').value = '';
         document.getElementById('modalRecetaPro').style.display = 'flex';
     });
 
-    document.getElementById('formRecetaPro').addEventListener('submit', function(e) {
+    document.getElementById('formRecetaPro').addEventListener('submit', function (e) {
         e.preventDefault();
         guardarProReceta();
     });
@@ -36,9 +33,9 @@ async function cargarProRecetas() {
     try {
         const response = await fetch(API_URL + '/pro/recetas');
         const data = await response.json();
-        proRecetasData      = (data.success ? data.recetas : []) || [];
+        proRecetasData = (data.success ? data.recetas : []) || [];
         proRecetasFiltrados = proRecetasData;
-        proRecetasVisible   = 8;
+        proRecetasVisible = 8;
         renderProRecetasTable();
     } catch (error) {
         console.error('Error:', error);
@@ -49,7 +46,7 @@ async function cargarProRecetas() {
 
 function renderProRecetasTable() {
     const tbody = document.getElementById('proRecetasBody');
-    const wrap  = document.getElementById('proRecetasMostrarMasWrap');
+    const wrap = document.getElementById('proRecetasMostrarMasWrap');
     if (!proRecetasFiltrados.length) {
         tbody.innerHTML = '<tr><td colspan="5" class="empty-message">No hay recetas.</td></tr>';
         if (wrap) wrap.innerHTML = '';
@@ -103,7 +100,7 @@ function editarProReceta(id) {
 
 async function cargarPendingRecetas() {
     try {
-        const res  = await fetch(API_URL + '/pro/recetas/pending');
+        const res = await fetch(API_URL + '/pro/recetas/pending');
         const data = await res.json();
         if (!data.success || data.recetas.length === 0) {
             document.getElementById('sectionPendingRecetas').style.display = 'none';
@@ -118,11 +115,11 @@ async function cargarPendingRecetas() {
 }
 
 function aplicarFiltrosPending() {
-    const q   = (document.getElementById('pendingSearch')?.value || '').toLowerCase().trim();
+    const q = (document.getElementById('pendingSearch')?.value || '').toLowerCase().trim();
     const cat = (document.getElementById('pendingCatFilter')?.value || '').toLowerCase();
     pendingFiltrados = allPendingRecetas.filter(r => {
-        const matchText = !q || r.titulo.toLowerCase().includes(q) || (r.categoria||'').toLowerCase().includes(q);
-        const matchCat  = !cat || (r.categoria||'').toLowerCase() === cat;
+        const matchText = !q || r.titulo.toLowerCase().includes(q) || (r.categoria || '').toLowerCase().includes(q);
+        const matchCat = !cat || (r.categoria || '').toLowerCase() === cat;
         return matchText && matchCat;
     });
     pendingVisible = porFilaP();
@@ -135,9 +132,9 @@ function mostrarMasPending() {
 }
 
 function renderPendingGrid() {
-    const grid  = document.getElementById('pendingRecetasGrid');
+    const grid = document.getElementById('pendingRecetasGrid');
     const items = pendingFiltrados.slice(0, pendingVisible);
-    const btn   = document.getElementById('btnMostrarMasPending');
+    const btn = document.getElementById('btnMostrarMasPending');
     if (items.length === 0) {
         grid.innerHTML = '<p style="color:#999;grid-column:1/-1;">No se encontraron recetas con ese filtro.</p>';
     } else {
@@ -173,12 +170,12 @@ function pendingCard(r) {
 function abrirDetallePending(id) {
     const r = allPendingRecetas.find(x => x.id == id);
     if (!r) return;
-    const img  = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=70';
-    const cat  = cap(r.categoria || 'receta');
-    const cal  = r.calorias  ? Math.round(r.calorias) + ' kcal'  : '—';
-    const prot = r.proteinas ? r.proteinas + 'g proteínas'        : '';
-    const carb = r.carbohidratos ? r.carbohidratos + 'g carbos'   : '';
-    const gras = r.grasas    ? r.grasas + 'g grasas'              : '';
+    const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&q=70';
+    const cat = cap(r.categoria || 'receta');
+    const cal = r.calorias ? Math.round(r.calorias) + ' kcal' : '—';
+    const prot = r.proteinas ? r.proteinas + 'g proteínas' : '';
+    const carb = r.carbohidratos ? r.carbohidratos + 'g carbos' : '';
+    const gras = r.grasas ? r.grasas + 'g grasas' : '';
     const macros = [prot, carb, gras].filter(Boolean).join(' · ');
 
     const ingList = r.ingredientes
@@ -238,7 +235,7 @@ function cerrarDetallePending() {
 
 async function aprobarReceta(id) {
     try {
-        const res    = await fetch(API_URL + `/pro/recetas/${id}/approve`, {
+        const res = await fetch(API_URL + `/pro/recetas/${id}/approve`, {
             method: 'POST'
         });
         const result = await res.json();
@@ -256,7 +253,7 @@ async function aprobarReceta(id) {
 async function rechazarReceta(id) {
     if (!confirm('¿Eliminar esta receta?')) return;
     try {
-        const res    = await fetch(API_URL + `/pro/recetas/${id}`, {
+        const res = await fetch(API_URL + `/pro/recetas/${id}`, {
             method: 'DELETE'
         });
         const result = await res.json();
@@ -330,7 +327,7 @@ function proRecetaPreviewImagen(input) {
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             preview.src = e.target.result;
             preview.style.display = 'block';
             wrap.style.display = 'flex';

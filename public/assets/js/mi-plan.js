@@ -1,9 +1,6 @@
-/**
- * BIENIESTAR - Mi Plan Personal
- */
 
 let planData = {};
-let planFavRecetaIds   = new Set();
+let planFavRecetaIds = new Set();
 let planFavEjercicioIds = new Set();
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -21,19 +18,19 @@ async function cargarPlan() {
             fetch(url),
             fetch(API_URL + '/favoritos'),
         ]);
-        const data    = await resPlan.json();
+        const data = await resPlan.json();
         const dataFav = await resFav.json();
         if (!data.success) throw new Error();
         if (dataFav.success) {
-            planFavRecetaIds    = new Set((dataFav.receta_ids    || []).map(String));
+            planFavRecetaIds = new Set((dataFav.receta_ids || []).map(String));
             planFavEjercicioIds = new Set((dataFav.ejercicio_ids || []).map(String));
         }
         planData = data.plan;
         renderPlan(planData);
     } catch (e) {
         const ids = esPaginaCompleta
-            ? ['planEjerciciosRow','planRecetasRow','planRecomendacionesCol']
-            : ['planEjerciciosGrid','planRecetasGrid','planRecomendacionesGrid'];
+            ? ['planEjerciciosRow', 'planRecetasRow', 'planRecomendacionesCol']
+            : ['planEjerciciosGrid', 'planRecetasGrid', 'planRecomendacionesGrid'];
         ids.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = '<p class="plan-loading">No se pudo cargar el plan.</p>';
@@ -42,8 +39,8 @@ async function cargarPlan() {
 }
 
 function renderPlan(plan) {
-    document.getElementById('numEjercicios').textContent      = plan.ejercicios.length;
-    document.getElementById('numRecetas').textContent         = plan.recetas.length;
+    document.getElementById('numEjercicios').textContent = plan.ejercicios.length;
+    document.getElementById('numRecetas').textContent = plan.recetas.length;
     document.getElementById('numRecomendaciones').textContent = plan.recomendaciones.length;
 
     if (esPaginaCompleta) {
@@ -64,8 +61,8 @@ function renderPlan(plan) {
             : '<p class="plan-empty">No hay recomendaciones aún.</p>';
     } else {
         // Layout dashboard: grids con tabs
-        const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-        const hoy  = dias[new Date().getDay()];
+        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const hoy = dias[new Date().getDay()];
 
         const gE = document.getElementById('planEjerciciosGrid');
         if (gE) gE.innerHTML = plan.ejercicios.length
@@ -86,9 +83,9 @@ function renderPlan(plan) {
 
 function planFavStarBtn(tipo, id) {
     const isFav = tipo === 'ejercicio' ? planFavEjercicioIds.has(String(id)) : planFavRecetaIds.has(String(id));
-    const cls   = isFav ? 'fav-active' : '';
-    const fill  = isFav ? '#ffc107' : 'none';
-    const strk  = isFav ? '#ffc107' : 'rgba(255,255,255,0.5)';
+    const cls = isFav ? 'fav-active' : '';
+    const fill = isFav ? '#ffc107' : 'none';
+    const strk = isFav ? '#ffc107' : 'rgba(255,255,255,0.5)';
     return `<button class="plan-fav-star ${cls}" title="${isFav ? 'Quitar de favoritos' : 'Guardar en favoritos'}"
         onclick="event.stopPropagation(); planToggleFav('${tipo}', ${id}, this)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="${fill}" stroke="${strk}" stroke-width="2">
@@ -99,7 +96,7 @@ function planFavStarBtn(tipo, id) {
 
 async function planToggleFav(tipo, id, btn) {
     try {
-        const res  = await fetch(API_URL + '/favoritos/toggle', {
+        const res = await fetch(API_URL + '/favoritos/toggle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tipo, id }),
@@ -120,13 +117,13 @@ async function planToggleFav(tipo, id, btn) {
             btn.querySelector('polygon').setAttribute('stroke', 'rgba(255,255,255,0.5)');
             btn.title = 'Guardar en favoritos';
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function ejercicioCard(e, idx = 0) {
-    const img   = e.imagen ? `<img src="${esc(e.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
+    const img = e.imagen ? `<img src="${esc(e.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
     const nivel = cap(e.nivel || 'principiante');
-    const tipo  = cap(e.tipo  || 'ejercicio');
+    const tipo = cap(e.tipo || 'ejercicio');
     const notas = e.notas ? `<div class="plan-card-notas">📝 ${esc(e.notas)}</div>` : '';
     const delay = (idx * 0.07).toFixed(2);
     return `
@@ -148,8 +145,8 @@ function ejercicioCard(e, idx = 0) {
 }
 
 function recetaCard(r, idx = 0) {
-    const img  = r.imagen ? `<img src="${esc(r.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
-    const cat  = cap(r.categoria || 'receta');
+    const img = r.imagen ? `<img src="${esc(r.imagen)}" class="plan-card-image" loading="lazy" onerror="this.style.display='none'">` : '';
+    const cat = cap(r.categoria || 'receta');
     const notas = r.notas ? `<div class="plan-card-notas">📝 ${esc(r.notas)}</div>` : '';
     const delay = (idx * 0.07).toFixed(2);
     return `
@@ -169,7 +166,7 @@ function recetaCard(r, idx = 0) {
 }
 
 function recomendacionCard(r, idx = 0) {
-    const tipoColor = { psicologia:'#9c27b0', ejercicio:'#ff6b35', alimentacion:'#4caf50', general:'#2196f3' };
+    const tipoColor = { psicologia: '#9c27b0', ejercicio: '#ff6b35', alimentacion: '#4caf50', general: '#2196f3' };
     const color = tipoColor[r.tipo] || tipoColor.general;
     const delay = (idx * 0.09).toFixed(2);
     return `
@@ -187,12 +184,12 @@ function openEjercicioModal(id) {
     document.getElementById('planModalTitle').textContent = e.titulo;
     const img = e.imagen ? `<img src="${esc(e.imagen)}" class="plan-modal-img" onerror="this.style.display='none'">` : '';
     const stats = [
-        e.duracion          ? statBox('Duración', e.duracion + ' min')         : '',
+        e.duracion ? statBox('Duración', e.duracion + ' min') : '',
         statBox('Nivel', cap(e.nivel || 'principiante')),
-        statBox('Tipo',  cap(e.tipo  || 'ejercicio')),
+        statBox('Tipo', cap(e.tipo || 'ejercicio')),
         e.calorias_quemadas ? statBox('Calorías', e.calorias_quemadas + ' kcal') : '',
-        e.musculo_objetivo  ? statBox('Músculo',  cap(e.musculo_objetivo))       : '',
-        e.equipamiento      ? statBox('Equipo',   cap(e.equipamiento))           : '',
+        e.musculo_objetivo ? statBox('Músculo', cap(e.musculo_objetivo)) : '',
+        e.equipamiento ? statBox('Equipo', cap(e.equipamiento)) : '',
     ].join('');
     const instrucciones = formatList(e.instrucciones);
     document.getElementById('planModalBody').innerHTML = `
@@ -212,16 +209,16 @@ function openRecetaModal(id) {
     document.getElementById('planModalTitle').textContent = r.titulo;
     const img = r.imagen ? `<img src="${esc(r.imagen)}" class="plan-modal-img" onerror="this.style.display='none'">` : '';
     const stats = [
-        r.tiempo_preparacion ? statBox('Tiempo',    r.tiempo_preparacion + ' min') : '',
-        r.porciones          ? statBox('Porciones', r.porciones)                   : '',
-        r.calorias           ? statBox('Calorías',  Math.round(r.calorias) + ' kcal') : '',
+        r.tiempo_preparacion ? statBox('Tiempo', r.tiempo_preparacion + ' min') : '',
+        r.porciones ? statBox('Porciones', r.porciones) : '',
+        r.calorias ? statBox('Calorías', Math.round(r.calorias) + ' kcal') : '',
         statBox('Categoría', cap(r.categoria || 'receta')),
     ].join('');
     document.getElementById('planModalBody').innerHTML = `
         ${img}
         <div class="plan-modal-stats">${stats}</div>
         ${r.descripcion ? `<p style="color:var(--color-text-secondary);margin-bottom:16px;">${esc(r.descripcion)}</p>` : ''}
-        ${r.ingredientes  ? `<h3 style="margin-bottom:8px;">Ingredientes</h3><ul style="padding-left:18px;line-height:1.8;">${formatList(r.ingredientes, 'li')}</ul>` : ''}
+        ${r.ingredientes ? `<h3 style="margin-bottom:8px;">Ingredientes</h3><ul style="padding-left:18px;line-height:1.8;">${formatList(r.ingredientes, 'li')}</ul>` : ''}
         ${r.instrucciones ? `<h3 style="margin:14px 0 8px;">Preparación</h3><ol style="padding-left:18px;line-height:1.8;">${formatList(r.instrucciones)}</ol>` : ''}
     `;
     document.getElementById('planModal').classList.add('open');

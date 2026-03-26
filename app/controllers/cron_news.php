@@ -1,17 +1,4 @@
 <?php
-/**
- * CRON: Auto-fetch de noticias desde GNews API
- *
- * Uso: GET /cron/news?secret=TU_CRON_SECRET
- *
- * Qué hace cada vez que se ejecuta:
- *   1. Despublica artículos auto-generados de más de NEWS_EXPIRE_DAYS días
- *   2. Busca artículos nuevos en GNews para 4 categorías
- *   3. Inserta los que no existan aún en la BD
- *
- * Configurar en IONOS → "Tareas programadas" → frecuencia diaria:
- *   https://tudominio.com/cron/news?secret=TU_CRON_SECRET
- */
 
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/news_config.php';
@@ -45,21 +32,21 @@ echo "[2/3] Artículos auto-generados eliminados (>" . NEWS_EXPIRE_DAYS . " día
 
 // ── 3. Traer noticias nuevas ───────────────────────────────────────
 $inserted = 0;
-$skipped  = 0;
-$errors   = 0;
+$skipped = 0;
+$errors = 0;
 
 foreach (NEWS_SEARCHES as $categoria => $query) {
     $url = 'https://gnews.io/api/v4/search?'
-         . http_build_query([
-             'q'      => $query,
-             'lang'   => 'es',
-             'max'    => NEWS_MAX_PER_CATEGORY,
-             'sortby' => 'publishedAt',
-             'token'  => GNEWS_API_KEY,
-         ]);
+        . http_build_query([
+            'q' => $query,
+            'lang' => 'es',
+            'max' => NEWS_MAX_PER_CATEGORY,
+            'sortby' => 'publishedAt',
+            'token' => GNEWS_API_KEY,
+        ]);
 
     sleep(1); // pequeña pausa entre llamadas para no saturar la API
-    $ctx      = stream_context_create(['http' => ['timeout' => 15]]);
+    $ctx = stream_context_create(['http' => ['timeout' => 15]]);
     $response = @file_get_contents($url, false, $ctx);
 
     if ($response === false) {
@@ -88,10 +75,13 @@ foreach (NEWS_SEARCHES as $categoria => $query) {
 
         // GNews recorta el content con "... [N chars]" — se elimina ese sufijo
         $contenido = preg_replace('/\s*\[\d+\s*chars\]$/u', '', $a['content'] ?? $a['description'] ?? '');
-        $resumen   = preg_replace('/\s*\[\d+\s*chars\]$/u', '', $a['description'] ?? '');
-        $titulo    = trim($a['title']  ?? '');
+        $resumen = preg_replace('/\s*\[\d+\s*chars\]$/u', '', $a['description'] ?? '');
+        $titulo = trim($a['title'] ?? '');
 
-        if (!$titulo) { $skipped++; continue; }
+        if (!$titulo) {
+            $skipped++;
+            continue;
+        }
 
         // Fecha de publicación desde la API
         $fecha = isset($a['publishedAt'])
@@ -99,14 +89,14 @@ foreach (NEWS_SEARCHES as $categoria => $query) {
             : date('Y-m-d H:i:s');
 
         $id = $model->createAuto([
-            'titulo'     => $titulo,
-            'contenido'  => $contenido,
-            'resumen'    => $resumen,
-            'imagen'     => $a['image']          ?? null,
-            'categoria'  => $categoria,
-            'autor'      => $a['source']['name'] ?? null,
+            'titulo' => $titulo,
+            'contenido' => $contenido,
+            'resumen' => $resumen,
+            'imagen' => $a['image'] ?? null,
+            'categoria' => $categoria,
+            'autor' => $a['source']['name'] ?? null,
             'url_fuente' => $artUrl,
-            'fecha'      => $fecha,
+            'fecha' => $fecha,
         ]);
 
         if ($id) {

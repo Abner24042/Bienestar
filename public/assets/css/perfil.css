@@ -1,7 +1,3 @@
-/**
- * BIENIESTAR - Estilos de Perfil
- */
-
 .profile-container {
     display: flex;
     flex-direction: column;
@@ -72,13 +68,16 @@
 .profile-role-badge.role-usuario {
     background: #4285F4;
 }
+
 .profile-role-badge.role-coach {
     background: #34A853;
 }
+
 .profile-role-badge.role-nutriologo {
     background: #FBBC04;
     color: #333;
 }
+
 .profile-role-badge.role-psicologo {
     background: #9C27B0;
 }

@@ -1,23 +1,18 @@
-/**
- * BIENIESTAR - Sistema de Chat
- * Modo pro:    panel dos columnas en /profesional
- * Modo usuario: FAB + drawer en /dashboard
- */
 
-let chatConvActiva  = null;   // { id, nombre, otroId, pendingInit? }
-let chatLastMsgId   = 0;
-let chatPollingInt  = null;
-let chatBadgeInt    = null;
-let chatConvInt     = null;
-let chatMiId        = null;
-let chatEsPro       = false;
+let chatConvActiva = null;   // { id, nombre, otroId, pendingInit? }
+let chatLastMsgId = 0;
+let chatPollingInt = null;
+let chatBadgeInt = null;
+let chatConvInt = null;
+let chatMiId = null;
+let chatEsPro = false;
 
 /* ─────────────────────────────────────────────────────────────────────────
    INICIALIZACIÓN
 ───────────────────────────────────────────────────────────────────────── */
 
 function chatInitPro(userId) {
-    chatMiId  = userId;
+    chatMiId = userId;
     chatEsPro = true;
     chatCargarConversaciones();
     chatBadgeInt = setInterval(chatActualizarBadgeGlobal, 5000);
@@ -29,7 +24,7 @@ function chatInitPro(userId) {
 }
 
 function chatInitUser(userId) {
-    chatMiId  = userId;
+    chatMiId = userId;
     chatEsPro = false;
     chatBadgeInt = setInterval(chatActualizarBadgeGlobal, 5000);
     chatActualizarBadgeGlobal();
@@ -45,11 +40,11 @@ function chatInitUser(userId) {
 
 async function chatCargarConversaciones() {
     try {
-        const res  = await fetch(API_URL + '/chat/conversaciones');
+        const res = await fetch(API_URL + '/chat/conversaciones');
         const data = await res.json();
         if (!data.success) return;
         chatRenderConvList(data.conversaciones, 'chatConvList');
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function chatRenderConvList(convs, listId) {
@@ -62,11 +57,11 @@ function chatRenderConvList(convs, listId) {
     }
 
     lista.innerHTML = convs.map(c => {
-        const inicial  = (c.otro_nombre || '?').charAt(0).toUpperCase();
-        const preview  = c.ultimo_contenido ? chatTruncar(c.ultimo_contenido, 34) : 'Sin mensajes';
-        const badge    = c.no_leidos > 0 ? `<span class="chat-conv-badge">${c.no_leidos}</span>` : '';
-        const active   = chatConvActiva?.id === c.id ? 'active' : '';
-        const clickFn  = listId === 'chatConvList'
+        const inicial = (c.otro_nombre || '?').charAt(0).toUpperCase();
+        const preview = c.ultimo_contenido ? chatTruncar(c.ultimo_contenido, 34) : 'Sin mensajes';
+        const badge = c.no_leidos > 0 ? `<span class="chat-conv-badge">${c.no_leidos}</span>` : '';
+        const active = chatConvActiva?.id === c.id ? 'active' : '';
+        const clickFn = listId === 'chatConvList'
             ? `chatAbrirConv(${c.id},'${chatEscAttr(c.otro_nombre)}',${c.otro_id})`
             : `chatDrawerAbrirConv(${c.id},'${chatEscAttr(c.otro_nombre)}',${c.otro_id})`;
         return `
@@ -87,7 +82,7 @@ function chatRenderConvList(convs, listId) {
 
 async function chatAbrirConv(convId, nombre, otroId) {
     chatConvActiva = { id: convId, nombre, otroId };
-    chatLastMsgId  = 0;
+    chatLastMsgId = 0;
 
     const header = document.getElementById('chatMainHeader');
     if (header) header.innerHTML =
@@ -134,10 +129,10 @@ async function chatAbrirModalNuevo() {
     // Cargar usuarios si no están en caché
     if (!chatUsuariosCache.length) {
         try {
-            const res  = await fetch(API_URL + '/chat/usuarios-disponibles');
+            const res = await fetch(API_URL + '/chat/usuarios-disponibles');
             const data = await res.json();
             if (data.success) chatUsuariosCache = data.usuarios;
-        } catch (e) {}
+        } catch (e) { }
     }
 
     modal.style.display = 'flex';
@@ -177,14 +172,14 @@ function chatFiltrarUsuarios(query) {
 }
 
 function chatSeleccionarUsuario(id, nombre) {
-    document.getElementById('chatNuevoUsuarioId').value   = id;
+    document.getElementById('chatNuevoUsuarioId').value = id;
     document.getElementById('chatNuevoUsuarioNombre').value = nombre;
-    document.getElementById('chatNuevoBuscar').value      = nombre;
+    document.getElementById('chatNuevoBuscar').value = nombre;
     document.getElementById('chatNuevoResultados').innerHTML = '';
 }
 
 function chatIniciarDesdeModal() {
-    const id     = document.getElementById('chatNuevoUsuarioId').value;
+    const id = document.getElementById('chatNuevoUsuarioId').value;
     const nombre = document.getElementById('chatNuevoUsuarioNombre').value;
     if (!id) { alert('Selecciona un destinatario de la lista'); return; }
 
@@ -192,7 +187,7 @@ function chatIniciarDesdeModal() {
     document.getElementById('modalNuevoChat').style.display = 'none';
 
     chatConvActiva = { id: null, nombre, otroId: destinatarioId, pendingInit: true };
-    chatLastMsgId  = 0;
+    chatLastMsgId = 0;
 
     const header = document.getElementById('chatMainHeader');
     if (header) header.textContent = nombre;
@@ -238,13 +233,13 @@ async function chatEnviarArchivo(input) {
     if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
     try {
-        const res  = await fetch(API_URL + '/chat/subir-archivo', { method: 'POST', body: formData });
+        const res = await fetch(API_URL + '/chat/subir-archivo', { method: 'POST', body: formData });
         const data = await res.json();
         if (!data.success) {
             chatShowToast(data.message || 'Error al enviar archivo', 'error');
         } else {
             if (chatConvActiva.pendingInit) {
-                chatConvActiva.id          = data.conversacion_id;
+                chatConvActiva.id = data.conversacion_id;
                 chatConvActiva.pendingInit = false;
                 chatLastMsgId = 0;
                 chatCargarConversaciones();
@@ -266,7 +261,7 @@ async function chatEnviarArchivo(input) {
 ───────────────────────────────────────────────────────────────────────── */
 
 async function chatEnviar() {
-    const input    = document.getElementById('chatInput');
+    const input = document.getElementById('chatInput');
     const contenido = input?.value.trim();
     if (!contenido || !chatConvActiva) return;
 
@@ -276,32 +271,32 @@ async function chatEnviar() {
     if (chatConvActiva.pendingInit) {
         // Primera vez: el POST crea la conversación
         try {
-            const res  = await fetch(API_URL + '/chat/enviar', {
+            const res = await fetch(API_URL + '/chat/enviar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ destinatario_id: chatConvActiva.otroId, contenido })
             });
             const data = await res.json();
             if (!data.success) { chatShowToast(data.message || 'Error al enviar', 'error'); return; }
-            chatConvActiva.id          = data.conversacion_id;
+            chatConvActiva.id = data.conversacion_id;
             chatConvActiva.pendingInit = false;
             chatLastMsgId = 0;
             await chatCargarMensajes('chatMessages', true);
             chatCargarConversaciones();
             chatReiniciarPolling(3000, 'chatMessages');
-        } catch (e) {}
+        } catch (e) { }
         return;
     }
 
     try {
-        const res  = await fetch(API_URL + '/chat/enviar', {
+        const res = await fetch(API_URL + '/chat/enviar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ destinatario_id: chatConvActiva.otroId, contenido })
         });
         const data = await res.json();
         if (data.success) await chatCargarMensajes('chatMessages', true);
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -324,9 +319,9 @@ function chatDrawerCerrar() {
     if (chatPollingInt) { clearInterval(chatPollingInt); chatPollingInt = null; }
     chatConvActiva = null;
     // Reset to list view
-    const lista   = document.getElementById('chatDrawerList');
+    const lista = document.getElementById('chatDrawerList');
     const chatArea = document.getElementById('chatDrawerChat');
-    if (lista)    lista.style.display = 'block';
+    if (lista) lista.style.display = 'block';
     if (chatArea) chatArea.style.display = 'none';
     document.getElementById('chatDrawerTitle').textContent = 'Mensajes';
     document.getElementById('chatDrawerBack').style.display = 'none';
@@ -334,23 +329,23 @@ function chatDrawerCerrar() {
 
 async function chatDrawerCargarConversaciones() {
     try {
-        const res  = await fetch(API_URL + '/chat/conversaciones');
+        const res = await fetch(API_URL + '/chat/conversaciones');
         const data = await res.json();
         if (!data.success) return;
         chatRenderConvList(data.conversaciones, 'chatDrawerConvList');
-    } catch (e) {}
+    } catch (e) { }
 }
 
 async function chatDrawerAbrirConv(convId, nombre, otroId) {
     chatConvActiva = { id: convId, nombre, otroId };
-    chatLastMsgId  = 0;
+    chatLastMsgId = 0;
 
     document.getElementById('chatDrawerTitle').textContent = nombre;
     document.getElementById('chatDrawerBack').style.display = 'inline';
 
-    const lista    = document.getElementById('chatDrawerList');
+    const lista = document.getElementById('chatDrawerList');
     const chatArea = document.getElementById('chatDrawerChat');
-    if (lista)    lista.style.display = 'none';
+    if (lista) lista.style.display = 'none';
     if (chatArea) chatArea.style.display = 'flex';
 
     const msgs = document.getElementById('chatDrawerMessages');
@@ -371,14 +366,14 @@ async function chatDrawerAbrirConv(convId, nombre, otroId) {
 function chatDrawerVolverLista() {
     if (chatPollingInt) { clearInterval(chatPollingInt); chatPollingInt = null; }
     chatConvActiva = null;
-    chatLastMsgId  = 0;
+    chatLastMsgId = 0;
 
     document.getElementById('chatDrawerTitle').textContent = 'Mensajes';
     document.getElementById('chatDrawerBack').style.display = 'none';
 
-    const lista    = document.getElementById('chatDrawerList');
+    const lista = document.getElementById('chatDrawerList');
     const chatArea = document.getElementById('chatDrawerChat');
-    if (lista)    lista.style.display = 'block';
+    if (lista) lista.style.display = 'block';
     if (chatArea) chatArea.style.display = 'none';
 
     chatDrawerCargarConversaciones();
@@ -386,20 +381,20 @@ function chatDrawerVolverLista() {
 }
 
 async function chatDrawerEnviar() {
-    const input    = document.getElementById('chatDrawerInput');
+    const input = document.getElementById('chatDrawerInput');
     const contenido = input?.value.trim();
     if (!contenido || !chatConvActiva?.id) return;
 
     input.value = '';
     try {
-        const res  = await fetch(API_URL + '/chat/enviar', {
+        const res = await fetch(API_URL + '/chat/enviar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ destinatario_id: chatConvActiva.otroId, contenido })
         });
         const data = await res.json();
         if (data.success) await chatCargarMensajes('chatDrawerMessages', true);
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -409,7 +404,7 @@ async function chatDrawerEnviar() {
 async function chatCargarMensajes(containerId, scroll = false) {
     if (!chatConvActiva?.id) return;
     try {
-        const res  = await fetch(`${API_URL}/chat/mensajes?conversacion_id=${chatConvActiva.id}&desde_id=${chatLastMsgId}`);
+        const res = await fetch(`${API_URL}/chat/mensajes?conversacion_id=${chatConvActiva.id}&desde_id=${chatLastMsgId}`);
         const data = await res.json();
         if (!data.success || !data.mensajes.length) return;
 
@@ -427,8 +422,10 @@ async function chatCargarMensajes(containerId, scroll = false) {
             if (m.tipo === 'archivo') {
                 const nombre = m.archivo_nombre || 'Archivo';
                 const ext = nombre.split('.').pop().toLowerCase();
-                const iconMap = { pdf:'📄', doc:'📝', docx:'📝', xls:'📊', xlsx:'📊', ppt:'📑', pptx:'📑',
-                                  jpg:'🖼️', jpeg:'🖼️', png:'🖼️', gif:'🖼️', zip:'🗜️', mp4:'🎬', mp3:'🎵', txt:'📃', csv:'📊' };
+                const iconMap = {
+                    pdf: '📄', doc: '📝', docx: '📝', xls: '📊', xlsx: '📊', ppt: '📑', pptx: '📑',
+                    jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', zip: '🗜️', mp4: '🎬', mp3: '🎵', txt: '📃', csv: '📊'
+                };
                 const icon = iconMap[ext] || '📎';
                 const fileEl = document.createElement('a');
                 fileEl.className = 'chat-file-msg';
@@ -469,7 +466,7 @@ async function chatCargarMensajes(containerId, scroll = false) {
         // Refresh sidebar badges
         if (chatEsPro) chatCargarConversaciones();
         else chatDrawerCargarConversaciones();
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -489,7 +486,7 @@ function chatReiniciarPolling(intervalo, containerId) {
 
 async function chatActualizarBadgeGlobal() {
     try {
-        const res  = await fetch(API_URL + '/chat/no-leidos');
+        const res = await fetch(API_URL + '/chat/no-leidos');
         const data = await res.json();
         if (!data.success) return;
         const total = data.total;
@@ -506,7 +503,7 @@ async function chatActualizarBadgeGlobal() {
             fabBadge.textContent = total;
             fabBadge.style.display = total > 0 ? 'flex' : 'none';
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -516,7 +513,7 @@ async function chatActualizarBadgeGlobal() {
 async function chatEliminarMensaje(msgId) {
     if (!confirm('¿Eliminar este mensaje?')) return;
     try {
-        const res  = await fetch(API_URL + '/chat/eliminar-mensaje', {
+        const res = await fetch(API_URL + '/chat/eliminar-mensaje', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mensaje_id: msgId })
@@ -528,14 +525,14 @@ async function chatEliminarMensaje(msgId) {
         } else {
             chatShowToast('No se pudo eliminar el mensaje', 'error');
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 async function chatEliminarChat() {
     if (!chatConvActiva?.id) return;
     if (!confirm('¿Eliminar esta conversación y todos sus mensajes? Esta acción no se puede deshacer.')) return;
     try {
-        const res  = await fetch(API_URL + '/chat/eliminar-chat', {
+        const res = await fetch(API_URL + '/chat/eliminar-chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ conversacion_id: chatConvActiva.id })
@@ -544,7 +541,7 @@ async function chatEliminarChat() {
         if (data.success) {
             if (chatPollingInt) { clearInterval(chatPollingInt); chatPollingInt = null; }
             chatConvActiva = null;
-            chatLastMsgId  = 0;
+            chatLastMsgId = 0;
 
             const header = document.getElementById('chatMainHeader');
             if (header) header.textContent = 'Selecciona una conversación';
@@ -560,7 +557,7 @@ async function chatEliminarChat() {
         } else {
             chatShowToast('No se pudo eliminar la conversación', 'error');
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -584,7 +581,7 @@ function chatTruncar(str, max) {
 
 function chatFormatTime(isoStr) {
     if (!isoStr) return '';
-    const d   = new Date(isoStr);
+    const d = new Date(isoStr);
     const now = new Date();
     const isToday = d.toDateString() === now.toDateString();
     const time = d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
@@ -596,7 +593,7 @@ function chatShowToast(msg, type = 'error') {
     if (typeof showToast === 'function') { showToast(msg, type); return; }
     const t = document.createElement('div');
     t.textContent = msg;
-    t.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:${type==='error'?'#f44336':'#4caf50'};color:#fff;padding:10px 22px;border-radius:8px;z-index:9999;font-size:0.9rem;`;
+    t.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:${type === 'error' ? '#f44336' : '#4caf50'};color:#fff;padding:10px 22px;border-radius:8px;z-index:9999;font-size:0.9rem;`;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 3000);
 }

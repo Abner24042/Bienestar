@@ -1,25 +1,21 @@
-/**
- * BIENIESTAR - JavaScript del Landing Page
- * Efectos parallax y scroll optimizados con rAF
- */
 
 // Transición suave al ir al login: desvanece el contenido, deja el fondo
-(function() {
-    document.querySelectorAll('a[href*="login"]').forEach(function(link) {
-        link.addEventListener('click', function(e) {
+(function () {
+    document.querySelectorAll('a[href*="login"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             var href = this.href;
             var els = document.querySelectorAll('.sticky-nav, .hero-content, .hero-overlay, .scroll-indicator, .features-section, .services-section, .cta-section, .footer');
-            els.forEach(function(el) {
+            els.forEach(function (el) {
                 el.style.transition = 'opacity 0.4s ease';
                 el.style.opacity = '0';
             });
-            setTimeout(function() { window.location.href = href; }, 420);
+            setTimeout(function () { window.location.href = href; }, 420);
         });
     });
 })();
 
-(function() {
+(function () {
     var heroSection = document.getElementById('heroSection');
     if (!heroSection) return;
 
@@ -30,7 +26,7 @@
     var ticking = false;
 
     // Scroll listener con passive y requestAnimationFrame
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (!ticking) {
             requestAnimationFrame(handleScroll);
             ticking = true;
@@ -70,8 +66,8 @@
     }
 
     // IntersectionObserver para animaciones de cards
-    var cardObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+    var cardObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
                 cardObserver.unobserve(entry.target);
@@ -79,7 +75,7 @@
         });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.feature-card, .service-card').forEach(function(card) {
+    document.querySelectorAll('.feature-card, .service-card').forEach(function (card) {
         cardObserver.observe(card);
     });
 
@@ -87,7 +83,7 @@
     var numbersAnimated = false;
     var featuresSection = document.querySelector('.features-section');
     if (featuresSection) {
-        var featuresObserver = new IntersectionObserver(function(entries) {
+        var featuresObserver = new IntersectionObserver(function (entries) {
             if (entries[0].isIntersecting && !numbersAnimated) {
                 numbersAnimated = true;
                 animateNumbers();
@@ -98,7 +94,7 @@
     }
 
     function animateNumbers() {
-        document.querySelectorAll('.feature-number').forEach(function(number) {
+        document.querySelectorAll('.feature-number').forEach(function (number) {
             var originalText = number.textContent;
             var finalValue, suffix = '';
 
@@ -118,7 +114,7 @@
             var increment = finalValue / steps;
             var current = 0;
 
-            var timer = setInterval(function() {
+            var timer = setInterval(function () {
                 current += increment;
                 if (current >= finalValue) {
                     number.textContent = finalValue + suffix;

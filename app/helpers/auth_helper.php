@@ -1,19 +1,17 @@
 <?php
 /**
- * Helpers de Autenticación
- */
-
-/**
  * Verificar si el usuario está autenticado
  */
-function isAuthenticated() {
+function isAuthenticated()
+{
     return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 }
 
 /**
  * Verificar si el usuario es administrador
  */
-function requireAdmin() {
+function requireAdmin()
+{
     requireAuth();
 
     if (!isAdmin()) {
@@ -25,14 +23,16 @@ function requireAdmin() {
 /**
  * Verificar si el usuario es admin
  */
-function isAdmin() {
+function isAdmin()
+{
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrador';
 }
 
 /**
  * Verificar si el usuario es profesional (coach, nutriologo, psicologo)
  */
-function isProfessional() {
+function isProfessional()
+{
     $professionalRoles = ['coach', 'nutriologo', 'psicologo'];
     return isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], $professionalRoles);
 }
@@ -40,7 +40,8 @@ function isProfessional() {
 /**
  * Requerir rol profesional
  */
-function requireProfessional() {
+function requireProfessional()
+{
     requireAuth();
     if (!isProfessional()) {
         redirect('dashboard');
@@ -51,7 +52,8 @@ function requireProfessional() {
 /**
  * Obtener etiqueta legible del rol
  */
-function getRoleLabel($role) {
+function getRoleLabel($role)
+{
     $labels = [
         'usuario' => 'Usuario',
         'Administrador' => 'Administrador',
@@ -65,35 +67,40 @@ function getRoleLabel($role) {
 /**
  * Obtener ID del usuario actual
  */
-function getUserId() {
+function getUserId()
+{
     return $_SESSION['user_id'] ?? null;
 }
 
 /**
  * Obtener email del usuario actual
  */
-function getUserEmail() {
+function getUserEmail()
+{
     return $_SESSION['user_email'] ?? null;
 }
 
 /**
  * Obtener nombre del usuario actual
  */
-function getUserName() {
+function getUserName()
+{
     return $_SESSION['user_name'] ?? null;
 }
 
 /**
  * Obtener usuario actual completo
  */
-function currentUser() {
+function currentUser()
+{
     return $_SESSION['user'] ?? null;
 }
 
 /**
  * Verificar si el usuario está autenticado
  */
-function requireAuth() {
+function requireAuth()
+{
     if (!isAuthenticated()) {
         redirect('login');
         exit;
@@ -103,7 +110,8 @@ function requireAuth() {
 /**
  * Redireccionar usando rutas limpias
  */
-function redirect($path) {
+function redirect($path)
+{
     // Si ya es una URL absoluta, usar directamente
     if (strpos($path, 'http') === 0) {
         header('Location: ' . $path);

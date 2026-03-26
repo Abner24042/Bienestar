@@ -1,19 +1,16 @@
-/**
- * BIENIESTAR - JavaScript de Noticias (Dinámico)
- */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadNoticias();
     initNewsFilters();
 });
 
-let newsData      = [];
-let filteredNews  = [];
-let newsVisible   = 3;
+let newsData = [];
+let filteredNews = [];
+let newsVisible = 3;
 
 function porFilaN() {
     const el = document.getElementById('newsGrid');
-    const w  = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
+    const w = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
     return Math.max(1, Math.floor((w + 16) / (320 + 16)));
 }
 
@@ -44,7 +41,7 @@ async function loadNoticias() {
 
 function applyNewsFilter() {
     const activeBtn = document.querySelector('.news-filters .filter-btn.active');
-    const filter    = activeBtn ? activeBtn.dataset.filter : 'all';
+    const filter = activeBtn ? activeBtn.dataset.filter : 'all';
 
     // El primer item es el destacado, no va en el grid
     const pool = newsData.slice(1);
@@ -55,7 +52,7 @@ function applyNewsFilter() {
 }
 
 function renderNoticiasPaginated() {
-    const grid    = document.getElementById('newsGrid');
+    const grid = document.getElementById('newsGrid');
     const visible = filteredNews.slice(0, newsVisible);
 
     if (filteredNews.length === 0) {
@@ -83,8 +80,8 @@ function mostrarMasNoticias() {
 }
 
 function renderNoticiaCard(n, idx = 0) {
-    const img   = n.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80';
-    const cat   = capitalize(n.categoria || 'general');
+    const img = n.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80';
+    const cat = capitalize(n.categoria || 'general');
     const delay = (idx * 0.08).toFixed(2);
     return `<article class="news-card" data-category="${escapeHtml(n.categoria)}"
         tabindex="0" aria-label="${escapeHtml(n.titulo)}"
@@ -112,7 +109,7 @@ function renderFeatured(noticia) {
     const img = noticia.imagen || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&q=80';
 
     document.getElementById('featuredImg').src = img;
-    document.getElementById('featuredImg').onerror = function() {
+    document.getElementById('featuredImg').onerror = function () {
         this.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&q=80';
     };
     document.getElementById('featuredCategory').textContent = capitalize(noticia.categoria || 'general');
@@ -121,7 +118,7 @@ function renderFeatured(noticia) {
     document.getElementById('featuredResumen').textContent = noticia.resumen || truncate(noticia.contenido, 200);
 
     var btn = document.getElementById('featuredBtn');
-    btn.onclick = function() { showNewsModal(noticia.id); };
+    btn.onclick = function () { showNewsModal(noticia.id); };
 
     featured.style.display = '';
 }
@@ -163,7 +160,7 @@ function closeNewsModal() {
 
 function initNewsFilters() {
     document.querySelectorAll('.news-filters .filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.news-filters .filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             applyNewsFilter();

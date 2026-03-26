@@ -1,11 +1,8 @@
-/**
- * BIENIESTAR - Calendario Personalizado (solo lectura)
- */
 
 let currentDate = new Date();
 let appointments = [];
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
     loadAppointments();
 });
@@ -15,7 +12,7 @@ function initCalendar() {
     const btnNextMonth = document.getElementById('btnNextMonth');
 
     if (btnPrevMonth) {
-        btnPrevMonth.addEventListener('click', function() {
+        btnPrevMonth.addEventListener('click', function () {
             currentDate.setDate(1);
             currentDate.setMonth(currentDate.getMonth() - 1);
             renderCalendar();
@@ -23,7 +20,7 @@ function initCalendar() {
     }
 
     if (btnNextMonth) {
-        btnNextMonth.addEventListener('click', function() {
+        btnNextMonth.addEventListener('click', function () {
             currentDate.setDate(1);
             currentDate.setMonth(currentDate.getMonth() + 1);
             renderCalendar();
@@ -44,7 +41,7 @@ function isDarkMode() {
 
 function renderCalendar() {
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -75,8 +72,8 @@ function renderCalendar() {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
         const isToday = today.getDate() === day &&
-                       today.getMonth() === month &&
-                       today.getFullYear() === year;
+            today.getMonth() === month &&
+            today.getFullYear() === year;
 
         dayDiv.style.cssText = `
             background: ${bgColor};
@@ -162,7 +159,7 @@ function displayAppointmentsOnCalendar() {
 function showDayAppointments(date, citasDelDia) {
     const [year, month, day] = date.split('-');
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const fechaFormateada = `${parseInt(day)} de ${monthNames[parseInt(month) - 1]} de ${year}`;
 
     let contenido;
@@ -205,7 +202,7 @@ function showDayAppointments(date, citasDelDia) {
         `;
         document.body.appendChild(modal);
 
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
             if (e.target === modal) closeModal('modalDayAppointments');
         });
     }
@@ -285,13 +282,13 @@ function showToast(message, type) {
     toast.textContent = message;
     toast.style.display = 'block';
     toast.style.opacity = '1';
-    setTimeout(function() {
+    setTimeout(function () {
         toast.style.opacity = '0';
-        setTimeout(function() { toast.style.display = 'none'; }, 300);
+        setTimeout(function () { toast.style.display = 'none'; }, 300);
     }, 3000);
 }
 
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     if (e.target.classList.contains('modal')) {
         e.target.style.display = 'none';
         document.body.style.overflow = 'auto';

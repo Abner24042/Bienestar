@@ -1,9 +1,4 @@
 /**
- * Configuración de EmailJS
- * NOTA: EMAIL_CONFIG se carga desde emailConfigLoader.php que lee el archivo .env
- */
-
-/**
  * Enviar email de confirmación de cita
  */
 async function sendAppointmentEmail(appointmentData) {
@@ -24,7 +19,7 @@ async function sendAppointmentEmail(appointmentData) {
             templateParams,
             EMAIL_CONFIG.publicKey
         );
-        
+
         console.log('✅ Email enviado:', response);
         return { success: true, message: 'Email enviado correctamente' };
     } catch (error) {

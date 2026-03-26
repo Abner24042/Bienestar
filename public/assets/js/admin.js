@@ -1,8 +1,5 @@
-/**
- * BIENIESTAR - Panel de Administrador
- */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initAdminPanel();
     loadStats();
 });
@@ -236,9 +233,9 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:1rem 1.5rem;border-radius:8px;background:white;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:10000;display:block;opacity:1;';
 
-    setTimeout(function() {
+    setTimeout(function () {
         toast.style.opacity = '0';
-        setTimeout(function() {
+        setTimeout(function () {
             toast.style.display = 'none';
         }, 300);
     }, 3000);

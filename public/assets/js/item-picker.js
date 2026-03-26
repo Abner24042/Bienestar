@@ -1,7 +1,5 @@
-/**
- * BIENESTAR - Item Picker Singleton (shared by nutriólogo + coach)
- */
-;(function () {
+
+; (function () {
     var PAGE = 8;
     var panel = null, currentTrigger = null, onSelectCb = null;
     var allItems = [], filtered = [], filterKey = 'categoria';
@@ -33,7 +31,7 @@
     function applyFilter() {
         filtered = allItems.filter(function (item) {
             var tOk = !term || (item.titulo || '').toLowerCase().includes(term) ||
-                      (item.descripcion || '').toLowerCase().includes(term);
+                (item.descripcion || '').toLowerCase().includes(term);
             var fOk = activeFilter === 'all' || (item[filterKey] || '') === activeFilter;
             return tOk && fOk;
         });
@@ -65,32 +63,32 @@
     }
 
     function renderList() {
-        var listEl  = panel.querySelector('.ip-list');
+        var listEl = panel.querySelector('.ip-list');
         var countEl = panel.querySelector('.ip-count');
         countEl.textContent = filtered.length + ' resultado' + (filtered.length !== 1 ? 's' : '');
         if (!filtered.length) {
             listEl.innerHTML = '<div class="ip-empty">Sin resultados' + (term ? ' para "' + ipEsc(term) + '"' : '') + '</div>';
             return;
         }
-        var curVal  = currentTrigger ? (currentTrigger.dataset.value || '') : '';
+        var curVal = currentTrigger ? (currentTrigger.dataset.value || '') : '';
         var html = filtered.map(function (item) {
-            var isRec  = filterKey === 'categoria';
-            var icon   = isRec ? '🍽️' : '💪';
-            var bg     = isRec ? 'rgba(76,175,80,.1)' : 'rgba(255,107,53,.1)';
-            var thumb  = item.imagen
+            var isRec = filterKey === 'categoria';
+            var icon = isRec ? '🍽️' : '💪';
+            var bg = isRec ? 'rgba(76,175,80,.1)' : 'rgba(255,107,53,.1)';
+            var thumb = item.imagen
                 ? '<img src="' + ipEsc(item.imagen) + '" loading="lazy" onerror="this.style.display=\'none\'">'
                 : '<div class="ip-item-icon" style="background:' + bg + ';">' + icon + '</div>';
             var sub = [];
-            if (item.calorias)           sub.push(Math.round(item.calorias) + ' kcal');
+            if (item.calorias) sub.push(Math.round(item.calorias) + ' kcal');
             if (item.tiempo_preparacion) sub.push(item.tiempo_preparacion + ' min');
-            if (item.duracion)           sub.push(item.duracion + ' min');
-            if (item.musculo_objetivo)   sub.push(ipCap(item.musculo_objetivo));
+            if (item.duracion) sub.push(item.duracion + ' min');
+            if (item.musculo_objetivo) sub.push(ipCap(item.musculo_objetivo));
             var subHtml = sub.length ? '<div class="ip-item-sub">' + sub.join(' · ') + '</div>' : '';
             var badges = '';
             if (isRec) {
                 if (item.categoria) badges += '<span class="ip-badge ip-badge-cat">' + ipEsc(ipCap(item.categoria)) + '</span>';
             } else {
-                if (item.tipo)  badges += '<span class="ip-badge ip-badge-type">' + ipEsc(ipCap(item.tipo)) + '</span>';
+                if (item.tipo) badges += '<span class="ip-badge ip-badge-type">' + ipEsc(ipCap(item.tipo)) + '</span>';
                 if (item.nivel) badges += '<span class="ip-badge ip-badge-nivel nivel-' + item.nivel + '">' + ipEsc(ipCap(item.nivel)) + '</span>';
             }
             var selCls = String(item.id) === String(curVal) ? ' ip-selected' : '';
@@ -131,11 +129,11 @@
         panel.className = accent === 'green' ? 'ip-green' : '';
         applyFilter();
         renderFilters();
-        var rect    = trigger.getBoundingClientRect();
-        var panelW  = Math.max(rect.width, 360);
-        var left    = rect.left;
+        var rect = trigger.getBoundingClientRect();
+        var panelW = Math.max(rect.width, 360);
+        var left = rect.left;
         if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
-        var topPos  = rect.bottom + 4;
+        var topPos = rect.bottom + 4;
         if (topPos + 360 > window.innerHeight) topPos = Math.max(8, rect.top - 364);
         panel.style.cssText = 'left:' + left + 'px;top:' + topPos + 'px;width:' + panelW + 'px;max-height:360px;';
         panel.classList.add('ip-open');
@@ -156,6 +154,6 @@
         var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML;
     }
 
-    window.openItemPicker       = openPanel;
+    window.openItemPicker = openPanel;
     window.closeItemPickerPanel = closePanel;
 })();

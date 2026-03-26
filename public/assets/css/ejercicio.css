@@ -1,7 +1,3 @@
-/**
- * BIENIESTAR - Estilos de Ejercicio
- */
-
 /* Filtros */
 .filters-section {
     display: flex;
@@ -477,6 +473,7 @@
     .exercise-content {
         padding: 16px;
     }
+
     .exercise-benefits {
         padding: 24px 16px;
     }

@@ -1,7 +1,3 @@
-/**
- * BIENIESTAR - Estilos de About
- */
-
 /* Header Simple */
 .simple-header {
     background: white;
@@ -384,20 +380,20 @@
     .about-hero h1 {
         font-size: 2.5rem;
     }
-    
+
     .story-content {
         grid-template-columns: 1fr;
     }
-    
+
     .mv-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .cta-buttons {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .btn-large {
         width: 100%;
         max-width: 300px;
@@ -408,19 +404,19 @@
     .header-nav {
         gap: 15px;
     }
-    
+
     .about-hero {
         padding: 60px 20px;
     }
-    
+
     .about-hero h1 {
         font-size: 2rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1.1rem;
     }
-    
+
     .story-stats {
         grid-template-columns: 1fr;
     }

@@ -1,20 +1,17 @@
-/**
- * BIENIESTAR - Profesional: Gestión de Noticias (Psicólogo)
- */
 
 let proNoticiasData = [];
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     cargarProNoticias();
 
-    document.getElementById('btnNuevaNoticiaPro').addEventListener('click', function() {
+    document.getElementById('btnNuevaNoticiaPro').addEventListener('click', function () {
         document.getElementById('modalNoticiaProTitle').textContent = 'Nueva Publicación';
         document.getElementById('formNoticiaPro').reset();
         document.getElementById('pro_noticia_id').value = '';
         document.getElementById('modalNoticiaPro').style.display = 'flex';
     });
 
-    document.getElementById('formNoticiaPro').addEventListener('submit', function(e) {
+    document.getElementById('formNoticiaPro').addEventListener('submit', function (e) {
         e.preventDefault();
         guardarProNoticia();
     });

@@ -1,6 +1,3 @@
-/**
- * BIENIESTAR - Gestión de Planes (Panel Profesional)
- */
 
 let planUsuarioActual = null;
 let planDataPro = {};
@@ -14,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('btnNuevaRecPro').addEventListener('click', abrirModalNuevaRecPro);
     }
     // Cerrar resultados al click fuera
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!e.target.closest('#planUsuarioBuscar') && !e.target.closest('#planUsuarioResultados')) {
             const r = document.getElementById('planUsuarioResultados');
             if (r) r.innerHTML = '';
@@ -316,7 +313,7 @@ async function abrirModalNuevaRecPro() {
                 selU.innerHTML = '<option value="">— Selecciona un usuario —</option>' +
                     data.usuarios.map(u => `<option value="${u.id}">${escP(u.nombre)} (${escP(u.correo)})</option>`).join('');
             }
-        } catch (e) {}
+        } catch (e) { }
     }
     document.getElementById('recProTitulo').value = '';
     document.getElementById('recProContenido').value = '';
@@ -326,11 +323,11 @@ async function abrirModalNuevaRecPro() {
 
 async function guardarRecPro() {
     const usuarioId = document.getElementById('recProUsuario').value;
-    const titulo    = document.getElementById('recProTitulo').value.trim();
+    const titulo = document.getElementById('recProTitulo').value.trim();
     const contenido = document.getElementById('recProContenido').value.trim();
-    const tipo      = document.getElementById('recProTipo').value;
+    const tipo = document.getElementById('recProTipo').value;
     if (!usuarioId) { showToastPlan('Selecciona un usuario', 'error'); return; }
-    if (!titulo)    { showToastPlan('El título es requerido', 'error'); return; }
+    if (!titulo) { showToastPlan('El título es requerido', 'error'); return; }
 
     try {
         const res = await fetch(API_URL + '/pro/plan/recomendar', {

@@ -1,7 +1,4 @@
 <?php
-/**
- * Configuración General de la Aplicación
- */
 
 // Cargar autoload de Composer
 require_once __DIR__ . '/../../vendor/autoload.php';
@@ -65,14 +62,16 @@ require_once __DIR__ . '/../helpers/file_helper.php';
 /**
  * Función helper para generar URLs
  */
-function url($path = '') {
+function url($path = '')
+{
     return BASE_URL . '/' . ltrim($path, '/');
 }
 
 /**
  * Función helper para generar URLs de assets
  */
-function asset($path = '') {
+function asset($path = '')
+{
     $url = ASSETS_URL . '/' . ltrim($path, '/');
     if (preg_match('/\.(css|js)$/i', $path)) {
         $url .= '?v=' . APP_VERSION;

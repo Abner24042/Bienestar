@@ -1,7 +1,3 @@
-/**
- * BIENIESTAR - Estilos de Alimentación
- */
-
 /* Filtros */
 .filters-section {
     display: flex;
@@ -259,11 +255,45 @@
     margin-top: 2px;
 }
 
-.nutbar-kcal  { background: #fff3e0; } .nutbar-kcal  .nutbar-val { color: #ff6d00; }
-.nutbar-prot  { background: #e8f5e9; } .nutbar-prot  .nutbar-val { color: #2e7d32; }
-.nutbar-carbs { background: #e3f2fd; } .nutbar-carbs .nutbar-val { color: #1565c0; }
-.nutbar-fat   { background: #fce4ec; } .nutbar-fat   .nutbar-val { color: #c2185b; }
-.nutbar-fiber { background: #f3e5f5; } .nutbar-fiber .nutbar-val { color: #7b1fa2; }
+.nutbar-kcal {
+    background: #fff3e0;
+}
+
+.nutbar-kcal .nutbar-val {
+    color: #ff6d00;
+}
+
+.nutbar-prot {
+    background: #e8f5e9;
+}
+
+.nutbar-prot .nutbar-val {
+    color: #2e7d32;
+}
+
+.nutbar-carbs {
+    background: #e3f2fd;
+}
+
+.nutbar-carbs .nutbar-val {
+    color: #1565c0;
+}
+
+.nutbar-fat {
+    background: #fce4ec;
+}
+
+.nutbar-fat .nutbar-val {
+    color: #c2185b;
+}
+
+.nutbar-fiber {
+    background: #f3e5f5;
+}
+
+.nutbar-fiber .nutbar-val {
+    color: #7b1fa2;
+}
 
 /* Detalle scrollable */
 .recipe-modal-detail {
@@ -396,9 +426,11 @@
     .recipe-stats {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .recipe-content {
         padding: 16px;
     }
+
     .nutrition-tips {
         padding: 24px 16px;
     }
@@ -503,11 +535,45 @@
     border-top-color: #333;
 }
 
-[data-theme="dark"] .nutbar-kcal  { background: #3a1800; } [data-theme="dark"] .nutbar-kcal  .nutbar-val { color: #ff8f3f; }
-[data-theme="dark"] .nutbar-prot  { background: #0d2e10; } [data-theme="dark"] .nutbar-prot  .nutbar-val { color: #66bb6a; }
-[data-theme="dark"] .nutbar-carbs { background: #0a1e3a; } [data-theme="dark"] .nutbar-carbs .nutbar-val { color: #64b5f6; }
-[data-theme="dark"] .nutbar-fat   { background: #3a0a1e; } [data-theme="dark"] .nutbar-fat   .nutbar-val { color: #f06292; }
-[data-theme="dark"] .nutbar-fiber { background: #1e0a3a; } [data-theme="dark"] .nutbar-fiber .nutbar-val { color: #ce93d8; }
+[data-theme="dark"] .nutbar-kcal {
+    background: #3a1800;
+}
+
+[data-theme="dark"] .nutbar-kcal .nutbar-val {
+    color: #ff8f3f;
+}
+
+[data-theme="dark"] .nutbar-prot {
+    background: #0d2e10;
+}
+
+[data-theme="dark"] .nutbar-prot .nutbar-val {
+    color: #66bb6a;
+}
+
+[data-theme="dark"] .nutbar-carbs {
+    background: #0a1e3a;
+}
+
+[data-theme="dark"] .nutbar-carbs .nutbar-val {
+    color: #64b5f6;
+}
+
+[data-theme="dark"] .nutbar-fat {
+    background: #3a0a1e;
+}
+
+[data-theme="dark"] .nutbar-fat .nutbar-val {
+    color: #f06292;
+}
+
+[data-theme="dark"] .nutbar-fiber {
+    background: #1e0a3a;
+}
+
+[data-theme="dark"] .nutbar-fiber .nutbar-val {
+    color: #ce93d8;
+}
 
 [data-theme="dark"] .nutbar-lbl {
     color: #888;

@@ -1,23 +1,20 @@
-/**
- * BIENIESTAR - JavaScript Global
- */
 
 // Ripple effect en botones
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     var btn = e.target.closest('.btn, .filter-btn, .fav-tab');
     if (!btn || btn.disabled) return;
-    var r    = btn.getBoundingClientRect();
+    var r = btn.getBoundingClientRect();
     var size = Math.max(r.width, r.height);
-    var el   = document.createElement('span');
-    el.className  = 'btn-ripple';
+    var el = document.createElement('span');
+    el.className = 'btn-ripple';
     el.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - r.left - size / 2) + 'px;top:' + (e.clientY - r.top - size / 2) + 'px;';
     btn.style.position = btn.style.position || 'relative';
     btn.style.overflow = 'hidden';
     btn.appendChild(el);
-    setTimeout(function() { el.remove(); }, 600);
+    setTimeout(function () { el.remove(); }, 600);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Inicializar menú de usuario
     const headerUser = document.querySelector('.header-user');
     const userMenu = document.querySelector('.user-menu');
@@ -67,12 +64,12 @@ function initDarkMode() {
     // Actualizar icono según tema actual
     updateDarkModeIcon(icon);
 
-    toggle.addEventListener('click', function(e) {
+    toggle.addEventListener('click', function (e) {
         e.stopPropagation();
         toggle.classList.remove('spinning');
         void toggle.offsetWidth; // reflow para reiniciar animación
         toggle.classList.add('spinning');
-        setTimeout(function() { toggle.classList.remove('spinning'); }, 450);
+        setTimeout(function () { toggle.classList.remove('spinning'); }, 450);
         const html = document.documentElement;
         const isDark = html.getAttribute('data-theme') === 'dark';
 

@@ -1,13 +1,8 @@
-/**
- * BIENIESTAR - Estilos de Autenticación
- */
-
 .auth-page {
     min-height: 100vh;
     background:
-        linear-gradient(135deg, rgba(15,20,50,0.72) 0%, rgba(10,25,60,0.78) 100%),
-        url('../img/content/DSC07783.jpg')
-        center center / cover no-repeat;
+        linear-gradient(135deg, rgba(15, 20, 50, 0.72) 0%, rgba(10, 25, 60, 0.78) 100%),
+        url('../img/content/DSC07783.jpg') center center / cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,8 +37,15 @@
 }
 
 @keyframes authCardIn {
-    from { opacity: 0; transform: translateY(28px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0)    scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Container */
@@ -287,9 +289,8 @@
    ============================================ */
 .auth-info {
     background:
-        linear-gradient(135deg, rgba(255,107,53,0.72) 0%, rgba(180,50,10,0.78) 100%),
-        url('https://www.anahuac.mx/iest//sites/default/files/gbb-uploads/vida-universitaria_1-k9nnzh.jpg')
-        center center / cover no-repeat;
+        linear-gradient(135deg, rgba(255, 107, 53, 0.72) 0%, rgba(180, 50, 10, 0.78) 100%),
+        url('https://www.anahuac.mx/iest//sites/default/files/gbb-uploads/vida-universitaria_1-k9nnzh.jpg') center center / cover no-repeat;
     color: white;
     padding: 45px 40px;
     display: flex;
@@ -413,10 +414,22 @@
     max-width: 360px;
 }
 
-.toast-notification.toast-error { background: #dc3545; }
-.toast-notification.toast-success { background: #28a745; }
-.toast-notification.toast-warning { background: #ffc107; color: #333; }
-.toast-notification.toast-info { background: #17a2b8; }
+.toast-notification.toast-error {
+    background: #dc3545;
+}
+
+.toast-notification.toast-success {
+    background: #28a745;
+}
+
+.toast-notification.toast-warning {
+    background: #ffc107;
+    color: #333;
+}
+
+.toast-notification.toast-info {
+    background: #17a2b8;
+}
 
 /* Spinner */
 .spinner-small {
@@ -431,7 +444,9 @@
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Campo con error */

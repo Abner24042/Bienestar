@@ -1,10 +1,7 @@
-/**
- * BIENIESTAR - JavaScript de Ejercicio (Dinámico)
- */
 
 let favoritosEjercicioIds = new Set();
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadEjercicios();
     loadFavoritosEjercicioIds();
     initFilters();
@@ -13,13 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function loadFavoritosEjercicioIds() {
     try {
-        const res  = await fetch(API_URL + '/favoritos');
+        const res = await fetch(API_URL + '/favoritos');
         const data = await res.json();
         if (data.success) {
             favoritosEjercicioIds = new Set(data.ejercicio_ids.map(String));
             renderEjerciciosPaginated();
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
 let _exerciseModalCurrentId = null;
@@ -28,36 +25,36 @@ async function toggleFavoritoModal(tipo, btn) {
     const id = _exerciseModalCurrentId;
     if (!id) return;
     try {
-        const res  = await fetch(API_URL + '/favoritos/toggle', {
+        const res = await fetch(API_URL + '/favoritos/toggle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tipo, id }),
         });
         const data = await res.json();
         if (!data.success) return;
-        const svg   = btn.querySelector('svg polygon');
+        const svg = btn.querySelector('svg polygon');
         const label = btn.querySelector('.modal-fav-label');
         if (data.action === 'added') {
             favoritosEjercicioIds.add(String(id));
             btn.classList.add('fav-active');
-            if (svg)   svg.setAttribute('fill', 'currentColor');
+            if (svg) svg.setAttribute('fill', 'currentColor');
             if (label) label.textContent = 'Guardado';
         } else {
             favoritosEjercicioIds.delete(String(id));
             btn.classList.remove('fav-active');
-            if (svg)   svg.setAttribute('fill', 'none');
+            if (svg) svg.setAttribute('fill', 'none');
             if (label) label.textContent = 'Guardar';
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 
-let exercisesData     = [];
+let exercisesData = [];
 let filteredExercises = [];
-let exerciseVisible   = 4;
+let exerciseVisible = 4;
 
 function porFilaEj() {
     const el = document.getElementById('exercisesGrid');
-    const w  = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
+    const w = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
     return Math.max(1, Math.floor((w + 16) / (320 + 16)));
 }
 
@@ -83,7 +80,7 @@ async function loadEjercicios() {
 function applyFilters() {
     const activeBtn = document.querySelector('.filter-btn.active');
     const filter = activeBtn ? activeBtn.dataset.filter : 'all';
-    const term   = (document.getElementById('searchExercises')?.value || '').toLowerCase().trim();
+    const term = (document.getElementById('searchExercises')?.value || '').toLowerCase().trim();
 
     filteredExercises = exercisesData.filter(e => {
         const typeOk = filter === 'all' || e.tipo === filter;
@@ -98,7 +95,7 @@ function applyFilters() {
 }
 
 function renderEjerciciosPaginated() {
-    const grid    = document.getElementById('exercisesGrid');
+    const grid = document.getElementById('exercisesGrid');
     const visible = filteredExercises.slice(0, exerciseVisible);
 
     if (filteredExercises.length === 0) {
@@ -126,11 +123,11 @@ function mostrarMasEjercicios() {
 }
 
 function renderEjercicioCard(e, idx = 0) {
-    const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
-    const tipo       = capitalize(e.tipo || 'cardio');
-    const nivel      = capitalize(e.nivel || 'principiante');
+    const img = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
+    const tipo = capitalize(e.tipo || 'cardio');
+    const nivel = capitalize(e.nivel || 'principiante');
     const levelClass = 'level-' + (e.nivel || 'principiante');
-    const delay      = (idx * 0.07).toFixed(2);
+    const delay = (idx * 0.07).toFixed(2);
 
     const duracionStat = e.duracion ? `
         <div class="meta-item">
@@ -185,10 +182,10 @@ function showExerciseModal(id) {
     const isFav = favoritosEjercicioIds.has(String(id));
     const favBtn = document.getElementById('exerciseModalFavBtn');
     if (favBtn) {
-        const svg   = favBtn.querySelector('svg polygon');
+        const svg = favBtn.querySelector('svg polygon');
         const label = favBtn.querySelector('.modal-fav-label');
         favBtn.classList.toggle('fav-active', isFav);
-        if (svg)   svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
+        if (svg) svg.setAttribute('fill', isFav ? 'currentColor' : 'none');
         if (label) label.textContent = isFav ? 'Guardado' : 'Guardar';
     }
 
@@ -219,12 +216,12 @@ function showExerciseModal(id) {
         </div>`;
     }
 
-    const duracionBox  = e.duracion          ? `<div class="stat-box"><span class="stat-label">Duración</span><span class="stat-value">${escapeHtml(String(e.duracion))} min</span></div>` : '';
-    const nivelBox     = `<div class="stat-box"><span class="stat-label">Nivel</span><span class="stat-value">${capitalize(e.nivel || 'principiante')}</span></div>`;
-    const tipoBox      = `<div class="stat-box"><span class="stat-label">Tipo</span><span class="stat-value">${capitalize(e.tipo || 'cardio')}</span></div>`;
-    const caloriasBox  = e.calorias_quemadas ? `<div class="stat-box"><span class="stat-label">Calorías</span><span class="stat-value">${escapeHtml(String(e.calorias_quemadas))} kcal</span></div>` : '';
-    const musculoBox   = e.musculo_objetivo  ? `<div class="stat-box"><span class="stat-label">Músculo</span><span class="stat-value">${escapeHtml(capitalize(e.musculo_objetivo))}</span></div>` : '';
-    const equipoBox    = e.equipamiento      ? `<div class="stat-box"><span class="stat-label">Equipo</span><span class="stat-value">${escapeHtml(capitalize(e.equipamiento))}</span></div>` : '';
+    const duracionBox = e.duracion ? `<div class="stat-box"><span class="stat-label">Duración</span><span class="stat-value">${escapeHtml(String(e.duracion))} min</span></div>` : '';
+    const nivelBox = `<div class="stat-box"><span class="stat-label">Nivel</span><span class="stat-value">${capitalize(e.nivel || 'principiante')}</span></div>`;
+    const tipoBox = `<div class="stat-box"><span class="stat-label">Tipo</span><span class="stat-value">${capitalize(e.tipo || 'cardio')}</span></div>`;
+    const caloriasBox = e.calorias_quemadas ? `<div class="stat-box"><span class="stat-label">Calorías</span><span class="stat-value">${escapeHtml(String(e.calorias_quemadas))} kcal</span></div>` : '';
+    const musculoBox = e.musculo_objetivo ? `<div class="stat-box"><span class="stat-label">Músculo</span><span class="stat-value">${escapeHtml(capitalize(e.musculo_objetivo))}</span></div>` : '';
+    const equipoBox = e.equipamiento ? `<div class="stat-box"><span class="stat-label">Equipo</span><span class="stat-value">${escapeHtml(capitalize(e.equipamiento))}</span></div>` : '';
 
     let secundariosSection = '';
     if (e.musculos_secundarios) {
@@ -270,7 +267,7 @@ function formatList(text) {
 
 function initFilters() {
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             applyFilters();

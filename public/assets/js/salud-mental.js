@@ -1,8 +1,5 @@
-/**
- * BIENIESTAR - JavaScript de Salud Mental
- */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initMentalHealthTest();
     initMoodPicker();
     initScrollReveal();
@@ -20,9 +17,9 @@ var moodMessages = {
 };
 
 function initMoodPicker() {
-    document.querySelectorAll('.mood-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('selected'); });
+    document.querySelectorAll('.mood-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.mood-btn').forEach(function (b) { b.classList.remove('selected'); });
             btn.classList.add('selected');
 
             var response = document.getElementById('moodResponse');
@@ -37,23 +34,23 @@ function initMoodPicker() {
 /* =====================
    EJERCICIO DE RESPIRACIÓN
    ===================== */
-var breathingActive  = false;
+var breathingActive = false;
 var breathingTimeout = null;
-var breathingPhases  = [
-    { name: 'Inhala…',  emoji: '🫁', duration: 4000, scale: 1.55 },
-    { name: 'Sostén',   emoji: '⏸️', duration: 4000, scale: 1.55 },
-    { name: 'Exhala…',  emoji: '💨', duration: 4000, scale: 0.65 },
-    { name: 'Espera',   emoji: '🌙', duration: 2000, scale: 0.65 },
+var breathingPhases = [
+    { name: 'Inhala…', emoji: '🫁', duration: 4000, scale: 1.55 },
+    { name: 'Sostén', emoji: '⏸️', duration: 4000, scale: 1.55 },
+    { name: 'Exhala…', emoji: '💨', duration: 4000, scale: 0.65 },
+    { name: 'Espera', emoji: '🌙', duration: 2000, scale: 0.65 },
 ];
 var breathPhaseIndex = 0;
 var breathCountInterval = null;
 
 function toggleBreathing() {
     breathingActive = !breathingActive;
-    var btn     = document.getElementById('breathingBtn');
-    var phase   = document.getElementById('breathingPhase');
+    var btn = document.getElementById('breathingBtn');
+    var phase = document.getElementById('breathingPhase');
     var counter = document.getElementById('breathingCounter');
-    var circle  = document.getElementById('breathingCircle');
+    var circle = document.getElementById('breathingCircle');
 
     if (breathingActive) {
         btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pausar';
@@ -64,10 +61,10 @@ function toggleBreathing() {
         btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px"><polygon points="5 3 19 12 5 21 5 3"/></svg>Iniciar';
         clearTimeout(breathingTimeout);
         clearInterval(breathCountInterval);
-        phase.textContent   = 'Presiona iniciar cuando estés listo';
+        phase.textContent = 'Presiona iniciar cuando estés listo';
         counter.style.display = 'none';
         circle.style.transition = 'transform 0.5s ease';
-        circle.style.transform  = 'scale(1)';
+        circle.style.transform = 'scale(1)';
         document.getElementById('breathingEmoji').textContent = '🌬️';
     }
 }
@@ -75,12 +72,12 @@ function toggleBreathing() {
 function runBreathPhase() {
     if (!breathingActive) return;
 
-    var p       = breathingPhases[breathPhaseIndex];
-    var phase   = document.getElementById('breathingPhase');
+    var p = breathingPhases[breathPhaseIndex];
+    var phase = document.getElementById('breathingPhase');
     var counter = document.getElementById('breathingCounter');
-    var count   = document.getElementById('breathingCount');
-    var circle  = document.getElementById('breathingCircle');
-    var emoji   = document.getElementById('breathingEmoji');
+    var count = document.getElementById('breathingCount');
+    var circle = document.getElementById('breathingCircle');
+    var emoji = document.getElementById('breathingEmoji');
 
     phase.textContent = p.name;
     emoji.textContent = p.emoji;
@@ -89,19 +86,19 @@ function runBreathPhase() {
     circle.classList.add('animating');
     circle.style.setProperty('--breath-duration', p.duration + 'ms');
     circle.style.transition = 'transform ' + p.duration + 'ms ease-in-out';
-    circle.style.transform  = 'scale(' + p.scale + ')';
+    circle.style.transform = 'scale(' + p.scale + ')';
 
     // Contador regresivo
     var secs = p.duration / 1000;
     count.textContent = secs;
     clearInterval(breathCountInterval);
-    breathCountInterval = setInterval(function() {
+    breathCountInterval = setInterval(function () {
         secs--;
         count.textContent = Math.max(0, secs);
         if (secs <= 0) clearInterval(breathCountInterval);
     }, 1000);
 
-    breathingTimeout = setTimeout(function() {
+    breathingTimeout = setTimeout(function () {
         breathPhaseIndex = (breathPhaseIndex + 1) % breathingPhases.length;
         runBreathPhase();
     }, p.duration);
@@ -111,8 +108,8 @@ function runBreathPhase() {
    SCROLL REVEAL
    ===================== */
 function initScrollReveal() {
-    var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('sm-visible');
                 observer.unobserve(entry.target);
@@ -120,7 +117,7 @@ function initScrollReveal() {
         });
     }, { threshold: 0.08 });
 
-    document.querySelectorAll('.sm-reveal').forEach(function(el) {
+    document.querySelectorAll('.sm-reveal').forEach(function (el) {
         observer.observe(el);
     });
 }
@@ -135,38 +132,38 @@ function initMentalHealthTest() {
 
 function handleTestSubmit(e) {
     e.preventDefault();
-    var formData  = new FormData(e.target);
+    var formData = new FormData(e.target);
     var questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
-    var allAnswered = questions.every(function(q) { return formData.get(q); });
+    var allAnswered = questions.every(function (q) { return formData.get(q); });
 
     if (!allAnswered) {
         showToast('Por favor responde todas las preguntas', 'warning');
         return;
     }
 
-    var score = questions.reduce(function(sum, q) { return sum + parseInt(formData.get(q)); }, 0);
+    var score = questions.reduce(function (sum, q) { return sum + parseInt(formData.get(q)); }, 0);
     showTestResults(score);
     saveTestResult(score);
 }
 
 function showTestResults(score) {
-    var testForm  = document.getElementById('mentalHealthTest');
+    var testForm = document.getElementById('mentalHealthTest');
     var resultsDiv = document.getElementById('testResults');
     var scoreValue = document.getElementById('scoreValue');
 
-    testForm.style.display  = 'none';
+    testForm.style.display = 'none';
     resultsDiv.style.display = 'block';
     animateScore(scoreValue, score);
 
     var result = interpretScore(score);
     document.getElementById('resultInterpretation').innerHTML = '<h4>' + result.title + '</h4><p>' + result.description + '</p>';
-    document.getElementById('resultRecommendations').innerHTML = '<h4>Recomendaciones:</h4><ul>' + result.recommendations.map(function(r) { return '<li>' + r + '</li>'; }).join('') + '</ul>';
+    document.getElementById('resultRecommendations').innerHTML = '<h4>Recomendaciones:</h4><ul>' + result.recommendations.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>';
 }
 
 function animateScore(element, finalScore) {
     var current = 0;
     var inc = finalScore / (1500 / 16);
-    var timer = setInterval(function() {
+    var timer = setInterval(function () {
         current += inc;
         if (current >= finalScore) { current = finalScore; clearInterval(timer); }
         element.textContent = Math.floor(current);
@@ -197,15 +194,15 @@ function interpretScore(score) {
 }
 
 function resetTest() {
-    var testForm   = document.getElementById('mentalHealthTest');
+    var testForm = document.getElementById('mentalHealthTest');
     var resultsDiv = document.getElementById('testResults');
     testForm.reset();
-    testForm.style.display   = 'block';
+    testForm.style.display = 'block';
     resultsDiv.style.display = 'none';
 }
 
 function getNivelFromScore(score) {
-    if (score <= 5)  return 'Excelente';
+    if (score <= 5) return 'Excelente';
     if (score <= 10) return 'Bueno';
     if (score <= 15) return 'Moderado';
     return 'Atención';
@@ -218,5 +215,5 @@ async function saveTestResult(score) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ puntaje: score, nivel: getNivelFromScore(score) })
         });
-    } catch (e) {}
+    } catch (e) { }
 }

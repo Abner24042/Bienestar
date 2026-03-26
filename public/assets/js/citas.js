@@ -1,11 +1,8 @@
-/**
- * BIENIESTAR - Mis Citas (solo lectura)
- */
 
 let currentDate = new Date();
 let allAppointments = [];
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
     loadUserAppointments();
 
@@ -32,7 +29,7 @@ function renderCalendar() {
     const month = currentDate.getMonth();
 
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     monthYear.textContent = `${monthNames[month]} ${year}`;
 
     const firstDay = new Date(year, month, 1).getDay();
@@ -89,7 +86,7 @@ function renderCalendar() {
 
     document.querySelectorAll('.calendar-day:not(.other-month)').forEach(dayEl => {
         dayEl.style.cursor = 'pointer';
-        dayEl.addEventListener('click', function() {
+        dayEl.addEventListener('click', function () {
             // Quitar seleccion anterior
             document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
             this.classList.add('selected');

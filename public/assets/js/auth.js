@@ -1,6 +1,3 @@
-/**
- * BIENIESTAR - JavaScript de Autenticación
- */
 
 function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -17,9 +14,9 @@ function showToast(message, type) {
     toast.textContent = message;
     toast.style.display = 'block';
     toast.style.opacity = '1';
-    setTimeout(function() {
+    setTimeout(function () {
         toast.style.opacity = '0';
-        setTimeout(function() { toast.style.display = 'none'; }, 300);
+        setTimeout(function () { toast.style.display = 'none'; }, 300);
     }, 3000);
 }
 
@@ -41,7 +38,7 @@ function showLoader() {
 function initLoginForm(form) {
     if (!form) return;
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         var emailInput = document.getElementById('correo');
         var passwordInput = document.getElementById('password');
         if (!emailInput || !passwordInput) return;
@@ -66,14 +63,14 @@ function initLoginForm(form) {
     });
 
     var inputs = form.querySelectorAll('input');
-    inputs.forEach(function(input) {
-        input.addEventListener('input', function() {
+    inputs.forEach(function (input) {
+        input.addEventListener('input', function () {
             clearFieldError(this);
         });
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     var loginForm = document.getElementById('loginForm');
     if (loginForm) initLoginForm(loginForm);
 });

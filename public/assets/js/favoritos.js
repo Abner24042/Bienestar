@@ -1,11 +1,8 @@
-/**
- * BIENIESTAR - Página de Favoritos
- */
 
-let favRecetas    = [];
+let favRecetas = [];
 let favEjercicios = [];
-let favTabActual  = 'recetas';
-let favCatActual  = 'all';
+let favTabActual = 'recetas';
+let favCatActual = 'all';
 let favTipoActual = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarFavoritos() {
     try {
-        const res  = await fetch(API_URL + '/favoritos');
+        const res = await fetch(API_URL + '/favoritos');
         const data = await res.json();
         if (!data.success) return;
 
-        favRecetas    = data.recetas    || [];
+        favRecetas = data.recetas || [];
         favEjercicios = data.ejercicios || [];
 
         renderFavRecetas();
@@ -46,9 +43,9 @@ async function cargarFavoritos() {
 
         const cr = document.getElementById('favCountRecetas');
         const ce = document.getElementById('favCountEjercicios');
-        if (cr) cr.textContent = favRecetas.length    ? `(${favRecetas.length})`    : '';
+        if (cr) cr.textContent = favRecetas.length ? `(${favRecetas.length})` : '';
         if (ce) ce.textContent = favEjercicios.length ? `(${favEjercicios.length})` : '';
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function favCambiarTab(tab, btn) {
@@ -56,12 +53,12 @@ function favCambiarTab(tab, btn) {
     document.querySelectorAll('.fav-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    const isRecetas    = tab === 'recetas';
+    const isRecetas = tab === 'recetas';
     const isEjercicios = tab === 'ejercicios';
 
-    document.getElementById('favGridRecetas').style.display       = isRecetas    ? '' : 'none';
-    document.getElementById('favFiltrosRecetas').style.display    = isRecetas    ? '' : 'none';
-    document.getElementById('favGridEjercicios').style.display    = isEjercicios ? '' : 'none';
+    document.getElementById('favGridRecetas').style.display = isRecetas ? '' : 'none';
+    document.getElementById('favFiltrosRecetas').style.display = isRecetas ? '' : 'none';
+    document.getElementById('favGridEjercicios').style.display = isEjercicios ? '' : 'none';
     document.getElementById('favFiltrosEjercicios').style.display = isEjercicios ? '' : 'none';
 }
 
@@ -86,10 +83,10 @@ function renderFavRecetas() {
     }
 
     grid.innerHTML = filtered.map((r, i) => {
-        const img      = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
-        const cat      = favCapitalize(r.categoria || 'comida');
-        const delay    = (i * 0.07).toFixed(2);
-        const deleted  = r._deleted === true;
+        const img = r.imagen || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80';
+        const cat = favCapitalize(r.categoria || 'comida');
+        const delay = (i * 0.07).toFixed(2);
+        const deleted = r._deleted === true;
         const cardStyle = `cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;${deleted ? 'opacity:0.72;' : ''}`;
         const deletedBadge = deleted
             ? `<span style="position:absolute;top:8px;left:8px;background:rgba(180,0,0,0.82);color:#fff;font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;">Eliminada</span>`
@@ -148,10 +145,10 @@ function favShowRecipeModal(id) {
 
     const nutBar = (r.proteinas || r.carbohidratos || r.grasas || r.calorias) ? `
         <div class="recipe-modal-nutbar">
-            ${r.calorias      ? `<div class="nutbar-item nutbar-kcal"><span class="nutbar-val">${Math.round(r.calorias)}</span><span class="nutbar-lbl">kcal</span></div>` : ''}
-            ${r.proteinas     ? `<div class="nutbar-item nutbar-prot"><span class="nutbar-val">${r.proteinas}g</span><span class="nutbar-lbl">Proteínas</span></div>` : ''}
+            ${r.calorias ? `<div class="nutbar-item nutbar-kcal"><span class="nutbar-val">${Math.round(r.calorias)}</span><span class="nutbar-lbl">kcal</span></div>` : ''}
+            ${r.proteinas ? `<div class="nutbar-item nutbar-prot"><span class="nutbar-val">${r.proteinas}g</span><span class="nutbar-lbl">Proteínas</span></div>` : ''}
             ${r.carbohidratos ? `<div class="nutbar-item nutbar-carbs"><span class="nutbar-val">${r.carbohidratos}g</span><span class="nutbar-lbl">Carbos</span></div>` : ''}
-            ${r.grasas        ? `<div class="nutbar-item nutbar-fat"><span class="nutbar-val">${r.grasas}g</span><span class="nutbar-lbl">Grasas</span></div>` : ''}
+            ${r.grasas ? `<div class="nutbar-item nutbar-fat"><span class="nutbar-val">${r.grasas}g</span><span class="nutbar-lbl">Grasas</span></div>` : ''}
         </div>` : '';
 
     document.getElementById('recipeModalTitle').textContent = r.titulo;
@@ -205,11 +202,11 @@ function renderFavEjercicios() {
     }
 
     grid.innerHTML = filtered.map((e, i) => {
-        const img        = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
-        const tipo       = favCapitalize(e.tipo || 'cardio');
-        const nivel      = favCapitalize(e.nivel || 'principiante');
+        const img = e.imagen || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&q=80';
+        const tipo = favCapitalize(e.tipo || 'cardio');
+        const nivel = favCapitalize(e.nivel || 'principiante');
         const levelClass = 'level-' + (e.nivel || 'principiante');
-        const delay      = (i * 0.07).toFixed(2);
+        const delay = (i * 0.07).toFixed(2);
 
         const duracionStat = e.duracion ? `<div class="meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2"/></svg><span>${e.duracion} min</span></div>` : '';
         const caloriasStat = e.calorias_quemadas ? `<div class="meta-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2"/></svg><span>${e.calorias_quemadas} kcal</span></div>` : '';
@@ -272,11 +269,11 @@ function favShowExerciseModal(id) {
             ${videoSection}
             <div class="exercise-modal-info">
                 <div class="exercise-modal-stats" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr));">
-                    ${e.duracion         ? `<div class="stat-box"><span class="stat-label">Duración</span><span class="stat-value">${e.duracion} min</span></div>` : ''}
+                    ${e.duracion ? `<div class="stat-box"><span class="stat-label">Duración</span><span class="stat-value">${e.duracion} min</span></div>` : ''}
                     <div class="stat-box"><span class="stat-label">Nivel</span><span class="stat-value">${favCapitalize(e.nivel || 'principiante')}</span></div>
                     <div class="stat-box"><span class="stat-label">Tipo</span><span class="stat-value">${favCapitalize(e.tipo || 'cardio')}</span></div>
                     ${e.calorias_quemadas ? `<div class="stat-box"><span class="stat-label">Calorías</span><span class="stat-value">${e.calorias_quemadas} kcal</span></div>` : ''}
-                    ${e.musculo_objetivo  ? `<div class="stat-box"><span class="stat-label">Músculo</span><span class="stat-value">${favCapitalize(e.musculo_objetivo)}</span></div>` : ''}
+                    ${e.musculo_objetivo ? `<div class="stat-box"><span class="stat-label">Músculo</span><span class="stat-value">${favCapitalize(e.musculo_objetivo)}</span></div>` : ''}
                 </div>
                 <h3>Instrucciones</h3>
                 <ol class="exercises-list">${favFormatList(e.instrucciones)}</ol>
@@ -301,7 +298,7 @@ async function toggleFavoritoPage(tipo, id, btn) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tipo, id }),
         });
-    } catch (e) {}
+    } catch (e) { }
 }
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
@@ -331,9 +328,9 @@ document.addEventListener('keydown', e => {
         closeFavExerciseModal();
     }
 });
-document.getElementById('dynamicRecipeModal')?.addEventListener('click', function(e) {
+document.getElementById('dynamicRecipeModal')?.addEventListener('click', function (e) {
     if (e.target === this) closeFavRecipeModal();
 });
-document.getElementById('dynamicExerciseModal')?.addEventListener('click', function(e) {
+document.getElementById('dynamicExerciseModal')?.addEventListener('click', function (e) {
     if (e.target === this) closeFavExerciseModal();
 });

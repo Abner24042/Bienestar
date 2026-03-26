@@ -1,6 +1,3 @@
-/**
- * BIENESTAR - Gestión de Rutinas (Coach)
- */
 
 let ejerciciosDisponibles = [];
 
@@ -30,8 +27,8 @@ async function cargarRutinas() {
         }
         tbody.innerHTML = data.rutinas.map(r => `
             <tr>
-                <td><strong>${escR(r.nombre)}</strong>${r.descripcion ? `<br><small style="color:#999;">${escR(r.descripcion.substring(0,60))}${r.descripcion.length>60?'…':''}</small>` : ''}</td>
-                <td><span style="color:${NIVEL_COLORS[r.nivel]||'#999'};font-weight:600;font-size:0.82rem;">${escR(r.nivel)}</span></td>
+                <td><strong>${escR(r.nombre)}</strong>${r.descripcion ? `<br><small style="color:#999;">${escR(r.descripcion.substring(0, 60))}${r.descripcion.length > 60 ? '…' : ''}</small>` : ''}</td>
+                <td><span style="color:${NIVEL_COLORS[r.nivel] || '#999'};font-weight:600;font-size:0.82rem;">${escR(r.nivel)}</span></td>
                 <td style="text-align:center;">${r.num_ejercicios}</td>
                 <td style="color:#999;">${r.duracion_total ? r.duracion_total + ' min' : '—'}</td>
                 <td>
@@ -51,7 +48,7 @@ async function cargarEjerciciosDisponibles() {
         const res = await fetch(API_URL + '/ejercicios');
         const data = await res.json();
         if (data.success) ejerciciosDisponibles = data.ejercicios || [];
-    } catch (e) {}
+    } catch (e) { }
 }
 
 async function cargarRutinasSelector() {
@@ -63,7 +60,7 @@ async function cargarRutinasSelector() {
         if (!sel) return;
         sel.innerHTML = '<option value="">— Elige una rutina —</option>' +
             data.rutinas.map(r => `<option value="${r.id}">${escR(r.nombre)} (${r.num_ejercicios} ejerc.)</option>`).join('');
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function abrirModalRutina(id = null) {

@@ -1,6 +1,3 @@
-/**
- * Configuración de Google Calendar API
- */
 
 // IMPORTANTE: Reemplaza estos valores con los tuyos
 const GOOGLE_CALENDAR_CONFIG = {
@@ -60,28 +57,28 @@ function connectGoogleCalendar() {
         alert('Google Calendar API aún no está listo. Intenta de nuevo en unos segundos.');
         return;
     }
-    
+
     tokenClient.callback = async (response) => {
         if (response.error !== undefined) {
             console.error('Error de autenticación:', response);
             showNotification('Error al conectar con Google Calendar', 'error');
             return;
         }
-        
+
         accessToken = response.access_token;
         console.log('✅ Token de acceso obtenido');
         showNotification('¡Conectado con Google Calendar!', 'success');
-        
+
         // Actualizar UI
         document.getElementById('btnConnectCalendar').style.display = 'none';
         document.getElementById('calendarConnected').style.display = 'block';
     };
-    
+
     // Solicitar token
     if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({prompt: 'consent'});
+        tokenClient.requestAccessToken({ prompt: 'consent' });
     } else {
-        tokenClient.requestAccessToken({prompt: ''});
+        tokenClient.requestAccessToken({ prompt: '' });
     }
 }
 
@@ -94,11 +91,11 @@ function disconnectGoogleCalendar() {
         google.accounts.oauth2.revoke(token.access_token);
         gapi.client.setToken('');
         accessToken = null;
-        
+
         // Actualizar UI
         document.getElementById('btnConnectCalendar').style.display = 'block';
         document.getElementById('calendarConnected').style.display = 'none';
-        
+
         showNotification('Desconectado de Google Calendar', 'info');
     }
 }
@@ -111,11 +108,11 @@ async function createGoogleCalendarEvent(eventData) {
         console.log('No hay token de acceso');
         return { success: false, error: 'No conectado' };
     }
-    
+
     // Construir fechas en formato ISO
     const startDateTime = `${eventData.fecha}T${eventData.hora}:00`;
     const endDateTime = `${eventData.fecha}T${addOneHour(eventData.hora)}:00`;
-    
+
     const event = {
         'summary': `BIENIESTAR - ${eventData.tipo}`,
         'location': 'IEST Anáhuac, Tampico',
@@ -131,22 +128,22 @@ async function createGoogleCalendarEvent(eventData) {
         'reminders': {
             'useDefault': false,
             'overrides': [
-                {'method': 'email', 'minutes': 24 * 60}, // 1 día antes
-                {'method': 'popup', 'minutes': 60}       // 1 hora antes
+                { 'method': 'email', 'minutes': 24 * 60 }, // 1 día antes
+                { 'method': 'popup', 'minutes': 60 }       // 1 hora antes
             ]
         },
         'colorId': '4' // Rosa/Rojo para citas médicas
     };
-    
+
     try {
         const response = await gapi.client.calendar.events.insert({
             'calendarId': 'primary',
             'resource': event
         });
-        
+
         console.log('✅ Evento creado en Google Calendar:', response.result);
-        return { 
-            success: true, 
+        return {
+            success: true,
             eventId: response.result.id,
             htmlLink: response.result.htmlLink
         };
@@ -163,13 +160,13 @@ async function deleteGoogleCalendarEvent(eventId) {
     if (!accessToken || !eventId) {
         return { success: false };
     }
-    
+
     try {
         await gapi.client.calendar.events.delete({
             'calendarId': 'primary',
             'eventId': eventId
         });
-        
+
         console.log('✅ Evento eliminado de Google Calendar');
         return { success: true };
     } catch (error) {
@@ -185,7 +182,7 @@ async function listUpcomingEvents(maxResults = 10) {
     if (!accessToken) {
         return [];
     }
-    
+
     try {
         const response = await gapi.client.calendar.events.list({
             'calendarId': 'primary',
@@ -195,7 +192,7 @@ async function listUpcomingEvents(maxResults = 10) {
             'maxResults': maxResults,
             'orderBy': 'startTime'
         });
-        
+
         return response.result.items || [];
     } catch (error) {
         console.error('Error al listar eventos:', error);
@@ -209,10 +206,10 @@ async function listUpcomingEvents(maxResults = 10) {
 function addOneHour(timeString) {
     const [hours, minutes] = timeString.split(':');
     let newHours = parseInt(hours) + 1;
-    
+
     // Formato 24h
     if (newHours > 23) newHours = 23;
-    
+
     return `${newHours.toString().padStart(2, '0')}:${minutes}`;
 }
 

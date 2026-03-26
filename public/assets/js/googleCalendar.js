@@ -1,6 +1,3 @@
-/**
- * Integración con Google Calendar
- */
 
 const GOOGLE_CONFIG = {
     clientId: '386216986813-g64cpooclgvge23jip5rh8g0abg268cs.apps.googleusercontent.com',
@@ -55,10 +52,10 @@ function handleAuthClick(callback) {
 
     if (gapi.client.getToken() === null) {
         // Solicitar token nuevo
-        tokenClient.requestAccessToken({prompt: 'consent'});
+        tokenClient.requestAccessToken({ prompt: 'consent' });
     } else {
         // Solicitar nuevo token (revocar el anterior)
-        tokenClient.requestAccessToken({prompt: ''});
+        tokenClient.requestAccessToken({ prompt: '' });
     }
 }
 
@@ -78,7 +75,7 @@ function handleSignoutClick() {
  * @param {Object} appointmentData - Datos de la cita
  */
 async function createGoogleCalendarEvent(appointmentData) {
-    const {title, date, time, type, description} = appointmentData;
+    const { title, date, time, type, description } = appointmentData;
 
     // Construir fecha y hora de inicio (formato: 2026-01-30T14:30:00)
     const startDateTime = `${date}T${time}:00`;
@@ -103,8 +100,8 @@ async function createGoogleCalendarEvent(appointmentData) {
         'reminders': {
             'useDefault': false,
             'overrides': [
-                {'method': 'email', 'minutes': 24 * 60}, // 1 día antes
-                {'method': 'popup', 'minutes': 60}        // 1 hora antes
+                { 'method': 'email', 'minutes': 24 * 60 }, // 1 día antes
+                { 'method': 'popup', 'minutes': 60 }        // 1 hora antes
             ]
         }
     };
@@ -138,7 +135,7 @@ async function createGoogleCalendarEvent(appointmentData) {
  * @param {Object} data - {title, date, time, description, attendeeEmail}
  */
 async function createGoogleCalendarEventWithAttendee(data) {
-    const {title, date, time, description, attendeeEmail} = data;
+    const { title, date, time, description, attendeeEmail } = data;
 
     const startDateTime = `${date}T${time}:00`;
     const start = new Date(`${date}T${time}`);
@@ -158,13 +155,13 @@ async function createGoogleCalendarEventWithAttendee(data) {
             'timeZone': 'America/Mexico_City'
         },
         'attendees': [
-            {'email': attendeeEmail}
+            { 'email': attendeeEmail }
         ],
         'reminders': {
             'useDefault': false,
             'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 60}
+                { 'method': 'email', 'minutes': 24 * 60 },
+                { 'method': 'popup', 'minutes': 60 }
             ]
         }
     };
@@ -223,7 +220,7 @@ function isGoogleCalendarAuthorized() {
 }
 
 // Cargar Google APIs
-(function() {
+(function () {
     // Crear scripts para cargar Google APIs
     const gapiScript = document.createElement('script');
     gapiScript.src = 'https://apis.google.com/js/api.js';

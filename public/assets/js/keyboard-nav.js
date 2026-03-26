@@ -1,13 +1,11 @@
-/**
- * BIENIESTAR - Navegación por teclado (accesibilidad global)
- */
+
 (function () {
     'use strict';
 
     // ── 1. Enter/Space activa divs clickeables con tabindex="0" ───────────────
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' && e.key !== ' ') return;
-        var el  = document.activeElement;
+        var el = document.activeElement;
         var tag = el ? el.tagName.toLowerCase() : '';
         if ((tag === 'div' || tag === 'article') && el.getAttribute('tabindex') === '0') {
             if (e.key === ' ') e.preventDefault();
@@ -72,8 +70,8 @@
             var el = mut.target;
             if (!el.classList.contains('modal') && !el.id.endsWith('Modal')) return;
             var visible = el.classList.contains('active') ||
-                          el.style.display === 'block' ||
-                          el.style.display === 'flex';
+                el.style.display === 'block' ||
+                el.style.display === 'flex';
             if (visible) {
                 var btn = el.querySelector('.modal-close, [autofocus]');
                 if (btn) setTimeout(function () { btn.focus(); }, 50);
@@ -89,15 +87,15 @@
         if (!el) return;
 
         var isTab = el.classList.contains('plan-tab') ||
-                    el.classList.contains('fav-tab')  ||
-                    el.classList.contains('filter-btn');
+            el.classList.contains('fav-tab') ||
+            el.classList.contains('filter-btn');
         if (!isTab) return;
 
         e.preventDefault();
         var siblings = Array.from(el.parentElement.querySelectorAll(
             '.plan-tab, .fav-tab, .filter-btn'
         ));
-        var idx  = siblings.indexOf(el);
+        var idx = siblings.indexOf(el);
         var next = e.key === 'ArrowRight'
             ? siblings[(idx + 1) % siblings.length]
             : siblings[(idx - 1 + siblings.length) % siblings.length];
@@ -107,7 +105,7 @@
     // ── 6. Menú de usuario con teclado ────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         var headerUser = document.querySelector('.header-user');
-        var userMenu   = document.querySelector('.user-menu');
+        var userMenu = document.querySelector('.user-menu');
         if (!headerUser || !userMenu) return;
 
         // Hacer el área de usuario focusable
@@ -120,8 +118,8 @@
         function openMenu() {
             userMenu.style.display = 'block';
             requestAnimationFrame(function () {
-                userMenu.style.opacity    = '1';
-                userMenu.style.transform  = 'translateY(0)';
+                userMenu.style.opacity = '1';
+                userMenu.style.transform = 'translateY(0)';
             });
             headerUser.setAttribute('aria-expanded', 'true');
             var first = userMenu.querySelector('a');
@@ -129,7 +127,7 @@
         }
 
         function closeMenu() {
-            userMenu.style.opacity   = '0';
+            userMenu.style.opacity = '0';
             userMenu.style.transform = 'translateY(-10px)';
             setTimeout(function () { userMenu.style.display = 'none'; }, 200);
             headerUser.setAttribute('aria-expanded', 'false');
@@ -143,11 +141,11 @@
 
         userMenu.addEventListener('keydown', function (e) {
             var items = Array.from(userMenu.querySelectorAll('a'));
-            var idx   = items.indexOf(document.activeElement);
+            var idx = items.indexOf(document.activeElement);
             if (e.key === 'ArrowDown') { e.preventDefault(); items[(idx + 1) % items.length].focus(); }
-            if (e.key === 'ArrowUp')   { e.preventDefault(); items[(idx - 1 + items.length) % items.length].focus(); }
-            if (e.key === 'Escape')    { closeMenu(); headerUser.focus(); }
-            if (e.key === 'Tab')       { closeMenu(); }
+            if (e.key === 'ArrowUp') { e.preventDefault(); items[(idx - 1 + items.length) % items.length].focus(); }
+            if (e.key === 'Escape') { closeMenu(); headerUser.focus(); }
+            if (e.key === 'Tab') { closeMenu(); }
         });
     });
 

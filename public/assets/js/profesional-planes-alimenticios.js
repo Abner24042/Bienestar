@@ -1,6 +1,3 @@
-/**
- * BIENESTAR - Gestión de Planes Alimenticios (Nutriólogo)
- */
 
 let recetasDisponiblesPA = [];
 
@@ -33,7 +30,7 @@ async function cargarPlanesAlimenticios() {
         }
         tbody.innerHTML = data.planes.map(p => `
             <tr>
-                <td><strong>${escPA(p.nombre)}</strong>${p.descripcion ? `<br><small style="color:#999;">${escPA(p.descripcion.substring(0,60))}${p.descripcion.length>60?'…':''}</small>` : ''}</td>
+                <td><strong>${escPA(p.nombre)}</strong>${p.descripcion ? `<br><small style="color:#999;">${escPA(p.descripcion.substring(0, 60))}${p.descripcion.length > 60 ? '…' : ''}</small>` : ''}</td>
                 <td style="color:#999;font-size:0.85rem;">${p.objetivo ? escPA(p.objetivo) : '—'}</td>
                 <td style="text-align:center;">${p.duracion_semanas} sem.</td>
                 <td style="text-align:center;">${p.num_recetas}</td>
@@ -54,7 +51,7 @@ async function cargarRecetasDisponiblesPA() {
         const res = await fetch(API_URL + '/pro/recetas');
         const data = await res.json();
         if (data.success) recetasDisponiblesPA = data.recetas || [];
-    } catch (e) {}
+    } catch (e) { }
 }
 
 async function cargarPlanesAlimSelector() {
@@ -66,7 +63,7 @@ async function cargarPlanesAlimSelector() {
         if (!sel) return;
         sel.innerHTML = '<option value="">— Elige un plan —</option>' +
             data.planes.map(p => `<option value="${p.id}">${escPA(p.nombre)} (${p.num_recetas} recetas)</option>`).join('');
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function abrirModalPlanAlim(id = null) {
@@ -140,7 +137,7 @@ function agregarRecetaPlanAlim(datos = null) {
     const selRec = datos ? recetasDisponiblesPA.find(r => r.id == datos.receta_id) : null;
 
     const optsDia = DIAS_SEMANA.slice(1).map((d, i) =>
-        `<option value="${i+1}" ${datos && datos.dia_semana == i+1 ? 'selected' : ''}>${d}</option>`
+        `<option value="${i + 1}" ${datos && datos.dia_semana == i + 1 ? 'selected' : ''}>${d}</option>`
     ).join('');
 
     const optsTiempo = TIEMPOS_COMIDA.map(t =>

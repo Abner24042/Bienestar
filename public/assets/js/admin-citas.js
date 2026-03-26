@@ -1,8 +1,5 @@
-/**
- * BIENIESTAR - Admin Gestión de Citas
- */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadAllAppointments();
 });
 
