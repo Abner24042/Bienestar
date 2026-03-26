@@ -96,33 +96,65 @@ async function editarRutina(id) {
 }
 
 function cerrarModalRutina() {
+    window.closeItemPickerPanel && closeItemPickerPanel();
     document.getElementById('modalRutina').style.display = 'none';
+}
+
+const EJ_CHEVRON = `<svg class="picker-trigger-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+function buildEjercicioTriggerR(ej) {
+    if (!ej) {
+        return `<div class="picker-trigger-icon" style="background:rgba(255,107,53,.1);">💪</div>
+                <span class="picker-trigger-text"><span class="picker-trigger-title" style="opacity:.45;">— Buscar ejercicio... —</span></span>`;
+    }
+    const thumb = ej.imagen
+        ? `<img class="picker-trigger-thumb" src="${escR(ej.imagen)}" onerror="this.style.display='none'">`
+        : `<div class="picker-trigger-icon" style="background:rgba(255,107,53,.1);">💪</div>`;
+    const nivel = ej.nivel
+        ? `<span class="picker-trigger-badge" style="background:rgba(255,107,53,.12);color:var(--color-primary);">${escR(ej.nivel)}</span>`
+        : '';
+    return `${thumb}<span class="picker-trigger-text"><span class="picker-trigger-title">${escR(ej.titulo)}</span></span>${nivel}`;
+}
+
+function abrirPickerEjercicioR(trigger) {
+    if (trigger.classList.contains('open')) { window.closeItemPickerPanel && closeItemPickerPanel(); return; }
+    window.openItemPicker(trigger, ejerciciosDisponibles, 'tipo', function (ej) {
+        const row = trigger.closest('.rutina-ej-row');
+        row.querySelector('.rej-ejercicio').value = ej.id;
+        trigger.dataset.value = ej.id;
+        trigger.classList.add('has-value');
+        trigger.innerHTML = buildEjercicioTriggerR(ej) + EJ_CHEVRON;
+    });
 }
 
 function agregarEjercicioRutina(datos = null) {
     const container = document.getElementById('rutinaEjerciciosList');
     const row = document.createElement('div');
-    row.className = 'rutina-ej-row';
-    row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:10px;padding:10px;background:rgba(255,107,53,0.06);border-radius:8px;border:1px solid rgba(255,107,53,0.15);';
+    row.className = 'picker-row picker-row-orange rutina-ej-row';
 
-    const optsEj = ejerciciosDisponibles.map(e =>
-        `<option value="${e.id}" ${datos && datos.ejercicio_id == e.id ? 'selected' : ''}>${escR(e.titulo)}</option>`
-    ).join('');
+    const selEj = datos ? ejerciciosDisponibles.find(e => e.id == datos.ejercicio_id) : null;
 
     row.innerHTML = `
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Ejercicio</label>
-            <select class="rej-ejercicio" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;">
-                <option value="">— Elige —</option>${optsEj}
-            </select></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Series</label>
-            <input type="number" class="rej-series" value="${datos ? datos.series || 3 : 3}" min="1" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;"></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Reps / Duración</label>
-            <input type="text" class="rej-reps" value="${datos ? datos.repeticiones || '' : ''}" placeholder="Ej: 12 o 30 seg" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;"></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Descanso (seg)</label>
-            <input type="number" class="rej-descanso" value="${datos ? datos.descanso_seg || 60 : 60}" min="0" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;"></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Notas</label>
-            <input type="text" class="rej-notas" value="${datos ? escR(datos.notas || '') : ''}" placeholder="Opcional" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;"></div>
-        <div style="padding-bottom:2px;"><button type="button" onclick="this.closest('.rutina-ej-row').remove()" style="padding:6px 10px;border:1px solid #f44336;background:transparent;color:#f44336;border-radius:6px;cursor:pointer;font-size:1rem;line-height:1;">✕</button></div>
+        <div class="picker-row-top">
+            <input type="hidden" class="rej-ejercicio" value="${datos ? escR(String(datos.ejercicio_id || '')) : ''}">
+            <button type="button" class="item-picker-trigger ${selEj ? 'has-value' : ''}"
+                    data-value="${datos ? escR(String(datos.ejercicio_id || '')) : ''}"
+                    onclick="abrirPickerEjercicioR(this)">
+                ${buildEjercicioTriggerR(selEj)}
+                ${EJ_CHEVRON}
+            </button>
+            <button type="button" class="picker-row-remove" onclick="this.closest('.rutina-ej-row').remove()">✕</button>
+        </div>
+        <div class="picker-row-fields">
+            <div class="picker-field"><label>Series</label>
+                <input type="number" class="rej-series" value="${datos ? escR(String(datos.series || 3)) : 3}" min="1"></div>
+            <div class="picker-field"><label>Reps / Duración</label>
+                <input type="text" class="rej-reps" value="${datos ? escR(datos.repeticiones || '') : ''}" placeholder="Ej: 12 o 30 seg"></div>
+            <div class="picker-field"><label>Descanso (seg)</label>
+                <input type="number" class="rej-descanso" value="${datos ? escR(String(datos.descanso_seg || 60)) : 60}" min="0"></div>
+            <div class="picker-field"><label>Notas</label>
+                <input type="text" class="rej-notas" value="${datos ? escR(datos.notas || '') : ''}" placeholder="Opcional"></div>
+        </div>
     `;
     container.appendChild(row);
 }

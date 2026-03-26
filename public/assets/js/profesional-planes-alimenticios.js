@@ -7,6 +7,150 @@ let recetasDisponiblesPA = [];
 const DIAS_SEMANA = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 const TIEMPOS_COMIDA = ['desayuno', 'almuerzo', 'merienda', 'cena', 'comida'];
 
+// ── Global Item Picker Singleton ──────────────────────────────────────────────
+;(function () {
+    var panel = null, currentTrigger = null, onSelectCb = null;
+    var allItems = [], filterKey = 'categoria', activeFilter = 'all', term = '';
+
+    function buildPanel() {
+        if (panel) return;
+        panel = document.createElement('div');
+        panel.id = 'itemPickerPanel';
+        panel.innerHTML =
+            '<div class="ip-search-wrap"><input type="text" class="ip-search" placeholder="Buscar..."></div>' +
+            '<div class="ip-filters"></div>' +
+            '<div class="ip-count"></div>' +
+            '<div class="ip-list"></div>';
+        document.body.appendChild(panel);
+        panel.querySelector('.ip-search').addEventListener('input', function () {
+            term = this.value.toLowerCase();
+            renderList();
+        });
+        document.addEventListener('mousedown', function (e) {
+            if (!panel || !panel.classList.contains('ip-open')) return;
+            if (!panel.contains(e.target) && currentTrigger && !currentTrigger.contains(e.target)) {
+                closePanel();
+            }
+        });
+    }
+
+    function renderFilters() {
+        var el = panel.querySelector('.ip-filters');
+        var cats = ['all'];
+        allItems.forEach(function (item) {
+            var v = item[filterKey] || '';
+            if (v && !cats.includes(v)) cats.push(v);
+        });
+        if (cats.length <= 2) { el.style.display = 'none'; return; }
+        el.style.display = '';
+        el.innerHTML = cats.map(function (c) {
+            return '<button class="ip-filter' + (activeFilter === c ? ' active' : '') + '" data-f="' + ipEsc(c) + '">' +
+                (c === 'all' ? 'Todos' : ipCap(c)) + '</button>';
+        }).join('');
+        el.querySelectorAll('.ip-filter').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                activeFilter = this.dataset.f;
+                el.querySelectorAll('.ip-filter').forEach(function (b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                renderList();
+            });
+        });
+    }
+
+    function renderList() {
+        var listEl = panel.querySelector('.ip-list');
+        var countEl = panel.querySelector('.ip-count');
+        var filtered = allItems.filter(function (item) {
+            var tOk = !term || (item.titulo || '').toLowerCase().includes(term) ||
+                      (item.descripcion || '').toLowerCase().includes(term);
+            var fOk = activeFilter === 'all' || (item[filterKey] || '') === activeFilter;
+            return tOk && fOk;
+        });
+        countEl.textContent = filtered.length + ' resultado' + (filtered.length !== 1 ? 's' : '');
+        if (!filtered.length) {
+            listEl.innerHTML = '<div class="ip-empty">Sin resultados' + (term ? ' para "' + ipEsc(term) + '"' : '') + '</div>';
+            return;
+        }
+        var curVal = currentTrigger ? (currentTrigger.dataset.value || '') : '';
+        listEl.innerHTML = filtered.map(function (item) {
+            var thumb = item.imagen
+                ? '<img src="' + ipEsc(item.imagen) + '" loading="lazy" onerror="this.style.display=\'none\'">'
+                : '<div class="ip-item-icon" style="background:rgba(255,107,53,.1);">' +
+                  (filterKey === 'categoria' ? '🍽️' : '💪') + '</div>';
+            var sub = [];
+            if (item.calorias)             sub.push(Math.round(item.calorias) + ' kcal');
+            if (item.tiempo_preparacion)   sub.push(item.tiempo_preparacion + ' min');
+            if (item.duracion)             sub.push(item.duracion + ' min');
+            if (item.musculo_objetivo)     sub.push(ipCap(item.musculo_objetivo));
+            var subHtml = sub.length ? '<div class="ip-item-sub">' + sub.join(' · ') + '</div>' : '';
+            var badges = '';
+            if (filterKey === 'categoria') {
+                if (item.categoria) badges += '<span class="ip-badge ip-badge-cat">' + ipEsc(ipCap(item.categoria)) + '</span>';
+                if (item.aprobada == 0) badges += '<span class="ip-badge ip-badge-pending">Pendiente</span>';
+            } else {
+                if (item.tipo)  badges += '<span class="ip-badge ip-badge-type">' + ipEsc(ipCap(item.tipo)) + '</span>';
+                if (item.nivel) badges += '<span class="ip-badge ip-badge-nivel nivel-' + item.nivel + '">' + ipEsc(ipCap(item.nivel)) + '</span>';
+            }
+            var selCls = String(item.id) === String(curVal) ? ' ip-selected' : '';
+            return '<div class="ip-item' + selCls + '" data-id="' + item.id + '">' +
+                thumb +
+                '<div class="ip-item-body"><div class="ip-item-title">' + ipEsc(item.titulo) + '</div>' + subHtml + '</div>' +
+                '<div class="ip-item-badges">' + badges + '</div>' +
+                '</div>';
+        }).join('');
+        listEl.querySelectorAll('.ip-item').forEach(function (itemEl) {
+            itemEl.addEventListener('click', function () {
+                var id = this.dataset.id;
+                var found = allItems.find(function (x) { return String(x.id) === String(id); });
+                if (found && onSelectCb) onSelectCb(found);
+                closePanel();
+            });
+        });
+    }
+
+    function openPanel(trigger, items, fKey, cb) {
+        buildPanel();
+        currentTrigger = trigger;
+        allItems = items;
+        filterKey = fKey;
+        onSelectCb = cb;
+        activeFilter = 'all';
+        term = '';
+        panel.querySelector('.ip-search').value = '';
+        renderFilters();
+        renderList();
+        // Position
+        var rect = trigger.getBoundingClientRect();
+        var panelW = Math.max(rect.width, 360);
+        var left = rect.left;
+        if (left + panelW > window.innerWidth - 8) left = Math.max(8, window.innerWidth - panelW - 8);
+        var topPos = rect.bottom + 4;
+        if (topPos + 350 > window.innerHeight) topPos = Math.max(8, rect.top - 354);
+        panel.style.cssText = 'left:' + left + 'px;top:' + topPos + 'px;width:' + panelW + 'px;max-height:350px;';
+        panel.classList.add('ip-open');
+        panel.querySelector('.ip-search').focus();
+        trigger.classList.add('open');
+    }
+
+    function closePanel() {
+        if (!panel) return;
+        panel.classList.remove('ip-open');
+        if (currentTrigger) currentTrigger.classList.remove('open');
+        currentTrigger = null;
+    }
+
+    function ipCap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+    function ipEsc(s) {
+        if (!s) return '';
+        var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML;
+    }
+
+    window.openItemPicker      = openPanel;
+    window.closeItemPickerPanel = closePanel;
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('proPlanesAlimBody')) {
         cargarPlanesAlimenticios();
@@ -97,18 +241,45 @@ async function editarPlanAlim(id) {
 }
 
 function cerrarModalPlanAlim() {
+    closeItemPickerPanel && closeItemPickerPanel();
     document.getElementById('modalPlanAlim').style.display = 'none';
+}
+
+// ── Picker de recetas ─────────────────────────────────────────────────────────
+
+function buildRecetaTriggerPA(receta) {
+    if (!receta) {
+        return `<div class="picker-trigger-icon" style="background:rgba(76,175,80,.1);">🍽️</div>
+                <span class="picker-trigger-text"><span class="picker-trigger-title" style="opacity:.45;">— Buscar receta... —</span></span>`;
+    }
+    const thumb = receta.imagen
+        ? `<img class="picker-trigger-thumb" src="${escPA(receta.imagen)}" onerror="this.style.display='none'">`
+        : `<div class="picker-trigger-icon" style="background:rgba(76,175,80,.1);">🍽️</div>`;
+    const cat = receta.categoria
+        ? `<span class="picker-trigger-badge" style="background:rgba(76,175,80,.12);color:#4caf50;">${escPA(receta.categoria)}</span>`
+        : '';
+    return `${thumb}<span class="picker-trigger-text"><span class="picker-trigger-title">${escPA(receta.titulo)}</span></span>${cat}`;
+}
+
+const CHEVRON_SVG = `<svg class="picker-trigger-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+function abrirPickerRecetaPA(trigger) {
+    if (trigger.classList.contains('open')) { closeItemPickerPanel(); return; }
+    openItemPicker(trigger, recetasDisponiblesPA, 'categoria', function (receta) {
+        const row = trigger.closest('.plan-rec-row');
+        row.querySelector('.prec-receta').value = receta.id;
+        trigger.dataset.value = receta.id;
+        trigger.classList.add('has-value');
+        trigger.innerHTML = buildRecetaTriggerPA(receta) + CHEVRON_SVG;
+    });
 }
 
 function agregarRecetaPlanAlim(datos = null) {
     const container = document.getElementById('planAlimRecetasList');
     const row = document.createElement('div');
-    row.className = 'plan-rec-row';
-    row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 0.6fr 1.5fr auto;gap:8px;align-items:end;margin-bottom:10px;padding:10px;background:rgba(76,175,80,0.06);border-radius:8px;border:1px solid rgba(76,175,80,0.2);';
+    row.className = 'picker-row picker-row-green plan-rec-row';
 
-    const optsRec = recetasDisponiblesPA.map(r =>
-        `<option value="${r.id}" ${datos && datos.receta_id == r.id ? 'selected' : ''}>${escPA(r.titulo)}</option>`
-    ).join('');
+    const selRec = datos ? recetasDisponiblesPA.find(r => r.id == datos.receta_id) : null;
 
     const optsDia = DIAS_SEMANA.slice(1).map((d, i) =>
         `<option value="${i+1}" ${datos && datos.dia_semana == i+1 ? 'selected' : ''}>${d}</option>`
@@ -118,22 +289,25 @@ function agregarRecetaPlanAlim(datos = null) {
         `<option value="${t}" ${datos && datos.tiempo_comida === t ? 'selected' : ''}>${t.charAt(0).toUpperCase() + t.slice(1)}</option>`
     ).join('');
 
-    const inputStyle = 'width:100%;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary,#111);font-size:0.85rem;';
-
     row.innerHTML = `
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Receta</label>
-            <select class="prec-receta" style="${inputStyle}">
-                <option value="">— Elige —</option>${optsRec}
-            </select></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Día</label>
-            <select class="prec-dia" style="${inputStyle}">${optsDia}</select></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Momento</label>
-            <select class="prec-tiempo" style="${inputStyle}">${optsTiempo}</select></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Porciones</label>
-            <input type="number" class="prec-porciones" value="${datos ? datos.porciones || 1 : 1}" min="0.5" step="0.5" style="${inputStyle}"></div>
-        <div><label style="font-size:0.75rem;color:#999;display:block;margin-bottom:3px;">Notas</label>
-            <input type="text" class="prec-notas" value="${datos ? escPA(datos.notas || '') : ''}" placeholder="Opcional" style="${inputStyle}"></div>
-        <div style="padding-bottom:2px;"><button type="button" onclick="this.closest('.plan-rec-row').remove()" style="padding:6px 10px;border:1px solid #f44336;background:transparent;color:#f44336;border-radius:6px;cursor:pointer;font-size:1rem;line-height:1;">✕</button></div>
+        <div class="picker-row-top">
+            <input type="hidden" class="prec-receta" value="${datos ? escPA(String(datos.receta_id || '')) : ''}">
+            <button type="button" class="item-picker-trigger ${selRec ? 'has-value' : ''}"
+                    data-value="${datos ? escPA(String(datos.receta_id || '')) : ''}"
+                    onclick="abrirPickerRecetaPA(this)">
+                ${buildRecetaTriggerPA(selRec)}
+                ${CHEVRON_SVG}
+            </button>
+            <button type="button" class="picker-row-remove" onclick="this.closest('.plan-rec-row').remove()">✕</button>
+        </div>
+        <div class="picker-row-fields">
+            <div class="picker-field"><label>Día</label><select class="prec-dia">${optsDia}</select></div>
+            <div class="picker-field"><label>Momento</label><select class="prec-tiempo">${optsTiempo}</select></div>
+            <div class="picker-field"><label>Porciones</label>
+                <input type="number" class="prec-porciones" value="${datos ? escPA(String(datos.porciones || 1)) : 1}" min="0.5" step="0.5"></div>
+            <div class="picker-field"><label>Notas</label>
+                <input type="text" class="prec-notas" value="${datos ? escPA(datos.notas || '') : ''}" placeholder="Opcional"></div>
+        </div>
     `;
     container.appendChild(row);
 }
@@ -218,7 +392,6 @@ function generarPlanAlimPDF(plan) {
     const gray = [100, 100, 100];
     const especialista = (typeof PROFESSIONAL_USER !== 'undefined' && PROFESSIONAL_USER.nombre) ? PROFESSIONAL_USER.nombre : '';
 
-    // Header
     doc.setFillColor(...green);
     doc.rect(0, 0, 210, 32, 'F');
     doc.setTextColor(255, 255, 255);
@@ -228,11 +401,8 @@ function generarPlanAlimPDF(plan) {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('Bienestar — Plan Nutricional Personalizado', 14, 21);
-    if (especialista) {
-        doc.text('Nutriólogo/a: ' + especialista, 14, 28);
-    }
+    if (especialista) doc.text('Nutriólogo/a: ' + especialista, 14, 28);
 
-    // Plan info
     let y = 42;
     doc.setTextColor(...dark);
     doc.setFontSize(15);
@@ -261,7 +431,6 @@ function generarPlanAlimPDF(plan) {
     doc.line(14, y, 196, y);
     y += 7;
 
-    // Group recipes by day — columnas suman 182mm
     if (plan.recetas && plan.recetas.length) {
         const byDay = {};
         plan.recetas.forEach(r => {
@@ -286,31 +455,16 @@ function generarPlanAlimPDF(plan) {
         });
 
         doc.autoTable({
-            startY: y,
-            margin: { left: 14, right: 14 },
+            startY: y, margin: { left: 14, right: 14 },
             head: [['Día', 'Momento', 'Receta', 'Porc.', 'Calorías', 'Notas']],
             body: tableBody,
-            styles: {
-                fontSize: 9,
-                cellPadding: { top: 4, right: 4, bottom: 4, left: 4 },
-                valign: 'middle',
-                overflow: 'linebreak',
-            },
-            headStyles: {
-                fillColor: green,
-                textColor: 255,
-                fontStyle: 'bold',
-                valign: 'middle',
-                halign: 'center',
-            },
+            styles: { fontSize: 9, cellPadding: { top: 4, right: 4, bottom: 4, left: 4 }, valign: 'middle', overflow: 'linebreak' },
+            headStyles: { fillColor: green, textColor: 255, fontStyle: 'bold', valign: 'middle', halign: 'center' },
             alternateRowStyles: { fillColor: [240, 249, 240] },
             columnStyles: {
-                0: { cellWidth: 25, fontStyle: 'bold' },
-                1: { cellWidth: 22, halign: 'center' },
-                2: { cellWidth: 58 },
-                3: { cellWidth: 15, halign: 'center' },
-                4: { cellWidth: 24, halign: 'center' },
-                5: { cellWidth: 38 },
+                0: { cellWidth: 25, fontStyle: 'bold' }, 1: { cellWidth: 22, halign: 'center' },
+                2: { cellWidth: 58 }, 3: { cellWidth: 15, halign: 'center' },
+                4: { cellWidth: 24, halign: 'center' }, 5: { cellWidth: 38 },
             },
         });
     } else {
@@ -319,7 +473,6 @@ function generarPlanAlimPDF(plan) {
         doc.text('Sin recetas registradas.', 14, y);
     }
 
-    // Footer
     const pageCount = doc.internal.getNumberOfPages();
     const fechaHoy = new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' });
     for (let i = 1; i <= pageCount; i++) {
