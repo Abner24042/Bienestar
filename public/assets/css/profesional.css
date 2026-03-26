@@ -266,12 +266,32 @@
 .ip-badge { font-size: 0.67rem; padding: 2px 5px; border-radius: 4px; white-space: nowrap; }
 .ip-badge-cat { background: rgba(76,175,80,.15); color: #4caf50; }
 .ip-badge-type { background: rgba(255,107,53,.15); color: var(--color-primary); }
-.ip-badge-pending { background: rgba(255,152,0,.15); color: #ff9800; }
 .ip-badge-nivel.nivel-principiante { background: rgba(76,175,80,.15); color: #4caf50; }
 .ip-badge-nivel.nivel-intermedio { background: rgba(255,152,0,.15); color: #ff9800; }
 .ip-badge-nivel.nivel-avanzado { background: rgba(244,67,54,.15); color: #f44336; }
 .ip-empty { padding: 28px; text-align: center; color: var(--color-text-secondary); font-size: 0.85rem; }
-.ip-count { padding: 6px 12px; font-size: 0.72rem; color: var(--color-text-secondary); border-bottom: 1px solid rgba(0,0,0,0.05); }
+.ip-count { padding: 5px 12px; font-size: 0.72rem; color: var(--color-text-secondary); border-bottom: 1px solid rgba(0,0,0,0.05); }
+.ip-show-more {
+    display: block; width: 100%; padding: 10px;
+    border: none; border-top: 1px solid rgba(0,0,0,0.08);
+    background: transparent; color: var(--color-primary);
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background .15s;
+}
+.ip-show-more:hover { background: rgba(255,107,53,.07); }
+
+/* Acento verde — recetas */
+#itemPickerPanel.ip-green .ip-filter.active { background: #4caf50; border-color: #4caf50; }
+#itemPickerPanel.ip-green .ip-item:hover    { background: rgba(76,175,80,.08); }
+#itemPickerPanel.ip-green .ip-item.ip-selected { background: rgba(76,175,80,.13); }
+#itemPickerPanel.ip-green .ip-show-more     { color: #4caf50; }
+#itemPickerPanel.ip-green .ip-show-more:hover { background: rgba(76,175,80,.07); }
+[data-theme="dark"] #itemPickerPanel.ip-green .ip-show-more { border-top-color: rgba(255,255,255,.07); }
+
+/* Acento naranja — ejercicios */
+#itemPickerPanel.ip-orange .ip-filter.active { background: var(--color-primary); border-color: var(--color-primary); }
+#itemPickerPanel.ip-orange .ip-item:hover    { background: rgba(255,107,53,.08); }
+#itemPickerPanel.ip-orange .ip-item.ip-selected { background: rgba(255,107,53,.13); }
+[data-theme="dark"] #itemPickerPanel .ip-show-more { border-top-color: rgba(255,255,255,.07); }
 
 /* Filas redeseñadas */
 .picker-row { margin-bottom: 10px; border-radius: 10px; padding: 10px; position: relative; }

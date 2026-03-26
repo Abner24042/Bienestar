@@ -124,7 +124,7 @@ function abrirPickerEjercicioR(trigger) {
         trigger.dataset.value = ej.id;
         trigger.classList.add('has-value');
         trigger.innerHTML = buildEjercicioTriggerR(ej) + EJ_CHEVRON;
-    });
+    }, 'orange');
 }
 
 function agregarEjercicioRutina(datos = null) {
