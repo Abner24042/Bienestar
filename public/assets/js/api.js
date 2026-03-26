@@ -1,14 +1,10 @@
-/**
- * BIENESTAR — Api Service
- * Cliente HTTP centralizado. Disponible globalmente como window.Api
- *
- * Uso:
- *   const { recetas } = await Api.get('/admin/recetas');
- *   await Api.post('/admin/recetas', formData);
- *   await Api.put('/admin/recetas/5', { titulo: 'Nuevo' });
- *   await Api.delete('/admin/recetas/5');
- */
+// cliente HTTP centralizado para todos los fetch del proyecto
+// en vez de repetir el mismo fetch con headers y manejo de errores en cada archivo,
+// lo ponemos aqui una vez y desde todos lados hacemos Api.get('/recetas') etc.
+// disponible globalmente como window.Api porque se carga en el header
+
 const Api = (() => {
+    // toma el API_URL que inyecta el header de PHP, o string vacio si no esta definido
     const base = typeof API_URL !== 'undefined' ? API_URL : '';
 
     async function request(method, endpoint, data = null) {
@@ -18,7 +14,9 @@ const Api = (() => {
         if (data !== null) {
             if (isFormData) {
                 options.body = data;
-                // No poner Content-Type: el browser lo setea con boundary automático
+                // con FormData NO se pone Content-Type manualmente
+                // el browser lo setea solo y agrega el boundary que necesita multipart
+                // si lo pones manualmente rompe el upload de imagenes - aprendi eso a las malas
             } else {
                 options.headers = { 'Content-Type': 'application/json' };
                 options.body = JSON.stringify(data);
@@ -29,10 +27,11 @@ const Api = (() => {
         try {
             res = await fetch(base + endpoint, options);
         } catch (networkErr) {
+            // esto pasa cuando no hay internet o el servidor no responde
             throw new ApiError('Sin conexión. Verifica tu red.', 0);
         }
 
-        // Intentar parsear JSON siempre
+        // intentamos parsear JSON siempre, si falla es error del servidor
         let json;
         try {
             json = await res.json();
@@ -40,6 +39,8 @@ const Api = (() => {
             throw new ApiError(`Error del servidor (${res.status})`, res.status);
         }
 
+        // todos los endpoints del backend regresan {success: true/false}
+        // si success es false lanzamos un error con el mensaje que vino del servidor
         if (!json.success) {
             throw new ApiError(json.message || 'Error desconocido', res.status, json);
         }
@@ -55,7 +56,8 @@ const Api = (() => {
     };
 })();
 
-/** Error tipado para distinguir errores de API vs errores JS */
+// clase de error personalizada para distinguir errores de API de errores de JS normales
+// con esto en el catch podemos hacer: if (err instanceof ApiError) y saber que fue del servidor
 class ApiError extends Error {
     constructor(message, status = 0, data = null) {
         super(message);

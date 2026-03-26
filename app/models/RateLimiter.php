@@ -1,40 +1,41 @@
 <?php
+// proteccion contra DDoS y fuerza bruta
+// la idea es contar cuantas peticiones llegan de la misma IP en un rango de tiempo
+// si pasa el limite la bloqueamos por un rato segun que tipo de ruta sea
+// lo mas importante: la IP NUNCA se guarda tal cual en la BD
+// se guarda como un hash HMAC-SHA256 que es de un solo sentido (no se puede revertir)
+// asi si alguien hackea la BD no sabe de que IP vienen las peticiones
+
 require_once __DIR__ . '/../config/database.php';
 
-/**
- * Rate Limiter — protección contra DDoS / fuerza bruta
- *
- * IPs almacenadas como HMAC-SHA256 (hash de un solo sentido, no reversible).
- * Límites por tipo de ruta:
- *   auth  → 10 req/min   → bloqueo 5 min   (login, Google OAuth)
- *   api   → 120 req/min  → bloqueo 1 min   (endpoints JSON)
- *   chat  → 300 req/min  → bloqueo 30 seg  (polling frecuente)
- *   page  → 60 req/min   → bloqueo 1 min   (páginas HTML)
- */
-class RateLimiter {
+class RateLimiter
+{
 
     private $db;
 
-    // [max_requests, window_seconds, block_seconds]
+    // limites por tipo de ruta: [max_peticiones, ventana_segundos, bloqueo_segundos]
+    // auth es mas estricto porque es donde se puede hacer fuerza bruta al login
+    // chat es mas permisivo porque el polling manda muchas peticiones seguidas
     private const LIMITS = [
-        'auth' => [10,   60, 300],
-        'api'  => [120,  60,  60],
-        'chat' => [300,  60,  30],
-        'page' => [60,   60,  60],
+        'auth' => [10, 60, 300],
+        'api' => [120, 60, 60],
+        'chat' => [300, 60, 30],
+        'page' => [60, 60, 60],
     ];
 
-    // IPs locales que nunca se limitan
+    // estas ips nunca se limitan (localhost durante desarrollo)
     private const WHITELIST = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
 
-    public function __construct() {
+    public function __construct()
+    {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->ensureTable();
     }
 
-    // ── Tabla auto-creada ──────────────────────────────────────────────────────
-
-    private function ensureTable(): void {
+    // crea la tabla si no existe, con esto no hay que correr migraciones manualmente
+    private function ensureTable(): void
+    {
         $this->db->exec("
             CREATE TABLE IF NOT EXISTS rate_limit (
                 ip_hash      VARCHAR(64)  NOT NULL,
@@ -47,21 +48,21 @@ class RateLimiter {
         ");
     }
 
-    // ── Método principal ───────────────────────────────────────────────────────
+    // regresa true si la peticion se permite, false si hay que bloquearla
+    public function check(string $ip, string $type = 'page'): bool
+    {
+        // localhost siempre pasa, si no bloqueariamos el servidor durante desarrollo
+        if (in_array($ip, self::WHITELIST, true))
+            return true;
 
-    /**
-     * Retorna true si la solicitud está permitida, false si debe ser bloqueada.
-     */
-    public function check(string $ip, string $type = 'page'): bool {
-        if (in_array($ip, self::WHITELIST, true)) return true;
-
-        // Hash de un solo sentido — la IP original nunca se almacena
+        // convertimos la IP a hash - la IP real nunca toca la BD
         $ipHash = hash_hmac('sha256', $ip, RATE_LIMIT_SECRET);
-        $now    = time();
+        $now = time();
 
         [$maxReq, $windowSec, $blockSec] = self::LIMITS[$type] ?? self::LIMITS['page'];
 
-        // Limpieza probabilística 1% de las veces para no acumular registros
+        // limpieza de registros viejos: solo 1% de las veces para no hacer DELETE en cada peticion
+        // esto es para que la tabla no crezca infinito
         if (mt_rand(1, 100) === 1) {
             $this->cleanup();
         }
@@ -78,25 +79,24 @@ class RateLimiter {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($row) {
-                // ¿Está bloqueado aún?
-                if ((int)$row['blocked_until'] > $now) {
+                // si la IP esta en periodo de bloqueo activo, rechazar
+                if ((int) $row['blocked_until'] > $now) {
                     $this->db->rollBack();
                     return false;
                 }
 
-                // ¿Venció la ventana de tiempo?
-                if ($now - (int)$row['window_start'] >= $windowSec) {
-                    // Reiniciar ventana
+                // si ya paso el tiempo de la ventana, reiniciamos el contador
+                if ($now - (int) $row['window_start'] >= $windowSec) {
                     $this->db->prepare(
                         "UPDATE rate_limit
                          SET requests = 1, window_start = ?, blocked_until = 0
                          WHERE ip_hash = ? AND route_type = ?"
                     )->execute([$now, $ipHash, $type]);
                 } else {
-                    $newCount = (int)$row['requests'] + 1;
+                    $newCount = (int) $row['requests'] + 1;
 
                     if ($newCount > $maxReq) {
-                        // Supera el límite → bloquear
+                        // supero el limite: bloquear hasta blocked_until
                         $this->db->prepare(
                             "UPDATE rate_limit
                              SET requests = ?, blocked_until = ?
@@ -112,7 +112,7 @@ class RateLimiter {
                     )->execute([$newCount, $ipHash, $type]);
                 }
             } else {
-                // Primera solicitud de esta IP para este tipo de ruta
+                // primera vez que vemos esta IP, insertar con contador en 1
                 $this->db->prepare(
                     "INSERT INTO rate_limit (ip_hash, route_type, requests, window_start, blocked_until)
                      VALUES (?, ?, 1, ?, 0)"
@@ -123,16 +123,20 @@ class RateLimiter {
             return true;
 
         } catch (Exception $e) {
-            try { $this->db->rollBack(); } catch (Exception $e2) {}
+            try {
+                $this->db->rollBack();
+            } catch (Exception $e2) {
+            }
             error_log('RateLimiter error: ' . $e->getMessage());
-            // Fail-open: ante error de DB se permite la solicitud
+            // fail-open: si la BD falla dejamos pasar la peticion para no romper el sitio
+            // es mejor no bloquear que dejar el sitio caido por un error interno
             return true;
         }
     }
 
-    // ── Limpieza de registros expirados ───────────────────────────────────────
-
-    private function cleanup(): void {
+    // borra registros que ya expiraron para que la tabla no crezca para siempre
+    private function cleanup(): void
+    {
         try {
             $cutoff = time() - 3600;
             $this->db->prepare(

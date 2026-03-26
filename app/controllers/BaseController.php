@@ -1,35 +1,38 @@
 <?php
-/**
- * BIENESTAR — BaseController
- * Clase base para todos los ResourceControllers.
- * Centraliza: auth, roles, respuestas JSON, lectura de input.
- */
-abstract class BaseController {
+// clase base que heredan todos los controladores nuevos del proyecto
+// centraliza el auth, validacion de roles y las respuestas JSON para no repetir lo mismo en cada archivo
+// si cambias algo aqui se afecta TODOS los controladores que hereden de esta clase, cuidado con eso
 
-    /** Parámetros de ruta extraídos por el Router (ej: {id}) */
+abstract class BaseController
+{
+
+    // parametros extraidos de la URL, ej: si la ruta es /api/recetas/{id} aqui viene ['id' => '5']
     protected array $params;
 
-    public function __construct(array $params = []) {
+    public function __construct(array $params = [])
+    {
         $this->params = $params;
-        // Todos los controllers devuelven JSON por defecto
+        // todos los endpoints son API y regresan JSON, lo forzamos desde el constructor
+        // asi no hay que poner el header en cada controlador individualmente
         header('Content-Type: application/json');
     }
 
-    // ── Auth ──────────────────────────────────────────────────────────────────
+    // ---- verificacion de sesion y roles ----
 
-    protected function requireAuth(): void {
+    // si el usuario no tiene sesion activa devuelve 401 y termina la ejecucion
+    protected function requireAuth(): void
+    {
         require_once APP_PATH . '/controllers/AuthController.php';
         if (!(new AuthController())->isAuthenticated()) {
             $this->error('No autenticado', 401);
         }
     }
 
-    /**
-     * Verifica que el usuario tenga uno de los roles dados.
-     * Uso: $this->requireRole('admin')
-     *      $this->requireRole('coach', 'nutriologo', 'psicologo')
-     */
-    protected function requireRole(string ...$roles): void {
+    // verifica que el usuario tenga alguno de los roles que se pasan como argumento
+    // usa el operador splat (...$roles) para poder pasar multiples roles: requireRole('coach', 'nutriologo')
+    // lee el rol de $_SESSION['user']['rol'] que se guarda cuando hace login
+    protected function requireRole(string ...$roles): void
+    {
         $this->requireAuth();
         $user = $this->currentUser();
         if (!$user || !in_array($user['rol'], $roles, true)) {
@@ -37,40 +40,45 @@ abstract class BaseController {
         }
     }
 
-    protected function requireAdmin(): void {
+    protected function requireAdmin(): void
+    {
+        // importante: en la base de datos el rol se guarda como 'Administrador' con A mayuscula
+        // no como 'admin' en minusculas - eso rompio todo cuando lo puse mal la primera vez
         $this->requireRole('Administrador');
     }
 
-    protected function requireProfessional(): void {
+    protected function requireProfessional(): void
+    {
         $this->requireRole('coach', 'nutriologo', 'psicologo');
     }
 
-    // ── Respuestas JSON ───────────────────────────────────────────────────────
+    // ---- respuestas JSON ----
 
-    /**
-     * Respuesta exitosa. $data se fusiona con { success: true }.
-     * Ejemplo: $this->success(['recetas' => $list], 'OK')
-     */
-    protected function success(array $data = [], string $message = ''): void {
+    // manda respuesta exitosa, mezcla $data con {success: true} y termina
+    // el exit() es necesario para que no se siga ejecutando codigo despues de responder
+    protected function success(array $data = [], string $message = ''): void
+    {
         $response = ['success' => true];
-        if ($message !== '') $response['message'] = $message;
+        if ($message !== '')
+            $response['message'] = $message;
         echo json_encode(array_merge($response, $data));
         exit;
     }
 
-    /**
-     * Respuesta de error. Termina la ejecución.
-     */
-    protected function error(string $message, int $code = 400): void {
+    // manda respuesta de error con el codigo HTTP correspondiente
+    protected function error(string $message, int $code = 400): void
+    {
         http_response_code($code);
         echo json_encode(['success' => false, 'message' => $message]);
         exit;
     }
 
-    // ── Lectura de input ──────────────────────────────────────────────────────
+    // ---- lectura de datos entrantes ----
 
-    /** Parsea el body JSON de la petición (para PUT/DELETE/POST con JSON) */
-    protected function getJsonBody(): array {
+    // lee el body de la peticion como JSON (para POST/PUT con Content-Type: application/json)
+    // usa static para cachearlo y no leer php://input mas de una vez por request
+    protected function getJsonBody(): array
+    {
         static $body = null;
         if ($body === null) {
             $body = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -78,24 +86,28 @@ abstract class BaseController {
         return $body;
     }
 
-    /** Parámetro de ruta (ej: {id} en /api/recetas/{id}) */
-    protected function param(string $key, $default = null) {
+    // lee un parametro de la URL definido con {keys} en la ruta
+    protected function param(string $key, $default = null)
+    {
         return $this->params[$key] ?? $default;
     }
 
-    /** Valor de $_POST */
-    protected function post(string $key, $default = null) {
+    // lee un campo de $_POST (para formularios y FormData)
+    protected function post(string $key, $default = null)
+    {
         return $_POST[$key] ?? $default;
     }
 
-    /** Convierte cadena vacía a null (útil para campos opcionales) */
-    protected function toNull($value) {
+    // convierte string vacio a null - util para campos opcionales
+    // sin esto los campos vacios del form se guardan como "" en la BD en vez de NULL
+    protected function toNull($value)
+    {
         return ($value === '' || $value === null) ? null : $value;
     }
 
-    // ── Usuario actual ────────────────────────────────────────────────────────
-
-    protected function currentUser(): ?array {
+    // regresa el arreglo del usuario actual desde la sesion
+    protected function currentUser(): ?array
+    {
         return $_SESSION['user'] ?? null;
     }
 }

@@ -1,76 +1,61 @@
 <?php
-/**
- * BIENESTAR — EjercicioController
- *
- * Consolida 9 archivos sueltos en un solo controlador:
- *   get_ejercicios.php, admin_get_ejercicios.php, admin_save_ejercicio.php,
- *   admin_delete_ejercicio.php, pro_get_ejercicios.php, pro_save_ejercicio.php,
- *   pro_delete_ejercicio.php, pro_plan_asignar_ejercicio.php, log_ejercicio.php
- *
- * Rutas en index.php:
- *   GET    /api/ejercicios                         → index()
- *   GET    /api/admin/ejercicios                   → adminIndex()
- *   POST   /api/admin/ejercicios                   → adminStore()
- *   POST   /api/admin/ejercicios/{id}/toggle       → adminToggle()
- *   DELETE /api/admin/ejercicios/{id}              → adminDestroy()
- *   GET    /api/pro/ejercicios                     → proIndex()
- *   POST   /api/pro/ejercicios                     → proStore()
- *   DELETE /api/pro/ejercicios/{id}                → proDestroy()
- *   POST   /api/pro/plan/asignar-ejercicio         → proAsignar()
- *   POST   /api/actividad/ejercicio                → logEjercicio()
- */
 
 require_once APP_PATH . '/models/Ejercicio.php';
 require_once APP_PATH . '/helpers/file_helper.php';
 
-class EjercicioController extends BaseController {
+class EjercicioController extends BaseController
+{
 
     private Ejercicio $model;
 
-    public function __construct(array $params = []) {
+    public function __construct(array $params = [])
+    {
         parent::__construct($params);
         $this->model = new Ejercicio();
     }
 
-    // ── USUARIO ───────────────────────────────────────────────────────────────
+    // ---- usuario normal ----
 
-    /** GET /api/ejercicios */
-    public function index(): void {
+    public function index(): void
+    {
         $this->requireAuth();
         $this->success(['ejercicios' => $this->model->getActive()]);
     }
 
-    // ── ADMIN ─────────────────────────────────────────────────────────────────
+    // ---- admin ----
 
-    /** GET /api/admin/ejercicios */
-    public function adminIndex(): void {
+    public function adminIndex(): void
+    {
         $this->requireAdmin();
         $this->success(['ejercicios' => $this->model->getAll()]);
     }
 
-    /** POST /api/admin/ejercicios */
-    public function adminStore(): void {
+    // crea o actualiza, si viene 'id' en el form es edicion, si no es creacion
+    public function adminStore(): void
+    {
         $this->requireAdmin();
 
         $titulo = trim($this->post('titulo', ''));
-        if ($titulo === '') $this->error('El título es requerido');
+        if ($titulo === '')
+            $this->error('El título es requerido');
 
-        $id = (int)$this->post('id', 0);
+        $id = (int) $this->post('id', 0);
 
         $data = [
-            'titulo'               => $titulo,
-            'descripcion'          => $this->toNull($this->post('descripcion')),
-            'duracion'             => $this->toNull($this->post('duracion')),
-            'nivel'                => $this->post('nivel', 'principiante'),
-            'tipo'                 => $this->post('tipo', 'cardio'),
-            'calorias_quemadas'    => $this->toNull($this->post('calorias_quemadas')),
-            'musculo_objetivo'     => $this->toNull($this->post('musculo_objetivo')),
+            'titulo' => $titulo,
+            'descripcion' => $this->toNull($this->post('descripcion')),
+            'duracion' => $this->toNull($this->post('duracion')),
+            'nivel' => $this->post('nivel', 'principiante'),
+            'tipo' => $this->post('tipo', 'cardio'),
+            'calorias_quemadas' => $this->toNull($this->post('calorias_quemadas')),
+            'musculo_objetivo' => $this->toNull($this->post('musculo_objetivo')),
             'musculos_secundarios' => $this->toNull($this->post('musculos_secundarios')),
-            'equipamiento'         => $this->toNull($this->post('equipamiento')),
-            'video_url'            => $this->toNull($this->post('video_url')),
-            'instrucciones'        => $this->toNull($this->post('instrucciones')),
+            'equipamiento' => $this->toNull($this->post('equipamiento')),
+            'video_url' => $this->toNull($this->post('video_url')),
+            'instrucciones' => $this->toNull($this->post('instrucciones')),
         ];
 
+        // si viene imagen la subimos, si no la dejamos como estaba (en edicion)
         if (!empty($_FILES['imagen']['name']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
             $result = uploadFile($_FILES['imagen'], 'ejercicios');
             if ($result['success']) {
@@ -79,70 +64,80 @@ class EjercicioController extends BaseController {
         }
 
         if ($id) {
-            if (!$this->model->findById($id)) $this->error('Ejercicio no encontrado', 404);
+            if (!$this->model->findById($id))
+                $this->error('Ejercicio no encontrado', 404);
             $this->model->update($id, $data);
             $this->success([], 'Ejercicio actualizado');
         } else {
             $data['creado_por'] = $this->post('creado_por');
-            $data['imagen']     = $data['imagen'] ?? null;
+            $data['imagen'] = $data['imagen'] ?? null;
             $newId = $this->model->create($data);
-            if (!$newId) $this->error('Error al guardar el ejercicio');
+            if (!$newId)
+                $this->error('Error al guardar el ejercicio');
             $this->success(['id' => $newId], 'Ejercicio creado');
         }
     }
 
-    /** POST /api/admin/ejercicios/{id}/toggle */
-    public function adminToggle(): void {
+    // recibe {activo: 0 o 1} en el body JSON y cambia el estado del ejercicio
+    public function adminToggle(): void
+    {
         $this->requireAdmin();
-        $id   = (int)$this->param('id');
+        $id = (int) $this->param('id');
         $body = $this->getJsonBody();
-        if (!$id || !isset($body['activo'])) $this->error('Datos inválidos');
+        if (!$id || !isset($body['activo']))
+            $this->error('Datos inválidos');
 
-        $activo = (int)$body['activo'];
+        $activo = (int) $body['activo'];
         $this->model->toggleActive($id, $activo);
         $this->success([], $activo ? 'Ejercicio activado' : 'Ejercicio desactivado');
     }
 
-    /** DELETE /api/admin/ejercicios/{id} */
-    public function adminDestroy(): void {
+    public function adminDestroy(): void
+    {
         $this->requireAdmin();
-        $id = (int)$this->param('id');
-        if (!$id) $this->error('ID requerido');
-        if (!$this->model->findById($id)) $this->error('Ejercicio no encontrado', 404);
+        $id = (int) $this->param('id');
+        if (!$id)
+            $this->error('ID requerido');
+        if (!$this->model->findById($id))
+            $this->error('Ejercicio no encontrado', 404);
         $this->model->delete($id);
         $this->success([], 'Ejercicio eliminado');
     }
 
-    // ── PROFESIONAL ───────────────────────────────────────────────────────────
+    // ---- profesional ----
 
-    /** GET /api/pro/ejercicios */
-    public function proIndex(): void {
+    // getForCoach devuelve ejercicios manuales (no auto-generados) disponibles para asignar
+    public function proIndex(): void
+    {
         $this->requireProfessional();
         $this->success(['ejercicios' => $this->model->getForCoach()]);
     }
 
-    /** POST /api/pro/ejercicios — crea o actualiza con verificación de propiedad */
-    public function proStore(): void {
+    // el profesional solo puede editar ejercicios que el mismo creo
+    // el form del panel manda 'pro_ejercicio_id', tambien aceptamos 'id' por compatibilidad
+    public function proStore(): void
+    {
         $this->requireProfessional();
         $user = $this->currentUser();
 
         $titulo = trim($this->post('titulo', ''));
-        if ($titulo === '') $this->error('El título es requerido');
+        if ($titulo === '')
+            $this->error('El título es requerido');
 
-        $id = (int)($this->post('pro_ejercicio_id', 0) ?: $this->post('id', 0));
+        $id = (int) ($this->post('pro_ejercicio_id', 0) ?: $this->post('id', 0));
 
         $data = [
-            'titulo'               => $titulo,
-            'descripcion'          => $this->toNull($this->post('descripcion')),
-            'duracion'             => $this->toNull($this->post('duracion')),
-            'nivel'                => $this->post('nivel', 'principiante'),
-            'tipo'                 => $this->post('tipo', 'cardio'),
-            'calorias_quemadas'    => $this->toNull($this->post('calorias_quemadas')),
-            'musculo_objetivo'     => $this->toNull(trim($this->post('musculo_objetivo', ''))),
+            'titulo' => $titulo,
+            'descripcion' => $this->toNull($this->post('descripcion')),
+            'duracion' => $this->toNull($this->post('duracion')),
+            'nivel' => $this->post('nivel', 'principiante'),
+            'tipo' => $this->post('tipo', 'cardio'),
+            'calorias_quemadas' => $this->toNull($this->post('calorias_quemadas')),
+            'musculo_objetivo' => $this->toNull(trim($this->post('musculo_objetivo', ''))),
             'musculos_secundarios' => $this->toNull(trim($this->post('musculos_secundarios', ''))),
-            'equipamiento'         => $this->toNull(trim($this->post('equipamiento', ''))),
-            'video_url'            => $this->toNull($this->post('video_url')),
-            'instrucciones'        => $this->toNull($this->post('instrucciones')),
+            'equipamiento' => $this->toNull(trim($this->post('equipamiento', ''))),
+            'video_url' => $this->toNull($this->post('video_url')),
+            'instrucciones' => $this->toNull($this->post('instrucciones')),
         ];
 
         if (!empty($_FILES['imagen']['name']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -154,7 +149,9 @@ class EjercicioController extends BaseController {
 
         if ($id) {
             $existing = $this->model->findById($id);
-            if (!$existing) $this->error('Ejercicio no encontrado', 404);
+            if (!$existing)
+                $this->error('Ejercicio no encontrado', 404);
+            // verificacion de propiedad: no puede editar ejercicios de otro profesional
             if ($existing['creado_por'] !== $user['correo']) {
                 $this->error('Sin permisos para editar este ejercicio', 403);
             }
@@ -162,22 +159,25 @@ class EjercicioController extends BaseController {
             $this->success([], 'Ejercicio actualizado');
         } else {
             $data['creado_por'] = $user['correo'];
-            $data['imagen']     = $data['imagen'] ?? null;
+            $data['imagen'] = $data['imagen'] ?? null;
             $newId = $this->model->create($data);
-            if (!$newId) $this->error('Error al guardar el ejercicio');
+            if (!$newId)
+                $this->error('Error al guardar el ejercicio');
             $this->success(['id' => $newId], 'Ejercicio creado');
         }
     }
 
-    /** DELETE /api/pro/ejercicios/{id} */
-    public function proDestroy(): void {
+    public function proDestroy(): void
+    {
         $this->requireProfessional();
         $user = $this->currentUser();
-        $id   = (int)$this->param('id');
-        if (!$id) $this->error('ID requerido');
+        $id = (int) $this->param('id');
+        if (!$id)
+            $this->error('ID requerido');
 
         $existing = $this->model->findById($id);
-        if (!$existing) $this->error('Ejercicio no encontrado', 404);
+        if (!$existing)
+            $this->error('Ejercicio no encontrado', 404);
         if ($existing['creado_por'] !== $user['correo']) {
             $this->error('Sin permisos para eliminar este ejercicio', 403);
         }
@@ -186,23 +186,26 @@ class EjercicioController extends BaseController {
         $this->success([], 'Ejercicio eliminado');
     }
 
-    // ── PLAN ──────────────────────────────────────────────────────────────────
+    // ---- plan ----
 
-    /** POST /api/pro/plan/asignar-ejercicio */
-    public function proAsignar(): void {
+    // asigna un ejercicio al plan de un usuario especifico
+    // recibe usuario_id y ejercicio_id en el body JSON
+    public function proAsignar(): void
+    {
         $this->requireProfessional();
         $user = $this->currentUser();
         $body = $this->getJsonBody();
 
-        $usuarioId   = $body['usuario_id']  ?? null;
+        $usuarioId = $body['usuario_id'] ?? null;
         $ejercicioId = $body['ejercicio_id'] ?? null;
-        $notas       = trim($body['notas']  ?? '') ?: null;
+        $notas = trim($body['notas'] ?? '') ?: null;
 
-        if (!$usuarioId || !$ejercicioId) $this->error('Datos incompletos');
+        if (!$usuarioId || !$ejercicioId)
+            $this->error('Datos incompletos');
 
         require_once APP_PATH . '/models/Plan.php';
         $plan = new Plan();
-        $ok   = $plan->asignarEjercicio($usuarioId, $ejercicioId, $user['correo'], $notas);
+        $ok = $plan->asignarEjercicio($usuarioId, $ejercicioId, $user['correo'], $notas);
 
         if ($ok) {
             $this->success([], 'Ejercicio asignado al plan');
@@ -211,24 +214,27 @@ class EjercicioController extends BaseController {
         }
     }
 
-    // ── ACTIVIDAD ─────────────────────────────────────────────────────────────
+    // ---- actividad ----
 
-    /** POST /api/actividad/ejercicio */
-    public function logEjercicio(): void {
+    // se llama cuando el usuario hace click en "iniciar entrenamiento"
+    // guarda el registro en actividad_registro para calcular calorias del dashboard
+    public function logEjercicio(): void
+    {
         $this->requireAuth();
         $user = $this->currentUser();
         $body = $this->getJsonBody();
 
-        $ejercicioId = (int)($body['ejercicio_id'] ?? 0);
-        $titulo      = trim($body['titulo'] ?? '');
-        $calorias    = (int)($body['calorias'] ?? 0);
+        $ejercicioId = (int) ($body['ejercicio_id'] ?? 0);
+        $titulo = trim($body['titulo'] ?? '');
+        $calorias = (int) ($body['calorias'] ?? 0);
 
-        if (!$ejercicioId || $calorias < 0) $this->error('Datos inválidos');
+        if (!$ejercicioId || $calorias < 0)
+            $this->error('Datos inválidos');
 
         require_once APP_PATH . '/models/ActividadRegistro.php';
         $model = new ActividadRegistro();
-        $id    = $model->logEjercicio($user['correo'], $ejercicioId, $titulo, $calorias);
+        $id = $model->logEjercicio($user['correo'], $ejercicioId, $titulo, $calorias);
 
-        $this->success(['logged' => (bool)$id]);
+        $this->success(['logged' => (bool) $id]);
     }
 }
