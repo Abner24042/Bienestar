@@ -538,8 +538,10 @@ a:hover {
 
 :focus-visible {
     outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
+    outline-offset: 3px;
     border-radius: var(--radius-sm);
+    /* sombra para que el anillo se vea en fondos del mismo color */
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.18);
 }
 
 :focus:not(:focus-visible) {

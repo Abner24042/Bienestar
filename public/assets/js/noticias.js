@@ -1,5 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+    insertRefreshBar();
     loadNoticias();
     initNewsFilters();
 });
@@ -8,6 +9,43 @@ let newsData = [];
 let filteredNews = [];
 let newsVisible = 3;
 
+const NEWS_CACHE_KEY = 'noticias';
+const NEWS_TTL = 20 * 60 * 1000; // 20 minutos - las noticias no cambian tan seguido
+
+// inserta la barra de estado del cache y el boton de actualizar debajo de los filtros
+function insertRefreshBar() {
+    const filters = document.querySelector('.news-filters');
+    if (!filters) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'newsCacheBar';
+    bar.style.cssText = 'display:flex;align-items:center;gap:10px;margin:10px 0 4px;font-size:0.8rem;color:#999;min-height:28px;';
+    bar.innerHTML = '<span id="newsCacheInfo"></span>';
+    filters.insertAdjacentElement('afterend', bar);
+}
+
+// actualiza el texto de la barra (ej: "Actualizado hace 5 min · Actualizar")
+function updateCacheBar(fromCache) {
+    const info = document.getElementById('newsCacheInfo');
+    if (!info) return;
+
+    const age = AppCache.ageMinutes(NEWS_CACHE_KEY);
+    const ageText = age !== null ? `Actualizado hace ${age === 0 ? 'menos de 1' : age} min` : 'Recién cargado';
+    const origen = fromCache ? '(desde caché)' : '(actualizado)';
+
+    info.innerHTML = `${ageText} ${origen} · <button onclick="refrescarNoticias()" style="background:none;border:none;color:#ff6b35;cursor:pointer;font-size:0.8rem;padding:0;font-weight:600;">↻ Actualizar</button>`;
+}
+
+// fuerza un refetch borrando el cache
+function refrescarNoticias() {
+    AppCache.clear(NEWS_CACHE_KEY);
+    const grid = document.getElementById('newsGrid');
+    if (grid) grid.innerHTML = '<p style="text-align:center;color:#999;grid-column:1/-1;">Actualizando noticias...</p>';
+    const featured = document.getElementById('featuredNews');
+    if (featured) featured.style.display = 'none';
+    loadNoticias();
+}
+
 function porFilaN() {
     const el = document.getElementById('newsGrid');
     const w = el ? (el.clientWidth || el.offsetWidth) : (window.innerWidth - 260);
@@ -15,12 +53,27 @@ function porFilaN() {
 }
 
 async function loadNoticias() {
+    // primero intenta usar el cache para mostrar algo de inmediato
+    const cached = AppCache.get(NEWS_CACHE_KEY);
+    if (cached) {
+        newsData = cached.data;
+        if (newsData.length > 0) {
+            renderFeatured(newsData[0]);
+            applyNewsFilter();
+        }
+        updateCacheBar(true);
+        return; // cache vigente, no hace fetch
+    }
+
+    // no hay cache o expiro, ir al servidor
     try {
         const response = await fetch(API_URL + '/noticias');
         const data = await response.json();
 
         if (data.success) {
             newsData = data.noticias || [];
+            AppCache.set(NEWS_CACHE_KEY, newsData, NEWS_TTL);
+
             if (newsData.length > 0) {
                 renderFeatured(newsData[0]);
                 applyNewsFilter();
@@ -28,6 +81,7 @@ async function loadNoticias() {
                 document.getElementById('newsGrid').innerHTML =
                     '<p style="text-align:center;color:#999;grid-column:1/-1;">No hay noticias disponibles</p>';
             }
+            updateCacheBar(false);
         } else {
             document.getElementById('newsGrid').innerHTML =
                 '<p style="text-align:center;color:#999;grid-column:1/-1;">No hay noticias disponibles</p>';
@@ -87,7 +141,8 @@ function renderNoticiaCard(n, idx = 0) {
         tabindex="0" aria-label="${escapeHtml(n.titulo)}"
         onclick="showNewsModal(${n.id})" style="cursor:pointer;animation:cardEnter 0.35s ease ${delay}s both;">
         <div class="news-image" style="position:relative;">
-            <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80'">
+            <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" loading="lazy"
+                 onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80'">
             <div class="news-category-badge">${escapeHtml(cat)}</div>
             <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.52);color:#fff;font-size:0.7rem;text-align:center;padding:5px 0;letter-spacing:0.3px;">
                 Dar click para ver detalles
@@ -141,7 +196,7 @@ function showNewsModal(id) {
                 <span class="article-date">${formatDate(n.fecha_publicacion)}</span>
                 <span class="article-category">${escapeHtml(capitalize(n.categoria || 'general'))}</span>
             </div>
-            <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" class="article-image" onerror="this.style.display='none'">
+            <img src="${escapeHtml(img)}" alt="${escapeHtml(n.titulo)}" class="article-image" loading="lazy" onerror="this.style.display='none'">
             <div class="article-body">
                 ${formatContent(bodyText)}
             </div>

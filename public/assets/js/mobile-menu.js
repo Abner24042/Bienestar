@@ -1,74 +1,96 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('📱 Inicializando menú móvil...');
-
-    const menuBtn = document.getElementById('mobileMenuBtn');
+    const menuBtn    = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    const menuOverlay = document.querySelector('.mobile-menu-overlay');
-    const menuItems = document.querySelectorAll('.mobile-menu-item');
+    if (!menuBtn || !mobileMenu) return;
 
-    if (!menuBtn || !mobileMenu) {
-        console.error('❌ No se encontraron los elementos del menú móvil');
-        return;
+    const menuPanel   = mobileMenu.querySelector('.mobile-menu-panel');
+    const menuOverlay = mobileMenu.querySelector('.mobile-menu-overlay');
+
+    // el panel empieza cerrado: inert lo saca del tab order Y del arbol de accesibilidad
+    // sin esto los links del menu reciben foco con Tab aunque el panel este oculto visualmente
+    menuPanel.inert = true;
+    menuPanel.id    = 'mobileMenuPanel';
+
+    // aria-expanded le dice al lector de pantalla si el menu esta abierto o cerrado
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-controls', 'mobileMenuPanel');
+
+    function openMenu() {
+        menuPanel.inert = false; // restaura foco y accesibilidad del panel
+        menuBtn.classList.add('open');
+        mobileMenu.classList.add('active');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        menuBtn.setAttribute('aria-label', 'Cerrar menú');
+        document.body.style.overflow = 'hidden';
+
+        // manda el foco al primer elemento interactivo del panel
+        const firstFocusable = menuPanel.querySelector('a, button');
+        if (firstFocusable) firstFocusable.focus();
     }
 
-    console.log('✅ Menú móvil encontrado');
+    function closeMenu() {
+        menuPanel.inert = true; // vuelve a bloquear foco del panel
+        menuBtn.classList.remove('open');
+        mobileMenu.classList.remove('active');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.setAttribute('aria-label', 'Abrir menú');
+        document.body.style.overflow = '';
 
-    // Abrir/cerrar menú
+        // regresa el foco al boton hamburguesa para no perder el contexto del usuario
+        menuBtn.focus();
+    }
+
     menuBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-
-        const isOpen = mobileMenu.classList.contains('active');
-
-        if (isOpen) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
+        mobileMenu.classList.contains('active') ? closeMenu() : openMenu();
     });
 
-    // Cerrar al hacer clic en el overlay
     if (menuOverlay) {
         menuOverlay.addEventListener('click', closeMenu);
     }
 
-    // Cerrar al hacer clic en un enlace
-    menuItems.forEach(item => {
-        item.addEventListener('click', function () {
-            // Dar tiempo para que se inicie la navegación antes de cerrar
-            setTimeout(closeMenu, 100);
-        });
+    // cerrar al navegar a otra pagina
+    mobileMenu.querySelectorAll('.mobile-menu-item').forEach(item => {
+        item.addEventListener('click', () => setTimeout(closeMenu, 80));
     });
 
-    // Cerrar con la tecla Escape
+    // cerrar con Escape - comportamiento estandar de dialogs/menus
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
             closeMenu();
         }
     });
 
-    // Funciones auxiliares
-    function openMenu() {
-        console.log('🍔 Abriendo menú móvil');
-        menuBtn.classList.add('open');
-        mobileMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+    // focus trap: mientras el menu esta abierto, Tab y Shift+Tab solo ciclan dentro del panel
+    // sin esto el usuario puede tabular hasta elementos detras del overlay
+    mobileMenu.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
 
-    function closeMenu() {
-        console.log('✖️ Cerrando menú móvil');
-        menuBtn.classList.remove('open');
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+        const focusables = Array.from(menuPanel.querySelectorAll(
+            'a[href], button:not([disabled])'
+        ));
+        if (focusables.length === 0) return;
 
-    // Cerrar menú si la ventana se redimensiona a escritorio
+        const first = focusables[0];
+        const last  = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+            // Shift+Tab desde el primero salta al ultimo
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            // Tab desde el ultimo vuelve al primero
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
+    // si la ventana crece a desktop y el menu estaba abierto, lo cerramos
     window.addEventListener('resize', function () {
         if (window.innerWidth > 992 && mobileMenu.classList.contains('active')) {
             closeMenu();
         }
     });
-
-    console.log('✅ Menú móvil inicializado correctamente');
 });

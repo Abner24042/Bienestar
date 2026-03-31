@@ -150,14 +150,18 @@ function showDashboardNotification(message, type = 'info') {
     }, 5000);
 }
 
-/**
- * Cargar estado mental desde último test
- */
 async function loadMentalStatus() {
     const nivelEl = document.getElementById('mentalNivel');
     const labelEl = document.getElementById('mentalLabel');
-
     if (!nivelEl) return;
+
+    // resultado del test no cambia con frecuencia, cache 10 minutos
+    const cached = AppCache.get('mental_status');
+    if (cached) {
+        nivelEl.textContent = cached.data.nivel;
+        labelEl.textContent = cached.data.hace + ' · Test de bienestar';
+        return;
+    }
 
     try {
         const resp = await fetch(API_URL + '/test/last');
@@ -167,6 +171,7 @@ async function loadMentalStatus() {
             const r = data.result;
             nivelEl.textContent = r.nivel;
             labelEl.textContent = r.hace + ' · Test de bienestar';
+            AppCache.set('mental_status', r, 10 * 60 * 1000);
         } else {
             nivelEl.textContent = 'Sin datos';
             labelEl.textContent = 'Realiza el test de bienestar';
@@ -177,17 +182,24 @@ async function loadMentalStatus() {
     }
 }
 
-/**
- * Cargar próxima cita
- */
 async function loadNextAppointment() {
-    const citaDiaEl = document.getElementById('citaDia');
-    const citaMesEl = document.getElementById('citaMes');
+    const citaDiaEl  = document.getElementById('citaDia');
+    const citaMesEl  = document.getElementById('citaMes');
     const citaLabelEl = document.getElementById('citaLabel');
     const citaDescEl = document.getElementById('citaDescripcion');
-    const badgeEl = document.getElementById('citaDateBadge');
-
+    const badgeEl    = document.getElementById('citaDateBadge');
     if (!citaDiaEl) return;
+
+    // citas: cache 5 minutos (pueden agendarse durante la sesion)
+    const cached = AppCache.get('next_appointment');
+    if (cached) {
+        const d = cached.data;
+        citaDiaEl.textContent = d.dia;
+        citaMesEl.textContent = d.mes;
+        if (citaLabelEl) citaLabelEl.textContent = d.titulo + ' · ' + d.hora;
+        if (citaDescEl && d.descripcion) { citaDescEl.textContent = d.descripcion; citaDescEl.style.display = ''; }
+        return;
+    }
 
     try {
         const resp = await fetch(API_URL + '/appointments/next');
@@ -201,6 +213,7 @@ async function loadNextAppointment() {
                 citaDescEl.textContent = data.descripcion;
                 citaDescEl.style.display = '';
             }
+            AppCache.set('next_appointment', data, 5 * 60 * 1000);
         } else {
             if (badgeEl) badgeEl.style.background = 'linear-gradient(160deg, #aaa 0%, #888 100%)';
             citaDiaEl.textContent = '—';

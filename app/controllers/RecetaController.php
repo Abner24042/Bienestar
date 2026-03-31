@@ -213,4 +213,4 @@ class RecetaController extends BaseController
 }
 
 //este codigo fue echo para poder bajar la cantidad de archivos de el proyecto y para que no tuviera el DRY, profe si ve esto 
-//sigue en proceso de ser terminado para hacerlo como a usted le gustaria :D
+//sigue en proceso de ser terminado para hacerlo como a usted le gustaria :D 

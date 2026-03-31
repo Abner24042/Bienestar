@@ -7,6 +7,9 @@ let chatConvInt = null;
 let chatMiId = null;
 let chatEsPro = false;
 
+// chatSonido() y chatActualizarBadgeGlobal() viven en chat-notify.js
+// ese script carga en todas las paginas — aqui solo usamos las funciones
+
 /* ─────────────────────────────────────────────────────────────────────────
    INICIALIZACIÓN
 ───────────────────────────────────────────────────────────────────────── */
@@ -15,8 +18,7 @@ function chatInitPro(userId) {
     chatMiId = userId;
     chatEsPro = true;
     chatCargarConversaciones();
-    chatBadgeInt = setInterval(chatActualizarBadgeGlobal, 5000);
-    chatActualizarBadgeGlobal();
+    // chat-notify.js ya hace el polling de badges globalmente, no duplicar
     // Polling automático de lista de conversaciones (nuevas conversaciones, badges)
     if (document.getElementById('chatConvList')) {
         chatConvInt = setInterval(chatCargarConversaciones, 5000);
@@ -26,8 +28,7 @@ function chatInitPro(userId) {
 function chatInitUser(userId) {
     chatMiId = userId;
     chatEsPro = false;
-    chatBadgeInt = setInterval(chatActualizarBadgeGlobal, 5000);
-    chatActualizarBadgeGlobal();
+    // chat-notify.js ya hace el polling de badges globalmente, no duplicar
     // Polling automático de lista de conversaciones (nuevas conversaciones, badges)
     if (document.getElementById('chatConvList')) {
         chatConvInt = setInterval(chatCargarConversaciones, 5000);
@@ -413,8 +414,13 @@ async function chatCargarMensajes(containerId, scroll = false) {
 
         const wasAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 60;
 
+        // guarda el id antes del loop para saber si esto es polling (no carga inicial)
+        const prevLastId = chatLastMsgId;
+        let hayMensajesDeOtro = false;
+
         data.mensajes.forEach(m => {
             const isMine = m.remitente_id == chatMiId;
+            if (!isMine) hayMensajesDeOtro = true; // llego algo del otro lado
             const wrap = document.createElement('div');
             wrap.className = 'chat-bubble ' + (isMine ? 'mine' : 'theirs');
             wrap.dataset.msgId = m.id;
@@ -463,6 +469,9 @@ async function chatCargarMensajes(containerId, scroll = false) {
 
         if (scroll || wasAtBottom) container.scrollTop = container.scrollHeight;
 
+        // solo suena si es polling (prevLastId > 0) y llegaron mensajes del otro — no en la carga inicial
+        if (prevLastId > 0 && hayMensajesDeOtro) chatSonido();
+
         // Refresh sidebar badges
         if (chatEsPro) chatCargarConversaciones();
         else chatDrawerCargarConversaciones();
@@ -481,30 +490,8 @@ function chatReiniciarPolling(intervalo, containerId) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   BADGE GLOBAL
+   BADGE GLOBAL — definido en chat-notify.js, aqui solo se llama
 ───────────────────────────────────────────────────────────────────────── */
-
-async function chatActualizarBadgeGlobal() {
-    try {
-        const res = await fetch(API_URL + '/chat/no-leidos');
-        const data = await res.json();
-        if (!data.success) return;
-        const total = data.total;
-
-        // Sidebar badge
-        document.querySelectorAll('.chat-nav-badge').forEach(el => {
-            el.textContent = total;
-            el.style.display = total > 0 ? 'inline' : 'none';
-        });
-
-        // FAB badge
-        const fabBadge = document.getElementById('chatFabBadge');
-        if (fabBadge) {
-            fabBadge.textContent = total;
-            fabBadge.style.display = total > 0 ? 'flex' : 'none';
-        }
-    } catch (e) { }
-}
 
 /* ─────────────────────────────────────────────────────────────────────────
    ELIMINAR MENSAJE / CHAT

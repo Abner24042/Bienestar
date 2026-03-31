@@ -57,7 +57,12 @@
       "Bash(\"c:/xampp/htdocs/a/Bienestar/public/assets/css/mi-plan.css\":*)",
       "Bash(node deploy.js public/assets/js/mi-plan.js public/assets/css/mi-plan.css public/pages/profesional/panel.php public/assets/js/profesional-planes.js public/assets/css/profesional.css)",
       "Bash(node deploy.js \"app/controllers/BaseController.php\" \"public/pages/profesional/panel.php\")",
-      "Bash(node deploy.js \"app/controllers/EjercicioController.php\" \"public/assets/js/admin-ejercicios.js\" \"public/assets/js/profesional-ejercicios.js\" \"public/pages/profesional/panel.php\" \"public/index.php\")"
+      "Bash(node deploy.js \"app/controllers/EjercicioController.php\" \"public/assets/js/admin-ejercicios.js\" \"public/assets/js/profesional-ejercicios.js\" \"public/pages/profesional/panel.php\" \"public/index.php\")",
+      "Bash(node deploy.js \"public/assets/img/icons/AbnerBorrego.jpeg\")",
+      "Bash(node deploy.js \"public/assets/css/auth.css\" \"public/assets/js/auth.js\")",
+      "Bash(node deploy.js \"public/assets/js/cache.js\" \"public/assets/js/noticias.js\" \"public/assets/js/dashboard.js\" \"app/views/layouts/header.php\")",
+      "Bash(node deploy.js \"public/assets/js/mobile-menu.js\" \"public/assets/css/mobile-menu.css\" \"public/assets/css/main.css\")",
+      "Read(//c/Users/abner/AppData/Local/Temp/claude/c--xampp-htdocs-a-Bienestar/44e693fa-557d-4e14-adc0-eaafaad48161/tasks/**)"
     ]
   }
 }

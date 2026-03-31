@@ -40,6 +40,8 @@ if (!isset($pageTitle)) {
     const API_URL  = BASE_URL + '/api';
     const CURRENT_USER_ID = <?php echo (int)($_SESSION['user_id'] ?? 0); ?>;
 </script>
+<script src="<?php echo asset('js/cache.js'); ?>"></script>
+<script defer src="<?php echo asset('js/chat-notify.js'); ?>"></script>
     <!-- Header -->
     <header class="dashboard-header">
         <div class="header-container">

@@ -18,6 +18,13 @@
     background: rgba(255, 107, 53, 0.1);
 }
 
+/* focus visible en el boton hamburguesa - sobre fondo oscuro del header */
+.mobile-menu-btn:focus-visible {
+    outline: 2px solid #ff6b35;
+    outline-offset: 3px;
+    background: rgba(255, 107, 53, 0.12);
+}
+
 .mobile-menu-btn span {
     display: block;
     width: 24px;
@@ -133,6 +140,14 @@
     background: #f7f7f7;
 }
 
+/* focus visible en los items del menu - anillo dentro del elemento */
+.mobile-menu-item:focus-visible {
+    outline: 2px solid #ff6b35;
+    outline-offset: -3px;
+    background: rgba(255, 107, 53, 0.06);
+    border-radius: 4px;
+}
+
 .mobile-menu-item.active {
     background: rgba(255, 107, 53, 0.1);
     border-left-color: #ff6b35;
@@ -173,6 +188,12 @@
 
 .mobile-menu-footer-btn:hover {
     background: #e55a00;
+}
+
+/* boton de cerrar sesion - fondo naranja, el anillo tiene que ser blanco para contrastar */
+.mobile-menu-footer-btn:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
 }
 
 /* Mostrar en pantallas pequeñas */

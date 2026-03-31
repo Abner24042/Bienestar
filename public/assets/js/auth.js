@@ -38,12 +38,21 @@ function showLoader() {
 function initLoginForm(form) {
     if (!form) return;
 
+    var emailInput    = document.getElementById('correo');
+    var rememberCheck = form.querySelector('input[name="remember"]');
+
+    // si habia un correo guardado, lo ponemos y marcamos el checkbox
+    var savedEmail = localStorage.getItem('bienestar_remember_email');
+    if (savedEmail && emailInput) {
+        emailInput.value = savedEmail;
+        if (rememberCheck) rememberCheck.checked = true;
+    }
+
     form.addEventListener('submit', function (e) {
-        var emailInput = document.getElementById('correo');
         var passwordInput = document.getElementById('password');
         if (!emailInput || !passwordInput) return;
 
-        var email = emailInput.value.trim();
+        var email    = emailInput.value.trim();
         var password = passwordInput.value.trim();
 
         if (!email || !password) {
@@ -56,6 +65,13 @@ function initLoginForm(form) {
             e.preventDefault();
             showToast('Email inválido', 'error');
             return false;
+        }
+
+        // guardar o borrar el correo segun el estado del checkbox
+        if (rememberCheck && rememberCheck.checked) {
+            localStorage.setItem('bienestar_remember_email', email);
+        } else {
+            localStorage.removeItem('bienestar_remember_email');
         }
 
         showLoader();
