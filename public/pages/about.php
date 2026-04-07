@@ -10,6 +10,13 @@ require_once '../../app/config/config.php';
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('img/content/AAX-Form-Grafico.svg'); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/main.css'); ?>">
     <link rel="stylesheet" href="<?php echo asset('css/about.css'); ?>">
+    <!-- aplica el tema guardado antes de que cargue el CSS pa evitar el flash blanco -->
+    <script>
+        (function () {
+            if (localStorage.getItem('bieniestar-theme') === 'dark')
+                document.documentElement.setAttribute('data-theme', 'dark');
+        })();
+    </script>
 </head>
 <body>
     <!-- Header Simple -->
@@ -22,6 +29,11 @@ require_once '../../app/config/config.php';
                 <nav class="header-nav">
                     <a href="<?php echo BASE_URL; ?>/">Inicio</a>
                     <a href="<?php echo url('about'); ?>" class="active">Nosotros</a>
+                    <button class="about-dark-toggle" id="aboutDarkToggle" aria-label="Cambiar modo oscuro" title="Modo oscuro">
+                        <!-- luna para light mode, sol para dark mode -->
+                        <svg id="aboutIconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <svg id="aboutIconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    </button>
                     <a href="<?php echo url('login'); ?>" class="btn btn-primary">Iniciar Sesión</a>
                 </nav>
             </div>
@@ -197,5 +209,35 @@ require_once '../../app/config/config.php';
     </footer>
 
     <script defer src="<?php echo asset('js/main.js'); ?>"></script>
+    <script>
+        (function () {
+            var toggle = document.getElementById('aboutDarkToggle');
+            var moon = document.getElementById('aboutIconMoon');
+            var sun = document.getElementById('aboutIconSun');
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    if (moon) moon.style.display = 'none';
+                    if (sun) sun.style.display = 'block';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    if (moon) moon.style.display = 'block';
+                    if (sun) sun.style.display = 'none';
+                }
+            }
+
+            applyTheme(localStorage.getItem('bieniestar-theme') || 'light');
+
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    var current = document.documentElement.getAttribute('data-theme');
+                    var next = current === 'dark' ? 'light' : 'dark';
+                    localStorage.setItem('bieniestar-theme', next);
+                    applyTheme(next);
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

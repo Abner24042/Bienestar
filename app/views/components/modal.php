@@ -8,14 +8,21 @@ if (!isset($modalContent))
     $modalContent = '';
 if (!isset($modalSize))
     $modalSize = 'medium'; // small, medium, large
+
+// id unico para el titulo — necesario para aria-labelledby
+$titleId = $modalId . '-title';
 ?>
 
-<div class="modal" id="<?php echo $modalId; ?>">
+<div class="modal"
+     id="<?php echo $modalId; ?>"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="<?php echo $titleId; ?>">
     <div class="modal-overlay"></div>
     <div class="modal-container modal-<?php echo $modalSize; ?>">
         <div class="modal-header">
-            <h3 class="modal-title"><?php echo htmlspecialchars($modalTitle); ?></h3>
-            <button class="modal-close" data-modal-close="<?php echo $modalId; ?>">&times;</button>
+            <h3 class="modal-title" id="<?php echo $titleId; ?>"><?php echo htmlspecialchars($modalTitle); ?></h3>
+            <button class="modal-close" data-modal-close="<?php echo $modalId; ?>" aria-label="Cerrar diálogo">&times;</button>
         </div>
         <div class="modal-body">
             <?php echo $modalContent; ?>
@@ -112,7 +119,8 @@ if (!isset($modalSize))
         background: none;
         border: none;
         font-size: 2rem;
-        color: #999;
+        /* #666 pasa WCAG AA (5.74:1) sobre fondo blanco — antes era #999 que fallaba */
+        color: #666;
         cursor: pointer;
         width: 32px;
         height: 32px;
@@ -166,41 +174,90 @@ if (!isset($modalSize))
 </style>
 
 <script>
-    // Funcionalidad del modal
+// guard pa que no se registre el mismo listener N veces si hay varios modales en la pagina
+if (!window._modalSistemaIniciado) {
+    window._modalSistemaIniciado = true;
+
+    // elemento que tenia el focus antes de abrir el modal — pa devolverlo al cerrar
+    var _modalOpener = null;
+
+    // devuelve todos los elementos que se pueden enfocar dentro del modal
+    function _modalFocusables(modal) {
+        return Array.from(modal.querySelectorAll(
+            'a[href], button:not([disabled]), input:not([disabled]), ' +
+            'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter(function (el) { return el.offsetParent !== null; });
+    }
+
+    function _abrirModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        _modalOpener = document.activeElement; // guarda quien tenia el focus
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // mover el focus al primer elemento interactivo del modal
+        var focusables = _modalFocusables(modal);
+        if (focusables.length) focusables[0].focus();
+    }
+
+    function _cerrarModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        // devolver el focus a donde estaba antes de abrir — importante pa teclado
+        if (_modalOpener && typeof _modalOpener.focus === 'function') {
+            _modalOpener.focus();
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        // Abrir modal
-        document.querySelectorAll('[data-modal-open]').forEach(button => {
-            button.addEventListener('click', function () {
-                const modalId = this.dataset.modalOpen;
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
+        // abrir
+        document.querySelectorAll('[data-modal-open]').forEach(function (btn) {
+            btn.addEventListener('click', function () { _abrirModal(this.dataset.modalOpen); });
+        });
+
+        // cerrar con boton
+        document.querySelectorAll('[data-modal-close]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                _cerrarModal(document.getElementById(this.dataset.modalClose));
             });
         });
 
-        // Cerrar modal
-        document.querySelectorAll('[data-modal-close]').forEach(button => {
-            button.addEventListener('click', function () {
-                const modalId = this.dataset.modalClose;
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-
-        // Cerrar al hacer clic en el overlay
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        // cerrar al click en overlay
+        document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
             overlay.addEventListener('click', function () {
-                const modal = this.closest('.modal');
-                if (modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
+                _cerrarModal(this.closest('.modal'));
             });
         });
     });
+
+    // Escape pa cerrar + focus trap con Tab/Shift+Tab
+    document.addEventListener('keydown', function (e) {
+        var modal = document.querySelector('.modal.active');
+        if (!modal) return;
+
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            _cerrarModal(modal);
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            var focusables = _modalFocusables(modal);
+            if (!focusables.length) return;
+            var first = focusables[0];
+            var last = focusables[focusables.length - 1];
+
+            if (e.shiftKey && document.activeElement === first) {
+                // shift+tab en el primero -> ir al ultimo
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                // tab en el ultimo -> ir al primero
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    });
+}
 </script>

@@ -448,11 +448,11 @@ $modalContent = '
     <div class="test-question">
         <h4>5. ¿Te sientes optimista sobre el futuro?</h4>
         <div class="test-options">
-            <label><input type="radio" name="q5" value="4"> Siempre</label>
-            <label><input type="radio" name="q5" value="3"> Frecuentemente</label>
+            <label><input type="radio" name="q5" value="4"> Nunca</label>
+            <label><input type="radio" name="q5" value="3"> Rara vez</label>
             <label><input type="radio" name="q5" value="2"> A veces</label>
-            <label><input type="radio" name="q5" value="1"> Rara vez</label>
-            <label><input type="radio" name="q5" value="0"> Nunca</label>
+            <label><input type="radio" name="q5" value="1"> Frecuentemente</label>
+            <label><input type="radio" name="q5" value="0"> Siempre</label>
         </div>
     </div>
     <div class="test-actions">
@@ -463,10 +463,12 @@ $modalContent = '
 <div id="testResults" class="test-results" style="display: none;">
     <h3>Tus Resultados</h3>
     <div class="result-score">
-        <div class="score-circle">
+        <div class="score-circle" id="scoreCircle">
+            <span class="score-top-label">Bienestar</span>
             <span class="score-value" id="scoreValue">0</span>
             <span class="score-max">/20</span>
         </div>
+        <p class="score-hint">Mayor puntaje = mayor bienestar</p>
     </div>
     <div class="result-interpretation" id="resultInterpretation"></div>
     <div class="result-recommendations" id="resultRecommendations"></div>

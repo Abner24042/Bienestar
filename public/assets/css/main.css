@@ -12,8 +12,9 @@
 
     /* Colores de texto */
     --color-text-primary: #111111;
-    --color-text-secondary: #666666;
-    --color-text-light: #999999;
+    --color-text-secondary: #555555;
+    /* #767676 es el minimo que pasa WCAG AA (4.54:1) sobre fondo blanco */
+    --color-text-light: #767676;
 
     /* Colores de fondo */
     --color-bg-primary: #ffffff;
@@ -74,8 +75,9 @@
     --color-accent: #1a1a1a;
 
     --color-text-primary: #e8e8e8;
-    --color-text-secondary: #aaaaaa;
-    --color-text-light: #888888;
+    --color-text-secondary: #cccccc;
+    /* en fondo oscuro #121212, #aaaaaa da ratio 6.7:1 — pasa WCAG AA holgado */
+    --color-text-light: #aaaaaa;
 
     --color-bg-primary: #121212;
     --color-bg-secondary: #1e1e1e;
@@ -546,4 +548,37 @@ a:hover {
 
 :focus:not(:focus-visible) {
     outline: none;
+}
+
+/* ===========================================
+   RESPONSIVE — MEJORAS GLOBALES
+   =========================================== */
+
+/* wrapper para tablas que pueden hacer overflow horizontal en movil */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+    /* evita que iOS haga zoom automatico cuando el usuario toca un input
+       — font-size menor a 16px lo dispara */
+    input, select, textarea, button {
+        font-size: max(16px, 1em);
+    }
+
+    /* modales ocupan casi toda la pantalla en movil */
+    .modal-container {
+        width: 96% !important;
+        max-height: 88vh;
+        border-radius: 12px;
+    }
+
+    /* formularios: campos full width en movil */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }

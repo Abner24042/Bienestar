@@ -147,15 +147,28 @@ function handleTestSubmit(e) {
 }
 
 function showTestResults(score) {
+    // invertir el score pa que mayor numero = mejor bienestar, mas intuitivo
+    // score raw: 0=mejor, 20=peor -> wellness: 20=mejor, 0=peor
+    var wellness = 20 - score;
+
     var testForm = document.getElementById('mentalHealthTest');
     var resultsDiv = document.getElementById('testResults');
     var scoreValue = document.getElementById('scoreValue');
 
     testForm.style.display = 'none';
     resultsDiv.style.display = 'block';
-    animateScore(scoreValue, score);
+    animateScore(scoreValue, wellness); // mostrar bienestar, no el puntaje de estres
 
-    var result = interpretScore(score);
+    // colorear el circulo segun el nivel
+    var circle = document.getElementById('scoreCircle');
+    if (circle) {
+        if (wellness >= 16) circle.style.background = 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)';
+        else if (wellness >= 11) circle.style.background = 'linear-gradient(135deg, #2196f3 0%, #1565c0 100%)';
+        else if (wellness >= 6) circle.style.background = 'linear-gradient(135deg, #ff6b35 0%, #e55a00 100%)';
+        else circle.style.background = 'linear-gradient(135deg, #f44336 0%, #c62828 100%)';
+    }
+
+    var result = interpretScore(score); // interpretacion usa score raw internamente
     document.getElementById('resultInterpretation').innerHTML = '<h4>' + result.title + '</h4><p>' + result.description + '</p>';
     document.getElementById('resultRecommendations').innerHTML = '<h4>Recomendaciones:</h4><ul>' + result.recommendations.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>';
 }
@@ -210,10 +223,13 @@ function getNivelFromScore(score) {
 
 async function saveTestResult(score) {
     try {
-        await fetch(API_URL + '/test/save', {
+        const res = await fetch(API_URL + '/test/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ puntaje: score, nivel: getNivelFromScore(score) })
         });
+        const data = await res.json();
+        // limpiar cache del dashboard pa que se actualice el widget de estado mental
+        if (data.success && typeof AppCache !== 'undefined') AppCache.clear('mental_status');
     } catch (e) { }
 }

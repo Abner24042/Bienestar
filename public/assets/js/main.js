@@ -58,18 +58,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initDarkMode() {
     const toggle = document.getElementById('darkModeToggle');
-    const icon = document.getElementById('darkModeIcon');
-    if (!toggle || !icon) return;
+    if (!toggle) return;
 
-    // Actualizar icono según tema actual
-    updateDarkModeIcon(icon);
+    updateDarkModeIcon();
 
     toggle.addEventListener('click', function (e) {
         e.stopPropagation();
         toggle.classList.remove('spinning');
-        void toggle.offsetWidth; // reflow para reiniciar animación
+        void toggle.offsetWidth;
         toggle.classList.add('spinning');
         setTimeout(function () { toggle.classList.remove('spinning'); }, 450);
+
         const html = document.documentElement;
         const isDark = html.getAttribute('data-theme') === 'dark';
 
@@ -81,14 +80,16 @@ function initDarkMode() {
             localStorage.setItem('bieniestar-theme', 'dark');
         }
 
-        updateDarkModeIcon(icon);
+        updateDarkModeIcon();
 
-        // Re-renderizar calendario si existe
         if (typeof renderCalendar === 'function') renderCalendar();
     });
 }
 
-function updateDarkModeIcon(icon) {
+function updateDarkModeIcon() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    icon.textContent = isDark ? '☀️' : '🌙';
+    const moon = document.getElementById('darkIconMoon');
+    const sun = document.getElementById('darkIconSun');
+    if (moon) moon.style.display = isDark ? 'none' : 'block';
+    if (sun) sun.style.display = isDark ? 'block' : 'none';
 }

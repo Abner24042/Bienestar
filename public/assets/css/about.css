@@ -421,3 +421,134 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* =====================
+   BOTON DARK MODE
+   ===================== */
+.about-dark-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+
+.about-dark-toggle:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #111;
+}
+
+/* =====================
+   DARK MODE
+   ===================== */
+[data-theme="dark"] body {
+    background: #121212;
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .simple-header {
+    background: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .logo h2 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .header-nav a {
+    color: #aaa;
+}
+
+[data-theme="dark"] .header-nav a:hover,
+[data-theme="dark"] .header-nav a.active {
+    color: #ff8c5f;
+}
+
+[data-theme="dark"] .about-dark-toggle {
+    color: #ccc;
+}
+
+[data-theme="dark"] .about-dark-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+[data-theme="dark"] .mission-vision {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .mv-card {
+    background: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .mv-card h2 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .mv-card p {
+    color: #aaa;
+}
+
+[data-theme="dark"] .our-story {
+    background: #121212;
+}
+
+[data-theme="dark"] .story-text h2 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .story-text p {
+    color: #aaa;
+}
+
+[data-theme="dark"] .stat {
+    background: #1e1e1e;
+}
+
+[data-theme="dark"] .our-values {
+    background: #1a1a1a;
+}
+
+[data-theme="dark"] .section-title {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: #aaa;
+}
+
+[data-theme="dark"] .value-card {
+    background: #1e1e1e;
+}
+
+[data-theme="dark"] .value-card h3 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .value-card p {
+    color: #aaa;
+}
+
+[data-theme="dark"] .value-card:hover {
+    border-color: #ff8c5f;
+    box-shadow: 0 8px 16px rgba(255, 107, 53, 0.15);
+}
+
+[data-theme="dark"] .our-team {
+    background: #121212;
+}
+
+[data-theme="dark"] .team-member h3 {
+    color: #e8e8e8;
+}
+
+[data-theme="dark"] .member-bio {
+    color: #aaa;
+}

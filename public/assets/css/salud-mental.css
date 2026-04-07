@@ -629,6 +629,15 @@
     animation: cardEnter 0.5s ease both;
 }
 
+.score-top-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 2px;
+}
+
 .score-value {
     font-size: 3.5rem;
     font-weight: 700;
@@ -638,6 +647,12 @@
 .score-max {
     font-size: 1.3rem;
     opacity: 0.8;
+}
+
+.score-hint {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: #888;
 }
 
 .result-interpretation {

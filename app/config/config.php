@@ -11,7 +11,7 @@ if (file_exists(__DIR__ . '/../../.env')) {
 
 // Configuración de la aplicación
 define('APP_NAME', 'BIENIESTAR');
-define('APP_VERSION', '2.1.0');
+define('APP_VERSION', '2.2.0');
 define('APP_ENV', $_ENV['APP_ENV'] ?? 'development');
 define('APP_DEBUG', ($_ENV['APP_DEBUG'] ?? 'true') === 'true');
 
