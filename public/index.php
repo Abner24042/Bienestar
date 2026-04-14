@@ -82,10 +82,16 @@ $router->post('/api/actividad/ejercicio',          'EjercicioController@logEjerc
 
 // API - Endpoints públicos
 
-$router->get('/api/noticias', APP_PATH . '/controllers/get_noticias.php');
-$router->get('/api/appointments', APP_PATH . '/controllers/get_appointments.php');
-$router->get('/api/users', APP_PATH . '/controllers/get_users.php');
-$router->get('/api/professional-appointments', APP_PATH . '/controllers/get_professional_appointments.php');
+$getCtrl = APP_PATH . '/controllers/get_controller.php';
+$router->get('/api/noticias',                   $getCtrl);
+$router->get('/api/appointments',               $getCtrl);
+$router->get('/api/appointments/next',          $getCtrl);
+$router->get('/api/professional-appointments',  $getCtrl);
+$router->get('/api/users',                      $getCtrl);
+$router->get('/api/mi-plan',                    $getCtrl);
+$router->get('/api/especialistas',              $getCtrl);
+$router->get('/api/test/last',                  $getCtrl);
+$router->get('/api/dashboard/stats',            $getCtrl);
 $router->post('/api/appointments/save', APP_PATH . '/controllers/save_appointment.php');
 $router->post('/api/appointments/request', APP_PATH . '/controllers/request_appointment.php');
 $router->post('/api/appointments/save-professional', APP_PATH . '/controllers/save_professional_appointment.php');
@@ -96,70 +102,62 @@ $router->post('/api/profile/upload-photo', APP_PATH . '/controllers/upload_photo
 $router->post('/api/profile/remove-photo', APP_PATH . '/controllers/remove_photo.php');
 $router->post('/api/profile/change-password', APP_PATH . '/controllers/change_password.php');
 $router->post('/api/test/save', APP_PATH . '/controllers/save_test_result.php');
-$router->get('/api/test/last', APP_PATH . '/controllers/get_test_result.php');
-$router->get('/api/appointments/next', APP_PATH . '/controllers/get_next_appointment.php');
-$router->get('/api/especialistas',     APP_PATH . '/controllers/get_especialistas.php');
 $router->get('/api/mis-solicitudes',        APP_PATH . '/controllers/mis_solicitudes_get.php');
 $router->post('/api/mis-solicitudes/vista', APP_PATH . '/controllers/mis_solicitudes_vista.php');
-$router->get('/api/mi-plan', APP_PATH . '/controllers/get_mi_plan.php');
-$router->get('/api/pro/usuarios-list', APP_PATH . '/controllers/pro_get_usuarios_list.php');
-$router->get('/api/pro/recomendaciones', APP_PATH . '/controllers/pro_get_recomendaciones.php');
-$router->get('/api/pro/plan/get-usuario', APP_PATH . '/controllers/pro_plan_get_usuario.php');
-$router->post('/api/pro/plan/asignar-receta', APP_PATH . '/controllers/pro_plan_asignar_receta.php');
-$router->post('/api/pro/plan/recomendar', APP_PATH . '/controllers/pro_plan_recomendar.php');
-$router->post('/api/pro/plan/remove', APP_PATH . '/controllers/pro_plan_remove.php');
+$proCtrl = APP_PATH . '/controllers/pro_controller.php';
+$router->get('/api/pro/usuarios-list',                  $proCtrl);
+$router->get('/api/pro/recomendaciones',                $proCtrl);
+$router->get('/api/pro/plan/get-usuario',               $proCtrl);
+$router->post('/api/pro/plan/asignar-receta',           $proCtrl);
+$router->post('/api/pro/plan/recomendar',               $proCtrl);
+$router->post('/api/pro/plan/remove',                   $proCtrl);
 
 
 // API - Endpoints admin
 
 
-$router->get('/api/admin/noticias', APP_PATH . '/controllers/admin_get_noticias.php');
-$router->post('/api/admin/noticias/save', APP_PATH . '/controllers/admin_save_noticia.php');
-$router->post('/api/admin/noticias/delete', APP_PATH . '/controllers/admin_delete_noticia.php');
-$router->get('/api/admin/appointments', APP_PATH . '/controllers/admin_get_appointments.php');
-$router->get('/api/admin/users', APP_PATH . '/controllers/admin_get_users.php');
-$router->post('/api/admin/users/save', APP_PATH . '/controllers/admin_save_user.php');
-$router->get('/api/admin/stats', APP_PATH . '/controllers/admin_get_stats.php');
-$router->get('/api/admin/export', APP_PATH . '/controllers/admin_export.php');
+$adminCtrl = APP_PATH . '/controllers/admin_controller.php';
+$router->get('/api/admin/stats',            $adminCtrl);
+$router->get('/api/admin/appointments',     $adminCtrl);
+$router->get('/api/admin/users',            $adminCtrl);
+$router->post('/api/admin/users/save',      $adminCtrl);
+$router->get('/api/admin/noticias',         $adminCtrl);
+$router->post('/api/admin/noticias/save',   $adminCtrl);
+$router->post('/api/admin/noticias/delete', $adminCtrl);
+$router->get('/api/admin/export',           $adminCtrl);
 
 
-// API - Solicitudes de cita (profesional)
-
-$router->get('/api/pro/solicitudes',        APP_PATH . '/controllers/pro_solicitudes_get.php');
-$router->get('/api/pro/solicitudes/count',  APP_PATH . '/controllers/pro_solicitudes_count.php');
-$router->post('/api/pro/solicitudes/accion',APP_PATH . '/controllers/pro_solicitudes_accion.php');
-
-
-// API - Endpoints profesional
-
-
-$router->get('/api/pro/noticias', APP_PATH . '/controllers/pro_get_noticias.php');
-$router->post('/api/pro/noticias/save', APP_PATH . '/controllers/pro_save_noticia.php');
-$router->post('/api/pro/noticias/delete', APP_PATH . '/controllers/pro_delete_noticia.php');
-$router->get('/api/pro/rutinas', APP_PATH . '/controllers/pro_get_rutinas.php');
-$router->post('/api/pro/rutinas/save', APP_PATH . '/controllers/pro_save_rutina.php');
-$router->post('/api/pro/rutinas/delete', APP_PATH . '/controllers/pro_delete_rutina.php');
-$router->get('/api/pro/rutinas/detail', APP_PATH . '/controllers/pro_get_rutina_detail.php');
-$router->post('/api/pro/rutinas/asignar', APP_PATH . '/controllers/pro_asignar_rutina.php');
-$router->get('/api/pro/planes-alimenticios', APP_PATH . '/controllers/pro_get_planes_alimenticios.php');
-$router->post('/api/pro/planes-alimenticios/save', APP_PATH . '/controllers/pro_save_plan_alimenticio.php');
-$router->post('/api/pro/planes-alimenticios/delete', APP_PATH . '/controllers/pro_delete_plan_alimenticio.php');
-$router->get('/api/pro/planes-alimenticios/detail', APP_PATH . '/controllers/pro_get_plan_alimenticio_detail.php');
-$router->post('/api/pro/planes-alimenticios/asignar', APP_PATH . '/controllers/pro_asignar_plan_alimenticio.php');
+$router->get('/api/pro/solicitudes',                    $proCtrl);
+$router->get('/api/pro/solicitudes/count',              $proCtrl);
+$router->post('/api/pro/solicitudes/accion',            $proCtrl);
+$router->get('/api/pro/noticias',                       $proCtrl);
+$router->post('/api/pro/noticias/save',                 $proCtrl);
+$router->post('/api/pro/noticias/delete',               $proCtrl);
+$router->get('/api/pro/rutinas',                        $proCtrl);
+$router->get('/api/pro/rutinas/detail',                 $proCtrl);
+$router->post('/api/pro/rutinas/save',                  $proCtrl);
+$router->post('/api/pro/rutinas/delete',                $proCtrl);
+$router->post('/api/pro/rutinas/asignar',               $proCtrl);
+$router->get('/api/pro/planes-alimenticios',            $proCtrl);
+$router->get('/api/pro/planes-alimenticios/detail',     $proCtrl);
+$router->post('/api/pro/planes-alimenticios/save',      $proCtrl);
+$router->post('/api/pro/planes-alimenticios/delete',    $proCtrl);
+$router->post('/api/pro/planes-alimenticios/asignar',   $proCtrl);
 
 
 // API - Chat
 
-$router->get('/api/chat/conversaciones', APP_PATH . '/controllers/chat_get_conversaciones.php');
-$router->get('/api/chat/mensajes',       APP_PATH . '/controllers/chat_get_mensajes.php');
-$router->get('/api/chat/no-leidos',      APP_PATH . '/controllers/chat_get_no_leidos.php');
-$router->post('/api/chat/enviar',        APP_PATH . '/controllers/chat_enviar.php');
-$router->post('/api/chat/marcar-leido',      APP_PATH . '/controllers/chat_marcar_leido.php');
-$router->post('/api/chat/eliminar-mensaje', APP_PATH . '/controllers/chat_eliminar_mensaje.php');
-$router->post('/api/chat/eliminar-chat',    APP_PATH . '/controllers/chat_eliminar_chat.php');
-$router->post('/api/chat/subir-archivo',    APP_PATH . '/controllers/chat_subir_archivo.php');
-$router->get('/api/admin/todos-usuarios',        APP_PATH . '/controllers/chat_get_todos_usuarios.php');
-$router->get('/api/chat/usuarios-disponibles',  APP_PATH . '/controllers/chat_get_usuarios_disponibles.php');
+$chatCtrl = APP_PATH . '/controllers/chat_controller.php';
+$router->get('/api/chat/conversaciones',       $chatCtrl);
+$router->get('/api/chat/mensajes',             $chatCtrl);
+$router->get('/api/chat/no-leidos',            $chatCtrl);
+$router->get('/api/chat/usuarios-disponibles', $chatCtrl);
+$router->get('/api/admin/todos-usuarios',      $chatCtrl);
+$router->post('/api/chat/enviar',              $chatCtrl);
+$router->post('/api/chat/marcar-leido',        $chatCtrl);
+$router->post('/api/chat/eliminar-mensaje',    $chatCtrl);
+$router->post('/api/chat/eliminar-chat',       $chatCtrl);
+$router->post('/api/chat/subir-archivo',       $chatCtrl);
 
 
 // API - Favoritos
