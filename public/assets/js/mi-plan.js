@@ -159,7 +159,7 @@ function recetaCard(r, idx = 0) {
                 <span class="plan-card-badge">${cat}</span>
             </div>
             <h3 class="plan-card-title">${esc(r.titulo)}</h3>
-            <p class="plan-card-meta">${r.tiempo_preparacion ? '⏱ ' + r.tiempo_preparacion + ' min' : ''}${r.calorias ? '  🔥 ' + Math.round(r.calorias) + ' kcal' : ''}</p>
+            <p class="plan-card-meta">⏱ ${r.tiempo_preparacion ? r.tiempo_preparacion + ' min' : 'No indicado'}${r.calorias ? '  🔥 ' + Math.round(r.calorias) + ' kcal' : ''}</p>
             ${notas}
         </div>
     </div>`;
@@ -174,7 +174,7 @@ function recomendacionCard(r, idx = 0) {
         <div class="recomendacion-tipo" style="color:${color};">${esc(cap(r.tipo))}</div>
         <div class="recomendacion-titulo">${esc(r.titulo)}</div>
         ${r.contenido ? `<div class="recomendacion-contenido">${esc(r.contenido)}</div>` : ''}
-        <div class="recomendacion-meta">— ${esc(r.profesional_id)}</div>
+        <div class="recomendacion-meta">— ${esc(r.profesional_nombre || r.profesional_id)}</div>
     </div>`;
 }
 

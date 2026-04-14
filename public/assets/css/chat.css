@@ -413,7 +413,8 @@
 [data-theme="dark"] .chat-search-item:hover { background: rgba(255,107,53,0.1); }
 
 /* ── Badge en sidebar nav ─────────────────────────────────────────────── */
-.chat-nav-badge {
+.chat-nav-badge,
+.sol-nav-badge {
     background: #f44336;
     color: #fff;
     border-radius: 10px;
@@ -424,6 +425,7 @@
     vertical-align: middle;
     display: none;
 }
+.sol-nav-badge { background: #ff6b35; }
 
 /* ── FAB (dashboard usuario) ──────────────────────────────────────────── */
 .chat-fab {

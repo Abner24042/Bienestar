@@ -70,6 +70,8 @@ function planLimpiarUsuario() {
     document.getElementById('planUsuarioBuscar').value = '';
     document.getElementById('planUsuarioTag').style.display = 'none';
     document.getElementById('planUsuarioContainer').style.display = 'none';
+    const saludEl = document.getElementById('planSaludUsuario');
+    if (saludEl) saludEl.style.display = 'none';
     planUsuarioActual = null;
 }
 
@@ -102,6 +104,16 @@ function setPlanLoading(on) {
 }
 
 function renderPlanPro(data) {
+    // Datos de salud del usuario
+    const saludEl = document.getElementById('planSaludUsuario');
+    if (saludEl && data.salud) {
+        const s = data.salud;
+        document.getElementById('planSaludPeso').textContent   = 'Peso: '   + (s.peso   ? s.peso + ' kg'   : 'No registrado');
+        document.getElementById('planSaludAltura').textContent = 'Altura: ' + (s.altura ? s.altura + ' m'  : 'No registrado');
+        document.getElementById('planSaludImc').textContent    = 'IMC: '    + (s.imc    ? s.imc             : 'No calculado');
+        saludEl.style.display = 'flex';
+    }
+
     // Ejercicios (coach)
     const elE = document.getElementById('planEjerciciosList');
     if (elE) {

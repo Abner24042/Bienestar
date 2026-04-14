@@ -116,11 +116,15 @@ function showAppointmentsForDate(dateStr) {
 
     content.innerHTML = appointments.map(apt => {
         const hora = apt.hora.substring(0, 5);
+        const notas = apt.descripcion
+            ? `<p style="margin-top:4px;font-size:0.82rem;color:var(--color-text-secondary,#666);">📝 ${apt.descripcion}</p>`
+            : '';
         return `<div class="appointment-item">
             <div class="apt-icon">📋</div>
             <div class="apt-details">
                 <h4>${apt.titulo}</h4>
                 <p>⏰ ${hora}</p>
+                ${notas}
             </div>
         </div>`;
     }).join('');

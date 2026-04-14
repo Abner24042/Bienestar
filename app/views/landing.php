@@ -219,6 +219,7 @@
     </footer>
 
     <!-- Scripts (defer para no bloquear render) -->
+    <script>const BASE_URL = '<?php echo BASE_URL; ?>';</script>
     <script defer src="<?php echo asset('js/main.js'); ?>"></script>
     <script defer src="<?php echo asset('js/landing.js'); ?>"></script>
 </body>

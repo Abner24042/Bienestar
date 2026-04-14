@@ -7,17 +7,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAuthenticated()) {
     $currentUser = currentUser();
     $isAdmin = isAdmin();
 
-    // Solo los administradores pueden modificar nombre, correo y área
-    if ($isAdmin) {
-        $nombre = sanitizeString($_POST['nombre'] ?? '');
-        $correo = sanitizeString($_POST['correo'] ?? '');
-        $area = sanitizeString($_POST['area'] ?? '');
-    } else {
-        // Si no es admin, mantener los valores actuales
-        $nombre = $currentUser['nombre'];
-        $correo = $currentUser['correo'];
-        $area = $currentUser['area'] ?? '';
+    // Solo administradores pueden modificar datos del perfil
+    if (!$isAdmin) {
+        redirect('perfil');
+        exit;
     }
+
+    $nombre = sanitizeString($_POST['nombre'] ?? '');
+    $correo = sanitizeString($_POST['correo'] ?? '');
+    $area   = sanitizeString($_POST['area'] ?? '');
+    $peso   = isset($_POST['peso'])   && $_POST['peso']   !== '' ? (float)$_POST['peso']   : null;
+    $altura = isset($_POST['altura']) && $_POST['altura'] !== '' ? (float)$_POST['altura'] : null;
 
     if (empty($nombre) || empty($correo)) {
         redirect('perfil?error=' . urlencode('Todos los campos son requeridos'));
@@ -34,8 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAuthenticated()) {
     $data = [
         'nombre' => $nombre,
         'correo' => $correo,
-        'area' => $area,
-        'foto' => $currentUser['foto']
+        'area'   => $area,
+        'foto'   => $currentUser['foto'],
+        'peso'   => $peso,
+        'altura' => $altura,
     ];
 
     if ($userModel->update($userId, $data)) {
@@ -46,10 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isAuthenticated()) {
         $_SESSION['user']['correo'] = $correo;
         $_SESSION['user']['area'] = $area;
 
-        $successMsg = $isAdmin
-            ? 'Perfil actualizado correctamente'
-            : 'Solo los administradores pueden modificar datos personales';
-        redirect('perfil?success=' . urlencode($successMsg));
+        redirect('perfil?success=' . urlencode('Perfil actualizado correctamente'));
     } else {
         redirect('perfil?error=' . urlencode('Error al actualizar perfil'));
     }

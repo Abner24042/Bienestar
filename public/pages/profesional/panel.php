@@ -26,6 +26,72 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         <p><?php echo htmlspecialchars(getRoleLabel($user['rol'])); ?> - <?php echo htmlspecialchars($user['nombre']); ?></p>
     </div>
 
+    <!-- ── Solicitudes de Cita ───────────────────────────────── -->
+    <div class="admin-section" id="seccionSolicitudes" style="width:100%;display:none;margin-bottom:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+            <h2 style="margin:0;">📩 Solicitudes de Cita
+                <span id="solBadgeHeader" style="display:none;font-size:0.8rem;background:#ff6b35;color:white;padding:2px 10px;border-radius:20px;margin-left:8px;"></span>
+            </h2>
+        </div>
+        <div id="solicitudesGrid" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <p style="color:var(--color-text-light);">Cargando solicitudes...</p>
+        </div>
+    </div>
+
+    <!-- Modal denegar solicitud -->
+    <div id="modalDenegarSol" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--color-bg-primary,#fff);border-radius:16px;padding:1.75rem;max-width:480px;width:90%;position:relative;">
+            <h3 style="margin-bottom:1rem;">Denegar solicitud</h3>
+            <input type="hidden" id="denegarSolId">
+            <div class="form-group">
+                <label>Motivo de la denegación <span style="color:#e55a00">*</span></label>
+                <textarea id="denegarMotivo" rows="3" placeholder="Explica por qué no puedes atender esta solicitud..." style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Reasignar a otro especialista (opcional)</label>
+                <select id="denegarReasignar" style="width:100%;padding:0.55rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+                    <option value="">— Sin reasignar —</option>
+                </select>
+            </div>
+            <div id="denegarMsg" style="display:none;margin-bottom:10px;"></div>
+            <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem;">
+                <button onclick="cerrarModalDenegar()" class="btn btn-secondary">Cancelar</button>
+                <button onclick="confirmarDenegar()" class="btn btn-primary" style="background:#dc2626;border-color:#dc2626;">Denegar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal aceptar solicitud -->
+    <div id="modalAceptarSol" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--color-bg-primary,#fff);border-radius:16px;padding:1.75rem;max-width:480px;width:90%;position:relative;">
+            <h3 style="margin-bottom:1rem;">Confirmar cita</h3>
+            <input type="hidden" id="aceptarSolId">
+            <div class="form-group">
+                <label>Título de la cita <span style="color:#e55a00">*</span></label>
+                <input type="text" id="aceptarTitulo" placeholder="Ej. Consulta de Nutrición" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+            </div>
+            <div class="form-group" style="display:flex;gap:1rem;">
+                <div style="flex:1;">
+                    <label>Fecha <span style="color:#e55a00">*</span></label>
+                    <input type="date" id="aceptarFecha" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+                </div>
+                <div style="flex:1;">
+                    <label>Hora <span style="color:#e55a00">*</span></label>
+                    <input type="time" id="aceptarHora" style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Notas adicionales (opcional)</label>
+                <textarea id="aceptarNotas" rows="2" placeholder="Indicaciones, preparación, etc." style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;resize:vertical;"></textarea>
+            </div>
+            <div id="aceptarMsg" style="display:none;margin-bottom:10px;"></div>
+            <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem;">
+                <button onclick="cerrarModalAceptar()" class="btn btn-secondary">Cancelar</button>
+                <button onclick="confirmarAceptar()" class="btn btn-primary" style="background:#16a34a;border-color:#16a34a;">✓ Confirmar Cita</button>
+            </div>
+        </div>
+    </div>
+
     <div class="admin-dashboard">
         <!-- Stats -->
         <div class="admin-stats-grid">
@@ -157,9 +223,9 @@ $additionalCSS = ['admin.css', 'profesional.css'];
             </div>
             <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;">
                 <input type="text" id="pendingSearch" placeholder="🔍 Buscar receta..." oninput="aplicarFiltrosPending()"
-                    style="flex:1;min-width:180px;padding:8px 12px;background:#2a2a2a;border:1px solid #444;border-radius:8px;color:#fff;font-size:0.875rem;">
+                    class="pro-filter-input" style="flex:1;min-width:180px;">
                 <select id="pendingCatFilter" onchange="aplicarFiltrosPending()"
-                    style="padding:8px 12px;background:#2a2a2a;border:1px solid #444;border-radius:8px;color:#fff;font-size:0.875rem;">
+                    class="pro-filter-input">
                     <option value="">Todas las categorías</option>
                     <option value="desayuno">Desayuno</option>
                     <option value="almuerzo">Almuerzo</option>
@@ -180,7 +246,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
 
         <!-- Modal detalle receta pendiente -->
         <div id="modalPendingDetalle" onclick="if(event.target===this)cerrarDetallePending()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9998;overflow-y:auto;padding:2rem 1rem;">
-            <div style="max-width:620px;margin:0 auto;background:#1a1a1a;border-radius:16px;overflow:hidden;position:relative;">
+            <div class="pro-pending-modal-inner" style="max-width:620px;margin:0 auto;">
                 <button onclick="cerrarDetallePending()" style="position:absolute;top:12px;right:14px;background:none;border:none;color:#aaa;font-size:1.5rem;cursor:pointer;z-index:1;">✕</button>
                 <div id="modalPendingContent"></div>
             </div>
@@ -194,7 +260,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
             </div>
             <div style="margin-bottom:1rem;">
                 <input type="text" id="proRecetasSearch" placeholder="🔍 Buscar en mis recetas..." oninput="filtrarProRecetas()"
-                    style="width:100%;max-width:320px;padding:8px 12px;background:#2a2a2a;border:1px solid #444;border-radius:8px;color:#fff;font-size:0.875rem;">
+                    class="pro-filter-input" style="width:100%;max-width:320px;">
             </div>
             <div class="admin-table-wrapper">
                 <table class="admin-table">
@@ -719,6 +785,14 @@ $additionalCSS = ['admin.css', 'profesional.css'];
 
             <div id="planUsuarioContainer" style="display:none;">
 
+                <!-- Datos de salud del usuario (solo nutriologo y coach) -->
+                <div id="planSaludUsuario" style="display:none;margin-bottom:1.5rem;padding:14px 18px;border-radius:10px;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+                    <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#ff6b35;">Datos de Salud</span>
+                    <span id="planSaludPeso" style="font-size:0.9rem;color:var(--color-text-secondary);">Peso: —</span>
+                    <span id="planSaludAltura" style="font-size:0.9rem;color:var(--color-text-secondary);">Altura: —</span>
+                    <span id="planSaludImc" style="font-size:0.9rem;color:var(--color-text-secondary);">IMC: —</span>
+                </div>
+
                 <?php if ($user['rol'] === 'coach'): ?>
                 <div style="margin-bottom:2rem;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
@@ -884,7 +958,7 @@ const PROFESSIONAL_USER = {
 <?php endif; ?>
 
 <?php
-$additionalJS = ['emailConfig.js', 'googleCalendar.js', 'profesional.js', 'profesional-planes.js'];
+$additionalJS = ['emailConfig.js', 'googleCalendar.js', 'profesional.js', 'profesional-planes.js', 'profesional-solicitudes.js'];
 if (in_array($user['rol'], ['nutriologo', 'coach'])) {
     $additionalJS[] = 'item-picker.js';
 }

@@ -62,7 +62,40 @@
       "Bash(node deploy.js \"public/assets/css/auth.css\" \"public/assets/js/auth.js\")",
       "Bash(node deploy.js \"public/assets/js/cache.js\" \"public/assets/js/noticias.js\" \"public/assets/js/dashboard.js\" \"app/views/layouts/header.php\")",
       "Bash(node deploy.js \"public/assets/js/mobile-menu.js\" \"public/assets/css/mobile-menu.css\" \"public/assets/css/main.css\")",
-      "Read(//c/Users/abner/AppData/Local/Temp/claude/c--xampp-htdocs-a-Bienestar/44e693fa-557d-4e14-adc0-eaafaad48161/tasks/**)"
+      "Read(//c/Users/abner/AppData/Local/Temp/claude/c--xampp-htdocs-a-Bienestar/44e693fa-557d-4e14-adc0-eaafaad48161/tasks/**)",
+      "Bash(xargs grep:*)",
+      "Read(//c/xampp/**)",
+      "Bash(./mysql/bin/mysql.exe -u root -e \"DELETE FROM bienestar.rutinas WHERE titulo = 'asdasd';\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"DELETE FROM bienestar.rutinas WHERE titulo = 'asdasd';\")",
+      "Bash(grep -oE 'style=\"[^\"]*color:#[0-9a-fA-F]{3,6}[^\"]*\"' /c/xampp/htdocs/a/Bienestar/public/pages/profesional/panel.php)",
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(find /c/xampp/htdocs/a/Bienestar/public/assets/css -name \"*.css\" -exec grep -l '\\\\.form-control\\\\|\\\\.btn-loader\\\\|\\\\.btn-text' {} \\\\;)",
+      "Bash(grep -n '\\\\.form-control' /c/xampp/htdocs/a/Bienestar/public/assets/css/*.css)",
+      "Bash(grep -E '\\(\\\\.form-control[^a-z-]|form-control\\\\s*\\\\{\\)' /c/xampp/htdocs/a/Bienestar/public/assets/css/*.css)",
+      "Bash(php -l app/controllers/pro_plan_get_usuario.php)",
+      "Bash(php -l app/controllers/update_profile.php)",
+      "Bash(php -l app/models/Plan.php)",
+      "Bash(php -l app/models/User.php)",
+      "Bash(php -l app/views/landing.php)",
+      "Bash(\"c:/xampp/php/php.exe\" -l app/controllers/pro_plan_get_usuario.php)",
+      "Bash(\"c:/xampp/php/php.exe\" -l app/controllers/update_profile.php)",
+      "Bash(\"c:/xampp/php/php.exe\" -l app/models/Plan.php)",
+      "Bash(\"c:/xampp/php/php.exe\" -l app/models/User.php)",
+      "Bash(\"c:/xampp/php/php.exe\" -l app/views/landing.php)",
+      "Bash(node --check public/assets/js/dashboard.js)",
+      "Bash(node --check public/assets/js/landing.js)",
+      "Bash(node --check public/assets/js/mi-plan.js)",
+      "Bash(node --check public/assets/js/profesional-planes.js)",
+      "Bash(node deploy.js \"public/assets/css/profesional.css\")",
+      "Bash(node deploy.js \"app/views/layouts/header.php\" \"public/assets/css/profesional.css\" \"public/pages/profesional/panel.php\")",
+      "Bash(node deploy.js \"public/assets/css/profesional.css\" \"public/assets/js/profesional-recetas.js\" \"app/views/layouts/header.php\")",
+      "Bash(node deploy.js \"public/assets/css/chat.css\" \"public/assets/js/profesional-solicitudes.js\" \"app/views/layouts/header.php\")",
+      "Bash(node deploy.js \"public/pages/citas.php\")"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }

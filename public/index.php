@@ -51,6 +51,7 @@ $router->get('/admin/logs', PUBLIC_PATH . '/pages/admin/logs.php');
 
 $router->get('/profesional', PUBLIC_PATH . '/pages/profesional/panel.php');
 $router->get('/chat',        PUBLIC_PATH . '/pages/chat.php');
+$router->get('/mensajes',    function() { redirect('chat'); });
 
 
 // ── RecetaController (migrado) ────────────────────────────────────────────────
@@ -86,6 +87,7 @@ $router->get('/api/appointments', APP_PATH . '/controllers/get_appointments.php'
 $router->get('/api/users', APP_PATH . '/controllers/get_users.php');
 $router->get('/api/professional-appointments', APP_PATH . '/controllers/get_professional_appointments.php');
 $router->post('/api/appointments/save', APP_PATH . '/controllers/save_appointment.php');
+$router->post('/api/appointments/request', APP_PATH . '/controllers/request_appointment.php');
 $router->post('/api/appointments/save-professional', APP_PATH . '/controllers/save_professional_appointment.php');
 $router->post('/api/appointments/delete', APP_PATH . '/controllers/delete_appointment.php');
 $router->post('/api/appointments/cancel', APP_PATH . '/controllers/cancel_appointment.php');
@@ -96,6 +98,9 @@ $router->post('/api/profile/change-password', APP_PATH . '/controllers/change_pa
 $router->post('/api/test/save', APP_PATH . '/controllers/save_test_result.php');
 $router->get('/api/test/last', APP_PATH . '/controllers/get_test_result.php');
 $router->get('/api/appointments/next', APP_PATH . '/controllers/get_next_appointment.php');
+$router->get('/api/especialistas',     APP_PATH . '/controllers/get_especialistas.php');
+$router->get('/api/mis-solicitudes',        APP_PATH . '/controllers/mis_solicitudes_get.php');
+$router->post('/api/mis-solicitudes/vista', APP_PATH . '/controllers/mis_solicitudes_vista.php');
 $router->get('/api/mi-plan', APP_PATH . '/controllers/get_mi_plan.php');
 $router->get('/api/pro/usuarios-list', APP_PATH . '/controllers/pro_get_usuarios_list.php');
 $router->get('/api/pro/recomendaciones', APP_PATH . '/controllers/pro_get_recomendaciones.php');
@@ -116,6 +121,13 @@ $router->get('/api/admin/users', APP_PATH . '/controllers/admin_get_users.php');
 $router->post('/api/admin/users/save', APP_PATH . '/controllers/admin_save_user.php');
 $router->get('/api/admin/stats', APP_PATH . '/controllers/admin_get_stats.php');
 $router->get('/api/admin/export', APP_PATH . '/controllers/admin_export.php');
+
+
+// API - Solicitudes de cita (profesional)
+
+$router->get('/api/pro/solicitudes',        APP_PATH . '/controllers/pro_solicitudes_get.php');
+$router->get('/api/pro/solicitudes/count',  APP_PATH . '/controllers/pro_solicitudes_count.php');
+$router->post('/api/pro/solicitudes/accion',APP_PATH . '/controllers/pro_solicitudes_accion.php');
 
 
 // API - Endpoints profesional

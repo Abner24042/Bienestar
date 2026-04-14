@@ -120,9 +120,11 @@ class Plan {
             $recetas = $stmt->fetchAll();
 
             $stmt = $this->db->prepare("
-                SELECT * FROM recomendaciones
-                WHERE usuario_id = :uid AND activo = 1
-                ORDER BY created_at DESC
+                SELECT r.*, COALESCE(u.nombre, r.profesional_id) AS profesional_nombre
+                FROM recomendaciones r
+                LEFT JOIN usuarios u ON u.correo = r.profesional_id
+                WHERE r.usuario_id = :uid AND r.activo = 1
+                ORDER BY r.created_at DESC
             ");
             $stmt->execute([':uid' => $usuarioId]);
             $recomendaciones = $stmt->fetchAll();

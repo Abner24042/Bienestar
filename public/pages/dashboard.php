@@ -41,7 +41,7 @@ include '../../app/views/layouts/header.php';
 
         <div class="stat-card" id="citaCard" tabindex="0" role="button" aria-label="Próxima Cita - ir a Citas" style="cursor:pointer; padding:0; overflow:hidden; align-items:stretch;" onclick="window.location.href='<?php echo url('citas'); ?>'">
             <div id="citaDateBadge" style="background: linear-gradient(160deg, #e91e63 0%, #ad1457 100%); min-width:130px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 20px; flex-shrink:0; gap:6px;">
-                <span id="citaDia" style="font-size:4rem; font-weight:800; color:#fff; line-height:1; letter-spacing:-2px;">—</span>
+                <span id="citaDia" style="font-size:4rem; font-weight:800; color:#fff; line-height:1; letter-spacing:-2px;">?</span>
                 <span id="citaMes" style="font-size:0.78rem; font-weight:700; color:rgba(255,255,255,0.85); text-transform:uppercase; letter-spacing:2.5px;">—</span>
             </div>
             <div style="flex:1; padding:24px 30px; display:flex; flex-direction:column; justify-content:center; gap:8px;">
@@ -49,7 +49,7 @@ include '../../app/views/layouts/header.php';
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6V12L16 14"/></svg>
                     Próxima Cita
                 </span>
-                <p id="citaLabel" style="margin:0; font-size:1.25rem; font-weight:700; color:var(--color-text-primary); line-height:1.3;">Cargando...</p>
+                <p id="citaLabel" style="margin:0; font-size:1.25rem; font-weight:700; color:var(--color-text-primary); line-height:1.3;">Verificando citas...</p>
                 <p id="citaDescripcion" style="margin:0; font-size:0.9rem; color:var(--color-text-secondary); display:none;"></p>
             </div>
         </div>

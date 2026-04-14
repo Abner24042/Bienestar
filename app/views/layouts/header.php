@@ -21,12 +21,19 @@ if (!isset($pageTitle)) {
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('img/content/AAX-Form-Grafico.svg'); ?>">
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="<?php echo asset('css/main.css'); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/dashboard.css'); ?>">
-    <link rel="stylesheet" href="<?php echo asset('css/mobile-menu.css'); ?>">
+    <?php
+    function cssAsset($file) {
+        $path = PUBLIC_PATH . '/assets/css/' . $file;
+        $v = file_exists($path) ? filemtime($path) : time();
+        return asset('css/' . $file) . '?v=' . $v;
+    }
+    ?>
+    <link rel="stylesheet" href="<?php echo cssAsset('main.css'); ?>">
+    <link rel="stylesheet" href="<?php echo cssAsset('dashboard.css'); ?>">
+    <link rel="stylesheet" href="<?php echo cssAsset('mobile-menu.css'); ?>">
 <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
-        <link rel="stylesheet" href="<?php echo asset('css/' . $css); ?>">
+        <link rel="stylesheet" href="<?php echo cssAsset($css); ?>">
     <?php endforeach; ?>
 <?php endif; ?>
 
@@ -38,12 +45,37 @@ if (!isset($pageTitle)) {
 <!-- skip link: permite a usuarios de teclado saltar directo al contenido sin pasar por todo el nav -->
 <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 <script>
-    const BASE_URL = '<?php echo BASE_URL; ?>';
-    const API_URL  = BASE_URL + '/api';
-    const CURRENT_USER_ID = <?php echo (int)($_SESSION['user_id'] ?? 0); ?>;
+    const BASE_URL         = '<?php echo BASE_URL; ?>';
+    const API_URL          = BASE_URL + '/api';
+    const CURRENT_USER_ID  = <?php echo (int)($_SESSION['user_id'] ?? 0); ?>;
+    const CURRENT_USER_EMAIL = '<?php echo addslashes($_SESSION['correo'] ?? ''); ?>';
+    const IS_PROFESSIONAL  = <?php echo isProfessional() ? 'true' : 'false'; ?>;
 </script>
 <script src="<?php echo asset('js/cache.js'); ?>"></script>
 <script defer src="<?php echo asset('js/chat-notify.js'); ?>"></script>
+<?php if (isProfessional()): ?>
+<script>
+// Polling del badge de solicitudes (global, todas las páginas para profesionales)
+(function() {
+    async function pollSolBadge() {
+        try {
+            const res  = await fetch(API_URL + '/pro/solicitudes/count');
+            const data = await res.json();
+            const cnt  = data.count || 0;
+            const badge = document.getElementById('solNavBadge');
+            if (badge) {
+                badge.textContent  = cnt > 0 ? cnt : '';
+                badge.style.display = cnt > 0 ? 'inline' : 'none';
+            }
+            // Si estamos en el panel, también actualizar el badge del header
+            if (typeof actualizarBadgeSol === 'function') actualizarBadgeSol(cnt);
+        } catch(e) {}
+    }
+    document.addEventListener('DOMContentLoaded', pollSolBadge);
+    setInterval(pollSolBadge, 5000);
+})();
+</script>
+<?php endif; ?>
     <!-- Header -->
     <header class="dashboard-header">
         <div class="header-container">
@@ -153,7 +185,7 @@ if (!isset($pageTitle)) {
                     <path d="M20 8V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M23 11H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Panel Profesional</span>
+                <span>Panel Profesional <span class="sol-nav-badge" id="solNavBadge"></span></span>
             </a>
             <?php endif; ?>
             <a href="<?php echo url('chat'); ?>" class="nav-item <?php echo $currentPage === 'chat' ? 'active' : ''; ?>">

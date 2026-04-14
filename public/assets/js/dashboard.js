@@ -216,9 +216,10 @@ async function loadNextAppointment() {
             AppCache.set('next_appointment', data, 5 * 60 * 1000);
         } else {
             if (badgeEl) badgeEl.style.background = 'linear-gradient(160deg, #aaa 0%, #888 100%)';
-            citaDiaEl.textContent = '—';
-            citaMesEl.textContent = '—';
-            if (citaLabelEl) citaLabelEl.textContent = 'No hay citas cercanas';
+            citaDiaEl.style.fontSize = '2rem';
+            citaDiaEl.textContent = '📅';
+            citaMesEl.textContent = 'Sin citas';
+            if (citaLabelEl) citaLabelEl.textContent = 'No hay citas próximas';
         }
     } catch (e) {
         if (badgeEl) badgeEl.style.background = 'linear-gradient(160deg, #aaa 0%, #888 100%)';

@@ -43,14 +43,10 @@
             var scrollPercent = scrollPosition / windowHeight;
 
             if (scrollPosition > 50) {
-                heroSection.classList.add('scrolled');
-                heroSection.style.height = Math.max(30, 100 - (scrollPercent * 70)) + 'vh';
                 heroBackground.style.transform = 'scale(' + (1 + scrollPercent * 0.3) + ')';
                 heroContent.style.opacity = Math.max(0, 1 - scrollPercent * 2);
                 heroContent.style.transform = 'translateY(-' + (scrollPercent * 50) + 'px)';
             } else {
-                heroSection.classList.remove('scrolled');
-                heroSection.style.height = '100vh';
                 heroBackground.style.transform = 'scale(1)';
                 heroContent.style.opacity = '1';
                 heroContent.style.transform = 'translateY(0)';

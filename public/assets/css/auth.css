@@ -256,6 +256,18 @@
     letter-spacing: 0.5px;
 }
 
+/* Auth notes */
+.auth-notes {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.auth-note {
+    font-size: 0.82rem;
+    color: var(--color-text-light);
+    margin: 4px 0;
+}
+
 /* Links */
 .back-home {
     text-align: center;

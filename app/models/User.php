@@ -8,6 +8,21 @@ class User {
     public function __construct() {
         $database = new Database();
         $this->db = $database->getConnection();
+        $this->ensureColumns();
+    }
+
+    private function ensureColumns() {
+        $cols = [
+            'peso'   => 'DECIMAL(5,2) DEFAULT NULL',
+            'altura' => 'DECIMAL(4,2) DEFAULT NULL',
+        ];
+        foreach ($cols as $col => $def) {
+            try {
+                $this->db->exec("ALTER TABLE {$this->table} ADD COLUMN {$col} {$def}");
+            } catch (PDOException $e) {
+                // Column already exists — ignore
+            }
+        }
     }
     
     /**
@@ -84,20 +99,24 @@ class User {
      */
     public function update($id, $data) {
         try {
-            $query = "UPDATE " . $this->table . " 
-                     SET nombre = :nombre, 
+            $query = "UPDATE " . $this->table . "
+                     SET nombre = :nombre,
                          correo = :correo,
                          foto = :foto,
-                         area = :area
+                         area = :area,
+                         peso = :peso,
+                         altura = :altura
                      WHERE id = :id";
-            
+
             $stmt = $this->db->prepare($query);
-            
+
             $stmt->bindParam(':id', $id);
             $stmt->bindParam(':nombre', $data['nombre']);
             $stmt->bindParam(':correo', $data['correo']);
             $stmt->bindParam(':foto', $data['foto']);
             $stmt->bindParam(':area', $data['area']);
+            $stmt->bindValue(':peso',   isset($data['peso'])   && $data['peso']   !== '' ? (float)$data['peso']   : null, PDO::PARAM_STR);
+            $stmt->bindValue(':altura', isset($data['altura']) && $data['altura'] !== '' ? (float)$data['altura'] : null, PDO::PARAM_STR);
             
             return $stmt->execute();
         } catch (PDOException $e) {

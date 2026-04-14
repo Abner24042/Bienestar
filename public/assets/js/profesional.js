@@ -68,12 +68,18 @@ function displayAppointmentsTable(appointments) {
 
     tbody.innerHTML = appointments.map(apt => {
         const estadoColors = {
-            pendiente: '#FF9800',
+            pendiente:  '#FF9800',
             confirmada: '#4CAF50',
-            cancelada: '#F44336',
+            aceptada:   '#4CAF50',
+            cancelada:  '#F44336',
             completada: '#2196F3'
         };
-        const color = estadoColors[apt.estado] || '#999';
+        // Solicitudes aceptadas usan sol_estado; citas normales usan estado
+        const estadoRaw = (apt.es_solicitud == 1 && apt.sol_estado)
+            ? apt.sol_estado
+            : (apt.estado || 'pendiente');
+        const estadoLabel = estadoRaw === 'aceptada' ? 'confirmada' : estadoRaw;
+        const color = estadoColors[estadoRaw] || '#999';
 
         // Formatear fecha
         const parts = apt.fecha.split('-');
@@ -92,7 +98,7 @@ function displayAppointmentsTable(appointments) {
             </td>
             <td>
                 <span style="background:${color};color:white;padding:0.25rem 0.75rem;border-radius:12px;font-size:0.85rem;">
-                    ${apt.estado}
+                    ${estadoLabel}
                 </span>
             </td>
         </tr>`;

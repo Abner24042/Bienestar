@@ -114,6 +114,7 @@ $additionalCSS = ['perfil.css'];
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -172,40 +173,42 @@ $additionalCSS = ['perfil.css'];
     </div>
 </div>
 
-<!-- Modal: Editar Perfil (Solo para administradores) -->
+<!-- Modal: Editar Perfil (solo admin) -->
 <?php if ($user['rol'] === 'Administrador'): ?>
 <?php
 $modalId = 'modalEditProfile';
 $modalTitle = 'Editar Perfil';
 $modalSize = 'medium';
-$isAdmin = ($user['rol'] === 'Administrador');
-$readonlyAttr = $isAdmin ? '' : 'readonly style="background-color: #f5f5f5; cursor: not-allowed;"';
 $modalContent = '
 <form id="formEditProfile" action="' . BASE_URL . '/api/profile/update" method="POST">
     <div class="form-group">
-        <label for="edit_nombre">Nombre Completo' . ($isAdmin ? '' : ' <small style="color: #999;">(Solo admin puede modificar)</small>') . '</label>
-        <input type="text" id="edit_nombre" name="nombre" value="' . htmlspecialchars($user['nombre']) . '" required ' . $readonlyAttr . '>
+        <label for="edit_nombre">Nombre Completo</label>
+        <input type="text" id="edit_nombre" name="nombre" value="' . htmlspecialchars($user['nombre']) . '" required>
     </div>
 
     <div class="form-group">
-        <label for="edit_correo">Correo Electrónico' . ($isAdmin ? '' : ' <small style="color: #999;">(Solo admin puede modificar)</small>') . '</label>
-        <input type="email" id="edit_correo" name="correo" value="' . htmlspecialchars($user['correo']) . '" required ' . $readonlyAttr . '>
+        <label for="edit_correo">Correo Electrónico</label>
+        <input type="email" id="edit_correo" name="correo" value="' . htmlspecialchars($user['correo']) . '" required>
     </div>
 
     <div class="form-group">
-        <label for="edit_area">Área' . ($isAdmin ? '' : ' <small style="color: #999;">(Solo admin puede modificar)</small>') . '</label>
-        <input type="text" id="edit_area" name="area" value="' . htmlspecialchars($user['area'] ?? '') . '" ' . $readonlyAttr . '>
+        <label for="edit_area">Área</label>
+        <input type="text" id="edit_area" name="area" value="' . htmlspecialchars($user['area'] ?? '') . '">
     </div>
-    ' . ($isAdmin ? '' : '
-    <div style="padding: 15px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px; margin-bottom: 15px;">
-        <p style="margin: 0; color: #e65100; font-size: 0.9rem;">
-            ⚠️ Solo los administradores pueden modificar nombre, correo y área.
-        </p>
+
+    <div class="form-group">
+        <label for="edit_peso">Peso (kg)</label>
+        <input type="number" id="edit_peso" name="peso" step="0.1" min="0" max="500" value="' . htmlspecialchars($user['peso'] ?? '') . '" placeholder="Ej: 70.5">
     </div>
-    ') . '
+
+    <div class="form-group">
+        <label for="edit_altura">Altura (m)</label>
+        <input type="number" id="edit_altura" name="altura" step="0.01" min="0" max="3" value="' . htmlspecialchars($user['altura'] ?? '') . '" placeholder="Ej: 1.70">
+    </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-modal-close="modalEditProfile">Cancelar</button>
-        ' . ($isAdmin ? '<button type="submit" class="btn btn-primary">Guardar Cambios</button>' : '<button type="button" class="btn btn-secondary" data-modal-close="modalEditProfile">Cerrar</button>') . '
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </div>
 </form>
 ';
@@ -213,7 +216,7 @@ include '../../app/views/components/modal.php';
 ?>
 <?php endif; ?>
 
-<!-- Modal: Cambiar Contraseña (Solo para administradores) -->
+<!-- Modal: Cambiar Contraseña -->
 <?php if ($user['rol'] === 'Administrador'): ?>
 <?php
 $modalId = 'modalChangePassword';
