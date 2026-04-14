@@ -37,6 +37,7 @@ $ACTION = match(true) {
     $method === 'POST' && $segment === 'plan/remove'                => 'plan_remove',
     // ── Usuarios ───────────────────────────────────────────────
     $method === 'GET'  && $segment === 'usuarios-list'              => 'usuarios_list',
+    $method === 'POST' && $segment === 'usuario/salud'              => 'usuario_salud',
     $method === 'GET'  && $segment === 'recomendaciones'            => 'recomendaciones',
     // ── Solicitudes de cita ────────────────────────────────────
     $method === 'GET'  && $segment === 'solicitudes'                => 'solicitudes_get',
@@ -144,6 +145,23 @@ try {
         // ── Usuarios list ────────────────────────────────────────
         case 'usuarios_list': {
             echo json_encode(['success' => true, 'usuarios' => (new Plan())->getUsuarios()]);
+            break;
+        }
+
+        // ── Editar peso/altura de un usuario ─────────────────────
+        case 'usuario_salud': {
+            if (!in_array($yo['rol'], ['nutriologo', 'coach'])) throw new Exception('Sin permisos');
+            $data      = json_decode(file_get_contents('php://input'), true);
+            $usuarioId = (int)($data['usuario_id'] ?? 0);
+            $peso      = isset($data['peso'])   && $data['peso']   !== '' ? (float)$data['peso']   : null;
+            $altura    = isset($data['altura']) && $data['altura'] !== '' ? (float)$data['altura'] : null;
+            if (!$usuarioId) throw new Exception('ID de usuario requerido');
+            $userModel = new User();
+            $existing  = $userModel->findById($usuarioId);
+            if (!$existing) throw new Exception('Usuario no encontrado');
+            $userModel->update($usuarioId, array_merge($existing, ['peso' => $peso, 'altura' => $altura]));
+            $imc = ($peso && $altura && $altura > 0) ? round($peso / ($altura * $altura), 1) : null;
+            echo json_encode(['success' => true, 'imc' => $imc]);
             break;
         }
 

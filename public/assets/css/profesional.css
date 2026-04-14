@@ -272,6 +272,9 @@ select.pro-filter-input {
     overflow-y: auto;
     z-index: 100;
 }
+.pro-user-search-results:empty {
+    display: none;
+}
 .pro-user-search-item {
     display: flex;
     align-items: center;

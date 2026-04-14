@@ -92,6 +92,33 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         </div>
     </div>
 
+    <!-- Modal editar datos de salud del usuario -->
+    <?php if (in_array($user['rol'], ['nutriologo', 'coach'])): ?>
+    <div id="modalSaludUsuario" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--color-bg-primary,#fff);border-radius:16px;padding:1.75rem;max-width:400px;width:90%;position:relative;">
+            <h3 style="margin-bottom:1rem;">✏️ Editar datos de salud</h3>
+            <div class="form-group" style="display:flex;gap:1rem;">
+                <div style="flex:1;">
+                    <label>Peso (kg)</label>
+                    <input type="number" id="saludPesoInput" step="0.1" min="1" max="300"
+                           style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+                </div>
+                <div style="flex:1;">
+                    <label>Altura (m)</label>
+                    <input type="number" id="saludAlturaInput" step="0.01" min="0.5" max="2.5"
+                           style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid var(--color-border,#ddd);border-radius:8px;background:var(--color-bg-secondary,#f7f7f7);color:var(--color-text-primary);font-family:inherit;">
+                </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">El IMC se calculará automáticamente.</p>
+            <div id="saludMsg" style="display:none;margin-bottom:10px;"></div>
+            <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem;">
+                <button onclick="cerrarModalSalud()" class="btn btn-secondary">Cancelar</button>
+                <button onclick="guardarSalud()" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="admin-dashboard">
         <!-- Stats -->
         <div class="admin-stats-grid">
@@ -767,9 +794,9 @@ $additionalCSS = ['admin.css', 'profesional.css'];
         </div>
         <?php endif; ?>
 
-        <!-- Gestión de Planes Personalizados -->
+        <!-- Control de Usuarios -->
         <div class="admin-section" style="width: 100%; overflow: visible;">
-            <h2>📋 Gestión de Planes Personalizados</h2>
+            <h2>👥 Control de Usuarios</h2>
             <div class="form-group" style="max-width:420px; margin-bottom:1.5rem; position:relative;">
                 <label>Buscar usuario</label>
                 <input type="text" id="planUsuarioBuscar" class="form-control"
@@ -786,12 +813,15 @@ $additionalCSS = ['admin.css', 'profesional.css'];
             <div id="planUsuarioContainer" style="display:none;">
 
                 <!-- Datos de salud del usuario (solo nutriologo y coach) -->
-                <div id="planSaludUsuario" style="display:none;margin-bottom:1.5rem;padding:14px 18px;border-radius:10px;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+                <?php if (in_array($user['rol'], ['nutriologo', 'coach'])): ?>
+                <div id="planSaludUsuario" style="display:none;margin-bottom:1.5rem;padding:14px 18px;border-radius:10px;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);gap:24px;flex-wrap:wrap;align-items:center;">
                     <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#ff6b35;">Datos de Salud</span>
                     <span id="planSaludPeso" style="font-size:0.9rem;color:var(--color-text-secondary);">Peso: —</span>
                     <span id="planSaludAltura" style="font-size:0.9rem;color:var(--color-text-secondary);">Altura: —</span>
                     <span id="planSaludImc" style="font-size:0.9rem;color:var(--color-text-secondary);">IMC: —</span>
+                    <button onclick="abrirModalSalud()" style="margin-left:auto;padding:5px 14px;background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff6b35;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">✏️ Editar</button>
                 </div>
+                <?php endif; ?>
 
                 <?php if ($user['rol'] === 'coach'): ?>
                 <div style="margin-bottom:2rem;">
@@ -958,18 +988,6 @@ const PROFESSIONAL_USER = {
 <?php endif; ?>
 
 <?php
-$additionalJS = ['emailConfig.js', 'googleCalendar.js', 'profesional.js', 'profesional-planes.js', 'profesional-solicitudes.js'];
-if (in_array($user['rol'], ['nutriologo', 'coach'])) {
-    $additionalJS[] = 'item-picker.js';
-}
-if ($user['rol'] === 'nutriologo') {
-    $additionalJS[] = 'profesional-recetas.js';
-    $additionalJS[] = 'profesional-planes-alimenticios.js';
-}
-if ($user['rol'] === 'coach') {
-    $additionalJS[] = 'profesional-ejercicios.js';
-    $additionalJS[] = 'profesional-rutinas.js';
-}
-if ($user['rol'] === 'psicologo') $additionalJS[] = 'profesional-noticias.js';
+$additionalJS = ['emailConfig.js', 'googleCalendar.js', 'item-picker.js', 'profesional-panel.js'];
 include '../../../app/views/layouts/footer.php';
 ?>

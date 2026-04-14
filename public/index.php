@@ -106,6 +106,7 @@ $router->get('/api/mis-solicitudes',        APP_PATH . '/controllers/mis_solicit
 $router->post('/api/mis-solicitudes/vista', APP_PATH . '/controllers/mis_solicitudes_vista.php');
 $proCtrl = APP_PATH . '/controllers/pro_controller.php';
 $router->get('/api/pro/usuarios-list',                  $proCtrl);
+$router->post('/api/pro/usuario/salud',                 $proCtrl);
 $router->get('/api/pro/recomendaciones',                $proCtrl);
 $router->get('/api/pro/plan/get-usuario',               $proCtrl);
 $router->post('/api/pro/plan/asignar-receta',           $proCtrl);
