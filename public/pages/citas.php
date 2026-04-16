@@ -155,6 +155,7 @@ document.getElementById("formSolicitarCita").addEventListener("submit", async fu
         const data = await res.json();
         msg.style.display = "";
         if (data.success) {
+            if (typeof clearFormDraft === 'function') clearFormDraft('formSolicitarCita');
             msg.style.cssText = "display:block;padding:10px;background:#e8f5e9;color:#2e7d32;border-radius:6px;margin-bottom:12px;";
             msg.textContent   = "✓ Solicitud enviada. El especialista la revisará pronto.";
             setTimeout(() => {

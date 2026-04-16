@@ -170,6 +170,7 @@ async function guardarNoticia() {
         const result = await response.json();
 
         if (result.success) {
+            clearFormDraft('formNoticia');
             showToast(result.message, 'success');
             cerrarModalNoticia();
             cargarNoticias();

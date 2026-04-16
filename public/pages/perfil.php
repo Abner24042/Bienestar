@@ -180,7 +180,7 @@ $modalId = 'modalEditProfile';
 $modalTitle = 'Editar Perfil';
 $modalSize = 'medium';
 $modalContent = '
-<form id="formEditProfile" action="' . BASE_URL . '/api/profile/update" method="POST">
+<form id="formEditProfile" action="' . BASE_URL . '/api/profile/update" method="POST" data-no-draft>
     <div class="form-group">
         <label for="edit_nombre">Nombre Completo</label>
         <input type="text" id="edit_nombre" name="nombre" value="' . htmlspecialchars($user['nombre']) . '" required>
@@ -223,7 +223,7 @@ $modalId = 'modalChangePassword';
 $modalTitle = 'Cambiar Contraseña';
 $modalSize = 'medium';
 $modalContent = '
-<form id="formChangePassword" action="' . BASE_URL . '/api/profile/change-password" method="POST">
+<form id="formChangePassword" action="' . BASE_URL . '/api/profile/change-password" method="POST" data-no-draft>
     <div class="form-group">
         <label for="current_password">Contraseña Actual</label>
         <input type="password" id="current_password" name="current_password" required>
@@ -255,7 +255,7 @@ $modalId = 'modalChangePhoto';
 $modalTitle = 'Cambiar Foto de Perfil';
 $modalSize = 'medium';
 $modalContent = '
-<form id="formChangePhoto" action="' . BASE_URL . '/api/profile/upload-photo" method="POST" enctype="multipart/form-data">
+<form id="formChangePhoto" action="' . BASE_URL . '/api/profile/upload-photo" method="POST" enctype="multipart/form-data" data-no-draft>
     <div class="form-group">
         <label for="photo">Seleccionar Foto</label>
         <input type="file" id="photo" name="photo" accept="image/*" required>

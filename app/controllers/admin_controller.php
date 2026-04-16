@@ -24,6 +24,7 @@ $segment = trim($segment, '/');
 $ADMIN_ACTION = match(true) {
     $method === 'GET'  && $segment === 'stats'          => 'stats',
     $method === 'GET'  && $segment === 'appointments'   => 'appointments',
+    $method === 'POST' && $segment === 'appointments/delete' => 'appointments_delete',
     $method === 'GET'  && $segment === 'users'          => 'users',
     $method === 'POST' && $segment === 'users/save'     => 'users_save',
     $method === 'GET'  && $segment === 'noticias'       => 'noticias',
@@ -72,8 +73,22 @@ try {
 
         // ── GET appointments ────────────────────────────────────
         case 'appointments': {
-            $appointments = (new Cita())->getAll();
-            echo json_encode(['success' => true, 'appointments' => $appointments]);
+            $cita  = new Cita();
+            $all   = $cita->getAll();
+            $pendientes = count(array_filter($all, fn($a) => ($a['es_solicitud'] ?? 0) == 1 && ($a['sol_estado'] ?? '') === 'pendiente'));
+            echo json_encode(['success' => true, 'appointments' => $all, 'pendientes' => $pendientes]);
+            break;
+        }
+
+        // ── POST appointments/delete ─────────────────────────────
+        case 'appointments_delete': {
+            $body = json_decode(file_get_contents('php://input'), true);
+            $id   = (int)($body['id'] ?? 0);
+            if (!$id) { echo json_encode(['success' => false, 'message' => 'ID requerido']); break; }
+            $db   = (new Database())->getConnection();
+            $stmt = $db->prepare("DELETE FROM citas_bieniestar WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            echo json_encode(['success' => true, 'message' => 'Cita eliminada']);
             break;
         }
 

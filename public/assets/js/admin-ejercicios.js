@@ -161,6 +161,7 @@ async function guardarEjercicio() {
         const result = await response.json();
 
         if (result.success) {
+            clearFormDraft('formEjercicio');
             showToast(result.message, 'success');
             cerrarModalEjercicio();
             cargarEjercicios();

@@ -107,6 +107,7 @@ async function guardarUsuario() {
         const result = await response.json();
 
         if (result.success) {
+            clearFormDraft('formUsuario');
             showToast(result.message, 'success');
             cerrarModalUsuario();
             cargarUsuarios();

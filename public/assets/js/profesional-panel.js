@@ -302,6 +302,7 @@ async function handleCreateAppointment(e) {
             } else {
                 showProToast('Cita creada exitosamente', 'success');
             }
+            clearFormDraft('formProfessionalAppointment');
             form.reset();
             await loadProfessionalAppointments();
         } else {
@@ -410,6 +411,7 @@ async function guardarProEjercicio() {
         const response = await fetch(API_URL + '/pro/ejercicios', { method: 'POST', body: new FormData(form) });
         const result   = await response.json();
         if (result.success) {
+            clearFormDraft('formEjercicioPro');
             showProToast(result.message, 'success');
             document.getElementById('modalEjercicioPro').style.display = 'none';
             cargarProEjercicios();
@@ -498,6 +500,7 @@ async function guardarProNoticia() {
         const response = await fetch(API_URL + '/pro/noticias/save', { method: 'POST', body: formData });
         const result   = await response.json();
         if (result.success) {
+            clearFormDraft('formNoticiaPro');
             showProToast(result.message, 'success');
             document.getElementById('modalNoticiaPro').style.display = 'none';
             cargarProNoticias();
@@ -621,6 +624,7 @@ async function guardarProReceta() {
         const response = await fetch(API_URL + '/pro/recetas', { method: 'POST', body: new FormData(form) });
         const result   = await response.json();
         if (result.success) {
+            clearFormDraft('formRecetaPro');
             showProToast(result.message, 'success');
             document.getElementById('modalRecetaPro').style.display = 'none';
             cargarProRecetas();
@@ -966,6 +970,7 @@ async function guardarRutina() {
         const res  = await fetch(API_URL + '/pro/rutinas/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+        if (!payload.id) clearFormDraft('formRutina');
         cerrarModalRutina();
         showProToast(payload.id ? 'Rutina actualizada' : 'Rutina creada');
         cargarRutinas();
@@ -1406,6 +1411,7 @@ async function guardarRecPro() {
         const res  = await fetch(API_URL + '/pro/plan/recomendar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario_id: usuarioId, titulo, contenido, tipo }) });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+        clearFormDraft('formNuevaRecPro');
         document.getElementById('modalNuevaRecPro').style.display = 'none';
         showProToast('Recomendación guardada');
         cargarRecomendacionesPro();
@@ -1604,6 +1610,7 @@ async function guardarPlanAlim() {
         const res  = await fetch(API_URL + '/pro/planes-alimenticios/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
+        if (!payload.id) clearFormDraft('formPlanAlim');
         cerrarModalPlanAlim();
         showProToast(payload.id ? 'Plan actualizado' : 'Plan creado');
         cargarPlanesAlimenticios();

@@ -92,7 +92,10 @@
       "Bash(node deploy.js \"app/views/layouts/header.php\" \"public/assets/css/profesional.css\" \"public/pages/profesional/panel.php\")",
       "Bash(node deploy.js \"public/assets/css/profesional.css\" \"public/assets/js/profesional-recetas.js\" \"app/views/layouts/header.php\")",
       "Bash(node deploy.js \"public/assets/css/chat.css\" \"public/assets/js/profesional-solicitudes.js\" \"app/views/layouts/header.php\")",
-      "Bash(node deploy.js \"public/pages/citas.php\")"
+      "Bash(node deploy.js \"public/pages/citas.php\")",
+      "Bash(sed -n '160,200p' c:/xampp/htdocs/a/Bienestar/public/assets/js/admin-recetas.js)",
+      "Bash(sed -n '155,200p' c:/xampp/htdocs/a/Bienestar/public/assets/js/admin-noticias.js)",
+      "Bash(sed -n '95,120p' c:/xampp/htdocs/a/Bienestar/public/assets/js/admin-usuarios.js)"
     ],
     "additionalDirectories": [
       "\\tmp"

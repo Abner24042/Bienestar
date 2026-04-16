@@ -6,6 +6,7 @@ let chatBadgeInt = null;
 let chatConvInt = null;
 let chatMiId = null;
 let chatEsPro = false;
+let chatSending = false;      // bloquea envíos duplicados
 
 // chatSonido() y chatActualizarBadgeGlobal() viven en chat-notify.js
 // ese script carga en todas las paginas — aqui solo usamos las funciones
@@ -262,10 +263,12 @@ async function chatEnviarArchivo(input) {
 ───────────────────────────────────────────────────────────────────────── */
 
 async function chatEnviar() {
+    if (chatSending) return;
     const input = document.getElementById('chatInput');
     const contenido = input?.value.trim();
     if (!contenido || !chatConvActiva) return;
 
+    chatSending = true;
     input.value = '';
     input.style.height = 'auto';
 
@@ -285,7 +288,7 @@ async function chatEnviar() {
             await chatCargarMensajes('chatMessages', true);
             chatCargarConversaciones();
             chatReiniciarPolling(3000, 'chatMessages');
-        } catch (e) { }
+        } catch (e) { } finally { chatSending = false; }
         return;
     }
 
@@ -297,7 +300,7 @@ async function chatEnviar() {
         });
         const data = await res.json();
         if (data.success) await chatCargarMensajes('chatMessages', true);
-    } catch (e) { }
+    } catch (e) { } finally { chatSending = false; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -382,10 +385,12 @@ function chatDrawerVolverLista() {
 }
 
 async function chatDrawerEnviar() {
+    if (chatSending) return;
     const input = document.getElementById('chatDrawerInput');
     const contenido = input?.value.trim();
     if (!contenido || !chatConvActiva?.id) return;
 
+    chatSending = true;
     input.value = '';
     try {
         const res = await fetch(API_URL + '/chat/enviar', {
@@ -395,7 +400,7 @@ async function chatDrawerEnviar() {
         });
         const data = await res.json();
         if (data.success) await chatCargarMensajes('chatDrawerMessages', true);
-    } catch (e) { }
+    } catch (e) { } finally { chatSending = false; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

@@ -118,8 +118,9 @@ $router->post('/api/pro/plan/remove',                   $proCtrl);
 
 
 $adminCtrl = APP_PATH . '/controllers/admin_controller.php';
-$router->get('/api/admin/stats',            $adminCtrl);
-$router->get('/api/admin/appointments',     $adminCtrl);
+$router->get('/api/admin/stats',                    $adminCtrl);
+$router->get('/api/admin/appointments',             $adminCtrl);
+$router->post('/api/admin/appointments/delete',     $adminCtrl);
 $router->get('/api/admin/users',            $adminCtrl);
 $router->post('/api/admin/users/save',      $adminCtrl);
 $router->get('/api/admin/noticias',         $adminCtrl);

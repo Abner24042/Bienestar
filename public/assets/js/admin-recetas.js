@@ -183,6 +183,7 @@ async function guardarReceta() {
         const result = await response.json();
 
         if (result.success) {
+            clearFormDraft('formReceta');
             showToast(result.message, 'success');
             cerrarModalReceta();
             cargarRecetas();
