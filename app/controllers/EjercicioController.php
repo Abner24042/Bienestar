@@ -208,6 +208,12 @@ class EjercicioController extends BaseController
         $ok = $plan->asignarEjercicio($usuarioId, $ejercicioId, $user['correo'], $notas);
 
         if ($ok) {
+            // Obtener título para el historial
+            $db   = (new Database())->getConnection();
+            $stmE = $db->prepare("SELECT titulo FROM ejercicios WHERE id = :id LIMIT 1");
+            $stmE->execute([':id' => $ejercicioId]);
+            $ejTitulo = ($stmE->fetch()['titulo'] ?? 'Ejercicio');
+            $plan->logPlanChange($usuarioId, 'ejercicio', $ejTitulo, 'asignado', $user['correo'], $user['nombre'], $notas);
             $this->success([], 'Ejercicio asignado al plan');
         } else {
             $this->error('Error al asignar');

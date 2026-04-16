@@ -1747,6 +1747,170 @@ async function confirmarAsignarPlanAlim() {
 
 
 /* ════════════════════════════════════════════════
+   SECCIÓN: HISTORIAL DE USUARIO
+   ════════════════════════════════════════════════ */
+
+let _historialData = null;
+let _histTabActual = 'salud';
+
+async function abrirHistorial() {
+    const userId = document.getElementById('planUsuarioId').value;
+    const nombre = document.getElementById('planUsuarioNombreTag').textContent;
+    if (!userId) return;
+
+    const modal = document.getElementById('modalHistorial');
+    if (!modal) return;
+
+    document.getElementById('historialUsuarioNombre').textContent = nombre;
+    document.getElementById('histPanelSalud').innerHTML  = '<p style="color:#999;text-align:center;padding:2rem 0;">Cargando...</p>';
+    document.getElementById('histPanelPlanes').innerHTML = '<p style="color:#999;text-align:center;padding:2rem 0;">Cargando...</p>';
+    modal.style.display = 'flex';
+    switchHistTab('salud');
+
+    try {
+        const res  = await fetch(API_URL + '/pro/historial-usuario?usuario_id=' + userId);
+        const data = await res.json();
+        if (!data.success) throw new Error();
+        _historialData = data;
+        renderHistorialSalud(data.historial_salud);
+        renderHistorialPlanes(data.historial_planes);
+    } catch (e) {
+        document.getElementById('histPanelSalud').innerHTML  = '<p style="color:#f44336;text-align:center;padding:2rem 0;">Error al cargar historial.</p>';
+        document.getElementById('histPanelPlanes').innerHTML = '<p style="color:#f44336;text-align:center;padding:2rem 0;">Error al cargar historial.</p>';
+    }
+}
+
+function cerrarHistorial() {
+    const modal = document.getElementById('modalHistorial');
+    if (modal) modal.style.display = 'none';
+}
+
+function switchHistTab(tab) {
+    _histTabActual = tab;
+    const isSalud  = tab === 'salud';
+    document.getElementById('histPanelSalud').style.display  = isSalud  ? '' : 'none';
+    document.getElementById('histPanelPlanes').style.display = !isSalud ? '' : 'none';
+
+    const btnSalud  = document.getElementById('histTabSalud');
+    const btnPlanes = document.getElementById('histTabPlanes');
+    if (isSalud) {
+        btnSalud.style.borderBottomColor  = '#ff6b35';
+        btnSalud.style.color              = '#ff6b35';
+        btnSalud.style.fontWeight         = '700';
+        btnPlanes.style.borderBottomColor = 'transparent';
+        btnPlanes.style.color             = 'var(--color-text-secondary)';
+        btnPlanes.style.fontWeight        = '600';
+    } else {
+        btnPlanes.style.borderBottomColor = '#ff6b35';
+        btnPlanes.style.color             = '#ff6b35';
+        btnPlanes.style.fontWeight        = '700';
+        btnSalud.style.borderBottomColor  = 'transparent';
+        btnSalud.style.color              = 'var(--color-text-secondary)';
+        btnSalud.style.fontWeight         = '600';
+    }
+}
+
+function renderHistorialSalud(lista) {
+    const panel = document.getElementById('histPanelSalud');
+    if (!lista || !lista.length) {
+        panel.innerHTML = `
+            <div style="text-align:center;padding:2.5rem 0;color:#999;">
+                <div style="font-size:2rem;margin-bottom:0.5rem;">⚖️</div>
+                <p style="margin:0;">Sin registros de salud aún.</p>
+                <p style="margin:4px 0 0;font-size:0.82rem;">Los cambios de peso y altura aparecerán aquí.</p>
+            </div>`;
+        return;
+    }
+
+    panel.innerHTML = `
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.87rem;">
+                <thead>
+                    <tr style="border-bottom:2px solid var(--color-border,#eee);">
+                        <th style="text-align:left;padding:8px 10px;color:#ff6b35;font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;">Fecha</th>
+                        <th style="text-align:center;padding:8px 10px;color:#ff6b35;font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;">Peso</th>
+                        <th style="text-align:center;padding:8px 10px;color:#ff6b35;font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;">Altura</th>
+                        <th style="text-align:center;padding:8px 10px;color:#ff6b35;font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;">IMC</th>
+                        <th style="text-align:left;padding:8px 10px;color:#ff6b35;font-size:0.78rem;text-transform:uppercase;letter-spacing:.5px;">Registrado por</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${lista.map((r, i) => {
+                        const fecha = r.fecha ? r.fecha.substring(0, 16).replace('T', ' ') : '—';
+                        const imc   = r.imc ? parseFloat(r.imc).toFixed(1) : '—';
+                        const imcColor = r.imc
+                            ? (r.imc < 18.5 ? '#2196F3' : r.imc < 25 ? '#4CAF50' : r.imc < 30 ? '#FF9800' : '#F44336')
+                            : '#999';
+                        const isFirst = i === 0;
+                        return `<tr style="border-bottom:1px solid var(--color-border,#f0f0f0);${isFirst ? 'background:rgba(255,107,53,0.04);' : ''}">
+                            <td style="padding:9px 10px;color:var(--color-text-secondary);">${esc(fecha)}</td>
+                            <td style="padding:9px 10px;text-align:center;font-weight:600;">${r.peso ? parseFloat(r.peso).toFixed(1) + ' kg' : '—'}</td>
+                            <td style="padding:9px 10px;text-align:center;font-weight:600;">${r.altura ? parseFloat(r.altura).toFixed(2) + ' m' : '—'}</td>
+                            <td style="padding:9px 10px;text-align:center;font-weight:700;color:${imcColor};">${imc}</td>
+                            <td style="padding:9px 10px;color:var(--color-text-secondary);font-size:0.82rem;">${esc(r.profesional_nombre || r.profesional_email || '—')}</td>
+                        </tr>`;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+        <p style="margin:10px 0 0;font-size:0.78rem;color:#bbb;">IMC: <span style="color:#2196F3;">&#60;18.5 bajo peso</span> · <span style="color:#4CAF50;">18.5–24.9 normal</span> · <span style="color:#FF9800;">25–29.9 sobrepeso</span> · <span style="color:#F44336;">≥30 obesidad</span></p>`;
+}
+
+function renderHistorialPlanes(lista) {
+    const panel = document.getElementById('histPanelPlanes');
+    if (!lista || !lista.length) {
+        panel.innerHTML = `
+            <div style="text-align:center;padding:2.5rem 0;color:#999;">
+                <div style="font-size:2rem;margin-bottom:0.5rem;">📄</div>
+                <p style="margin:0;">Sin historial de planes aún.</p>
+                <p style="margin:4px 0 0;font-size:0.82rem;">Las asignaciones y cambios de plan aparecerán aquí.</p>
+            </div>`;
+        return;
+    }
+
+    const tipoIcon = {
+        ejercicio:        '💪',
+        receta:           '🍽️',
+        recomendacion:    '💬',
+        rutina:           '🏃',
+        plan_alimenticio: '🥗',
+    };
+    const tipoLabel = {
+        ejercicio:        'Ejercicio',
+        receta:           'Receta',
+        recomendacion:    'Recomendación',
+        rutina:           'Rutina',
+        plan_alimenticio: 'Plan alimenticio',
+    };
+    const accionColor = { asignado: '#4CAF50', removido: '#F44336' };
+    const accionLabel = { asignado: '+ Asignado', removido: '− Removido' };
+
+    panel.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            ${lista.map(r => {
+                const fecha = r.fecha ? r.fecha.substring(0, 16).replace('T', ' ') : '—';
+                const icon  = tipoIcon[r.tipo]  || '📋';
+                const label = tipoLabel[r.tipo] || r.tipo;
+                const aColor = accionColor[r.accion] || '#999';
+                const aLabel = accionLabel[r.accion] || r.accion;
+                return `<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border-radius:10px;border:1px solid var(--color-border,#eee);background:var(--color-bg-primary,#fff);">
+                    <div style="font-size:1.3rem;line-height:1;margin-top:1px;">${icon}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <span style="font-weight:700;font-size:0.9rem;">${esc(r.item_titulo || '—')}</span>
+                            <span style="font-size:0.72rem;padding:2px 8px;border-radius:10px;background:${aColor}20;color:${aColor};font-weight:600;">${aLabel}</span>
+                            <span style="font-size:0.72rem;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,0.06);color:var(--color-text-secondary);">${label}</span>
+                        </div>
+                        ${r.notas ? `<p style="margin:3px 0 0;font-size:0.8rem;color:var(--color-text-secondary);">${esc(r.notas)}</p>` : ''}
+                        <p style="margin:3px 0 0;font-size:0.78rem;color:#bbb;">${esc(fecha)} · ${esc(r.profesional_nombre || r.profesional_email || '—')}</p>
+                    </div>
+                </div>`;
+            }).join('')}
+        </div>`;
+}
+
+
+/* ════════════════════════════════════════════════
    SECCIÓN: SOLICITUDES
    ════════════════════════════════════════════════ */
 

@@ -128,6 +128,7 @@ $router->post('/api/admin/noticias/delete', $adminCtrl);
 $router->get('/api/admin/export',           $adminCtrl);
 
 
+$router->get('/api/pro/historial-usuario',              $proCtrl);
 $router->get('/api/pro/solicitudes',                    $proCtrl);
 $router->get('/api/pro/solicitudes/count',              $proCtrl);
 $router->post('/api/pro/solicitudes/accion',            $proCtrl);

@@ -21,6 +21,18 @@ class Plan {
 
     private function ensureTables() {
         $sqls = [
+            "CREATE TABLE IF NOT EXISTS historial_planes (
+                id                INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id        INT NOT NULL,
+                tipo              VARCHAR(50)  NOT NULL,
+                item_titulo       VARCHAR(255),
+                accion            VARCHAR(20)  NOT NULL,
+                profesional_email VARCHAR(255),
+                profesional_nombre VARCHAR(255),
+                notas             TEXT,
+                fecha             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_usuario (usuario_id)
+            )",
             "CREATE TABLE IF NOT EXISTS plan_ejercicios (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 usuario_id INT NOT NULL,
@@ -132,6 +144,67 @@ class Plan {
             return compact('ejercicios', 'recetas', 'recomendaciones');
         } catch (PDOException $e) {
             return ['ejercicios' => [], 'recetas' => [], 'recomendaciones' => []];
+        }
+    }
+
+    public function getAsignacionInfo($tipo, $id) {
+        try {
+            switch ($tipo) {
+                case 'ejercicio':
+                    $stmt = $this->db->prepare(
+                        "SELECT pe.usuario_id, e.titulo FROM plan_ejercicios pe
+                         JOIN ejercicios e ON e.id = pe.ejercicio_id WHERE pe.id = :id LIMIT 1"
+                    );
+                    break;
+                case 'receta':
+                    $stmt = $this->db->prepare(
+                        "SELECT pr.usuario_id, r.titulo FROM plan_recetas pr
+                         JOIN recetas r ON r.id = pr.receta_id WHERE pr.id = :id LIMIT 1"
+                    );
+                    break;
+                case 'recomendacion':
+                    $stmt = $this->db->prepare(
+                        "SELECT usuario_id, titulo FROM recomendaciones WHERE id = :id LIMIT 1"
+                    );
+                    break;
+                default: return null;
+            }
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch() ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function logPlanChange($usuarioId, $tipo, $itemTitulo, $accion, $profesionalEmail, $profesionalNombre, $notas = null) {
+        try {
+            $stmt = $this->db->prepare(
+                "INSERT INTO historial_planes (usuario_id, tipo, item_titulo, accion, profesional_email, profesional_nombre, notas)
+                 VALUES (:uid, :tipo, :titulo, :accion, :email, :nombre, :notas)"
+            );
+            $stmt->execute([
+                ':uid'    => $usuarioId,
+                ':tipo'   => $tipo,
+                ':titulo' => $itemTitulo,
+                ':accion' => $accion,
+                ':email'  => $profesionalEmail,
+                ':nombre' => $profesionalNombre,
+                ':notas'  => $notas,
+            ]);
+        } catch (PDOException $e) {
+            error_log('logPlanChange: ' . $e->getMessage());
+        }
+    }
+
+    public function getHistorialPlanes($usuarioId) {
+        try {
+            $stmt = $this->db->prepare(
+                "SELECT * FROM historial_planes WHERE usuario_id = :uid ORDER BY fecha DESC LIMIT 200"
+            );
+            $stmt->execute([':uid' => $usuarioId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
         }
     }
 

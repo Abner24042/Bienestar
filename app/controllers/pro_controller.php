@@ -39,6 +39,7 @@ $ACTION = match(true) {
     $method === 'GET'  && $segment === 'usuarios-list'              => 'usuarios_list',
     $method === 'POST' && $segment === 'usuario/salud'              => 'usuario_salud',
     $method === 'GET'  && $segment === 'recomendaciones'            => 'recomendaciones',
+    $method === 'GET'  && $segment === 'historial-usuario'          => 'historial_usuario',
     // ── Solicitudes de cita ────────────────────────────────────
     $method === 'GET'  && $segment === 'solicitudes'                => 'solicitudes_get',
     $method === 'GET'  && $segment === 'solicitudes/count'          => 'solicitudes_count',
@@ -101,7 +102,16 @@ try {
             $recetaId  = $data['receta_id']  ?? null;
             $notas     = trim($data['notas'] ?? '') ?: null;
             if (!$usuarioId || !$recetaId) throw new Exception('Datos incompletos');
-            $ok = (new Plan())->asignarReceta($usuarioId, $recetaId, $yo['correo'], $notas);
+            $planModel = new Plan();
+            $ok = $planModel->asignarReceta($usuarioId, $recetaId, $yo['correo'], $notas);
+            if ($ok) {
+                // Obtener título de la receta para el historial
+                $db   = (new Database())->getConnection();
+                $stmR = $db->prepare("SELECT titulo FROM recetas WHERE id = :id LIMIT 1");
+                $stmR->execute([':id' => $recetaId]);
+                $recTitulo = ($stmR->fetch()['titulo'] ?? 'Receta');
+                $planModel->logPlanChange($usuarioId, 'receta', $recTitulo, 'asignado', $yo['correo'], $yo['nombre'], $notas);
+            }
             echo json_encode($ok
                 ? ['success' => true,  'message' => 'Receta asignada al plan']
                 : ['success' => false, 'message' => 'Error al asignar']);
@@ -116,7 +126,11 @@ try {
             $contenido = trim($data['contenido'] ?? '');
             $tipo      = $data['tipo'] ?? 'general';
             if (!$usuarioId || !$titulo) throw new Exception('Datos incompletos');
-            $id = (new Plan())->addRecomendacion($usuarioId, $yo['correo'], $titulo, $contenido, $tipo);
+            $planModel = new Plan();
+            $id = $planModel->addRecomendacion($usuarioId, $yo['correo'], $titulo, $contenido, $tipo);
+            if ($id) {
+                $planModel->logPlanChange($usuarioId, 'recomendacion', $titulo, 'asignado', $yo['correo'], $yo['nombre'], $contenido ?: null);
+            }
             echo json_encode($id
                 ? ['success' => true,  'message' => 'Recomendación agregada']
                 : ['success' => false, 'message' => 'Error al agregar']);
@@ -130,12 +144,17 @@ try {
             $id    = $data['id']   ?? null;
             if (!$tipo || !$id) throw new Exception('Datos incompletos');
             $model = new Plan();
+            // Obtener info antes de eliminar para el historial
+            $info = $model->getAsignacionInfo($tipo, $id);
             $ok = match ($tipo) {
                 'ejercicio'     => $model->removeEjercicio($id),
                 'receta'        => $model->removeReceta($id),
                 'recomendacion' => $model->removeRecomendacion($id, $yo['correo']),
                 default         => false,
             };
+            if ($ok && $info) {
+                $model->logPlanChange($info['usuario_id'], $tipo, $info['titulo'], 'removido', $yo['correo'], $yo['nombre']);
+            }
             echo json_encode($ok
                 ? ['success' => true,  'message' => 'Eliminado del plan']
                 : ['success' => false, 'message' => 'No encontrado o sin permisos']);
@@ -161,6 +180,8 @@ try {
             if (!$existing) throw new Exception('Usuario no encontrado');
             $userModel->update($usuarioId, array_merge($existing, ['peso' => $peso, 'altura' => $altura]));
             $imc = ($peso && $altura && $altura > 0) ? round($peso / ($altura * $altura), 1) : null;
+            // Registrar en historial de salud
+            $userModel->registrarSalud($usuarioId, $yo['correo'], $peso, $altura, $imc);
             echo json_encode(['success' => true, 'imc' => $imc]);
             break;
         }
@@ -168,6 +189,22 @@ try {
         // ── Recomendaciones del profesional ──────────────────────
         case 'recomendaciones': {
             echo json_encode(['success' => true, 'recomendaciones' => (new Plan())->getRecomendacionesByPro($yo['correo'])]);
+            break;
+        }
+
+        // ── Historial de un usuario ───────────────────────────────
+        case 'historial_usuario': {
+            $usuarioId = (int)($_GET['usuario_id'] ?? 0);
+            if (!$usuarioId) throw new Exception('ID requerido');
+            $userModel = new User();
+            $planModel = new Plan();
+            $salud     = $userModel->getHistorialSalud($usuarioId);
+            $planes    = $planModel->getHistorialPlanes($usuarioId);
+            echo json_encode([
+                'success' => true,
+                'historial_salud'  => $salud,
+                'historial_planes' => $planes,
+            ]);
             break;
         }
 
@@ -337,6 +374,9 @@ try {
                 $planModel->asignarEjercicio($input['usuario_id'], $ej['ejercicio_id'], $yo['correo'], $notas);
                 $asignados++;
             }
+            // Registrar en historial como una sola entrada de rutina
+            $notasLog = !empty($input['notas']) ? $input['notas'] : null;
+            $planModel->logPlanChange($input['usuario_id'], 'rutina', $rutina['nombre'], 'asignado', $yo['correo'], $yo['nombre'], $notasLog);
             echo json_encode(['success' => true, 'asignados' => $asignados, 'message' => "$asignados ejercicio(s) agregados al plan del usuario"]);
             break;
         }
@@ -408,6 +448,9 @@ try {
                 $planModel->asignarReceta($input['usuario_id'], $r['receta_id'], $yo['correo'], $notas, (int)$r['dia_semana']);
                 $asignados++;
             }
+            // Registrar en historial como una sola entrada de plan alimenticio
+            $notasLog = !empty($input['notas']) ? $input['notas'] : null;
+            $planModel->logPlanChange($input['usuario_id'], 'plan_alimenticio', $plan['nombre'], 'asignado', $yo['correo'], $yo['nombre'], $notasLog);
             echo json_encode(['success' => true, 'asignados' => $asignados, 'message' => "$asignados receta(s) agregadas al plan del usuario"]);
             break;
         }

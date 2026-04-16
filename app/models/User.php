@@ -23,6 +23,58 @@ class User {
                 // Column already exists — ignore
             }
         }
+        $this->ensureHistorialSaludTable();
+    }
+
+    private function ensureHistorialSaludTable() {
+        try {
+            $this->db->exec("CREATE TABLE IF NOT EXISTS historial_salud (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                usuario_id      INT NOT NULL,
+                profesional_email VARCHAR(255),
+                peso            DECIMAL(5,2),
+                altura          DECIMAL(4,2),
+                imc             DECIMAL(4,1),
+                fecha           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                KEY idx_usuario (usuario_id)
+            )");
+        } catch (PDOException $e) {}
+    }
+
+    public function registrarSalud($usuarioId, $profesionalEmail, $peso, $altura, $imc) {
+        try {
+            $stmt = $this->db->prepare(
+                "INSERT INTO historial_salud (usuario_id, profesional_email, peso, altura, imc)
+                 VALUES (:uid, :email, :peso, :altura, :imc)"
+            );
+            $stmt->execute([
+                ':uid'    => $usuarioId,
+                ':email'  => $profesionalEmail,
+                ':peso'   => $peso,
+                ':altura' => $altura,
+                ':imc'    => $imc,
+            ]);
+        } catch (PDOException $e) {
+            error_log('registrarSalud: ' . $e->getMessage());
+        }
+    }
+
+    public function getHistorialSalud($usuarioId) {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT hs.*,
+                       u.nombre AS profesional_nombre
+                FROM historial_salud hs
+                LEFT JOIN usuarios u ON u.correo = hs.profesional_email
+                WHERE hs.usuario_id = :uid
+                ORDER BY hs.fecha DESC
+                LIMIT 100
+            ");
+            $stmt->execute([':uid' => $usuarioId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
     }
     
     /**

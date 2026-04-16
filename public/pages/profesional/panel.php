@@ -119,6 +119,40 @@ $additionalCSS = ['admin.css', 'profesional.css'];
     </div>
     <?php endif; ?>
 
+    <!-- Modal Historial de Usuario -->
+    <div id="modalHistorial" onclick="if(event.target===this)cerrarHistorial()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem;">
+        <div style="background:var(--color-bg-primary,#fff);border-radius:16px;width:100%;max-width:680px;margin:auto;overflow:hidden;">
+            <!-- Header -->
+            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--color-border,#eee);display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <h3 style="margin:0;font-size:1.05rem;">📋 Historial del usuario</h3>
+                    <p id="historialUsuarioNombre" style="margin:2px 0 0;font-size:0.82rem;color:var(--color-text-secondary);"></p>
+                </div>
+                <button onclick="cerrarHistorial()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--color-text-secondary);line-height:1;">×</button>
+            </div>
+            <!-- Tabs -->
+            <div style="display:flex;border-bottom:1px solid var(--color-border,#eee);">
+                <button id="histTabSalud" onclick="switchHistTab('salud')"
+                    style="flex:1;padding:0.75rem;border:none;background:none;font-weight:700;font-size:0.88rem;cursor:pointer;border-bottom:2px solid #ff6b35;color:#ff6b35;">
+                    ⚖️ Salud
+                </button>
+                <button id="histTabPlanes" onclick="switchHistTab('planes')"
+                    style="flex:1;padding:0.75rem;border:none;background:none;font-weight:600;font-size:0.88rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);">
+                    📄 Planes
+                </button>
+            </div>
+            <!-- Contenido tabs -->
+            <div style="max-height:65vh;overflow-y:auto;">
+                <div id="histPanelSalud" style="padding:1.25rem 1.5rem;">
+                    <p style="color:#999;text-align:center;">Cargando...</p>
+                </div>
+                <div id="histPanelPlanes" style="display:none;padding:1.25rem 1.5rem;">
+                    <p style="color:#999;text-align:center;">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="admin-dashboard">
         <!-- Stats -->
         <div class="admin-stats-grid">
@@ -806,6 +840,7 @@ $additionalCSS = ['admin.css', 'profesional.css'];
                 <input type="hidden" id="planUsuarioId">
                 <div id="planUsuarioTag" style="display:none;margin-top:8px;padding:7px 12px;background:rgba(255,107,53,0.12);border-radius:8px;font-size:0.85rem;color:#ff6b35;display:flex;align-items:center;gap:8px;">
                     <span id="planUsuarioNombreTag" style="flex:1;"></span>
+                    <button onclick="abrirHistorial()" style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.4);color:#ff6b35;border-radius:6px;cursor:pointer;font-size:0.78rem;font-weight:600;padding:3px 10px;line-height:1.4;">📋 Historial</button>
                     <button onclick="planLimpiarUsuario()" style="background:none;border:none;cursor:pointer;color:#ff6b35;font-size:1.1rem;padding:0;line-height:1;">×</button>
                 </div>
             </div>
