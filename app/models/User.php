@@ -13,8 +13,9 @@ class User {
 
     private function ensureColumns() {
         $cols = [
-            'peso'   => 'DECIMAL(5,2) DEFAULT NULL',
-            'altura' => 'DECIMAL(4,2) DEFAULT NULL',
+            'peso'        => 'DECIMAL(5,2) DEFAULT NULL',
+            'altura'      => 'DECIMAL(4,2) DEFAULT NULL',
+            'login_count' => 'INT DEFAULT 0',
         ];
         foreach ($cols as $col => $def) {
             try {
@@ -24,6 +25,19 @@ class User {
             }
         }
         $this->ensureHistorialSaludTable();
+    }
+
+    public function incrementLoginCount($id) {
+        try {
+            $this->db->prepare("UPDATE {$this->table} SET login_count = COALESCE(login_count, 0) + 1 WHERE id = :id")
+                     ->execute([':id' => $id]);
+            $stmt = $this->db->prepare("SELECT login_count FROM {$this->table} WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log('incrementLoginCount: ' . $e->getMessage());
+            return 1;
+        }
     }
 
     private function ensureHistorialSaludTable() {

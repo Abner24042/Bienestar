@@ -118,8 +118,24 @@ function renderEjerciciosPaginated() {
 }
 
 function mostrarMasEjercicios() {
+    const prevVisible = exerciseVisible;
     exerciseVisible += porFilaEj();
-    renderEjerciciosPaginated();
+
+    const grid = document.getElementById('exercisesGrid');
+    const btnWrap = grid.querySelector('[style*="grid-column"]');
+    if (btnWrap) btnWrap.remove();
+
+    const newCards = filteredExercises.slice(prevVisible, exerciseVisible);
+    grid.insertAdjacentHTML('beforeend', newCards.map((e, i) => renderEjercicioCard(e, i)).join(''));
+
+    if (exerciseVisible < filteredExercises.length) {
+        const restantes = filteredExercises.length - exerciseVisible;
+        grid.insertAdjacentHTML('beforeend', `<div style="grid-column:1/-1;text-align:center;margin:1.5rem 0 0.5rem;">
+            <button class="btn btn-secondary" onclick="mostrarMasEjercicios()" style="min-width:190px;">
+                Mostrar más (${restantes} restante${restantes !== 1 ? 's' : ''})
+            </button>
+        </div>`);
+    }
 }
 
 function renderEjercicioCard(e, idx = 0) {

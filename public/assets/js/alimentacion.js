@@ -142,8 +142,24 @@ function renderRecetasPaginated() {
 }
 
 function mostrarMasRecetas() {
+    const prevVisible = recipeVisible;
     recipeVisible += porFilaR();
-    renderRecetasPaginated();
+
+    const grid = document.getElementById('recipesGrid');
+    const btnWrap = grid.querySelector('[style*="grid-column"]');
+    if (btnWrap) btnWrap.remove();
+
+    const newCards = filteredRecipes.slice(prevVisible, recipeVisible);
+    grid.insertAdjacentHTML('beforeend', newCards.map((r, i) => renderRecetaCard(r, i)).join(''));
+
+    if (recipeVisible < filteredRecipes.length) {
+        const restantes = filteredRecipes.length - recipeVisible;
+        grid.insertAdjacentHTML('beforeend', `<div style="grid-column:1/-1;text-align:center;margin:1.5rem 0 0.5rem;">
+            <button class="btn btn-secondary" onclick="mostrarMasRecetas()" style="min-width:190px;">
+                Mostrar más (${restantes} restante${restantes !== 1 ? 's' : ''})
+            </button>
+        </div>`);
+    }
 }
 
 function renderRecetaCard(r, idx = 0) {

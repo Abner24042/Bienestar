@@ -109,6 +109,11 @@ try {
     $_SESSION['login_method'] = 'google';
     $_SESSION['google_token'] = $token;
 
+    $newCount = $userModel->incrementLoginCount($user['id']);
+    $_SESSION['user']['login_count']  = $newCount;
+    $_SESSION['tutorial_count']        = $newCount;
+    if ($newCount <= 3) $_SESSION['tutorial_fresh_login'] = true;
+
     // Redirigir al dashboard
     redirect('dashboard');
     exit;

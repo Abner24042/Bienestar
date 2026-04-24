@@ -127,13 +127,6 @@ include '../../app/views/layouts/header.php';
     </div>
 </div>
 
-<!-- FAB Chat -->
-<a href="<?php echo url('chat'); ?>" class="chat-fab" aria-label="Mensajes">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-    <span id="chatFabBadge" class="chat-fab-badge"></span>
-</a>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

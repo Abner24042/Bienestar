@@ -34,7 +34,11 @@ class AuthController {
             
             // Crear sesión
             $this->createSession($user);
-            
+            $newCount = $this->userModel->incrementLoginCount($user['id']);
+            $_SESSION['user']['login_count'] = $newCount;
+            $_SESSION['tutorial_count']       = $newCount;
+            if ($newCount <= 3) $_SESSION['tutorial_fresh_login'] = true;
+
             return [
                 'success' => true,
                 'message' => 'Login exitoso',
@@ -83,7 +87,11 @@ class AuthController {
                 
                 // Crear sesión
                 $this->createSession($user);
-                
+                $newCount = $this->userModel->incrementLoginCount($user['id']);
+                $_SESSION['user']['login_count']  = $newCount;
+                $_SESSION['tutorial_count']        = $newCount;
+                $_SESSION['tutorial_fresh_login']  = true;
+
                 return [
                     'success' => true,
                     'message' => 'Registro exitoso',

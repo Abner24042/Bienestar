@@ -349,14 +349,13 @@
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
     margin-bottom: 36px;
-    overflow: hidden;
 }
 
 .tips-scroll {
     display: flex;
     gap: 20px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding: 6px 4px 12px;
     scrollbar-width: thin;
     scrollbar-color: #ff6b35 #f5f5f5;
 }
@@ -406,9 +405,13 @@
     right: 16px;
     font-size: 2rem;
     font-weight: 800;
-    color: rgba(255, 107, 53, 0.08);
+    color: rgba(255, 107, 53, 0.18);
     line-height: 1;
     user-select: none;
+}
+
+[data-theme="dark"] .tip-num {
+    color: rgba(255, 107, 53, 0.45);
 }
 
 .tip-card h3 {

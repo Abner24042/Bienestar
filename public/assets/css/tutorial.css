@@ -1,0 +1,410 @@
+/* =====================
+   TUTORIAL OVERLAY
+   ===================== */
+
+#tutorial-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: transparent;
+    pointer-events: all;
+    display: none;
+}
+
+#tutorial-spotlight {
+    position: fixed;
+    z-index: 9991;
+    pointer-events: none;
+    border-radius: 10px;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.68);
+    outline: 2.5px solid rgba(255, 107, 53, 0.85);
+    outline-offset: 3px;
+    transition: top 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                left 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                border-radius 0.38s ease;
+    display: none;
+}
+
+#tutorial-tooltip {
+    position: fixed;
+    z-index: 9992;
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 26px 20px;
+    width: 310px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 16px rgba(0,0,0,0.1);
+    pointer-events: all;
+    display: none;
+    animation: tutorialFadeIn 0.28s ease both;
+}
+
+@keyframes tutorialFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+[data-theme="dark"] #tutorial-tooltip {
+    background: #1e1e1e;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tutorial-step-count {
+    font-size: 0.73rem;
+    color: #999;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.tutorial-btn-skip {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.tutorial-btn-skip:hover {
+    color: #888;
+}
+
+[data-theme="dark"] .tutorial-btn-skip {
+    color: #555;
+}
+
+[data-theme="dark"] .tutorial-btn-skip:hover {
+    color: #888;
+}
+
+.tutorial-progress {
+    height: 3px;
+    background: #f0f0f0;
+    border-radius: 2px;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .tutorial-progress {
+    background: #2e2e2e;
+}
+
+.tutorial-progress-fill {
+    height: 100%;
+    background: #ff6b35;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.tutorial-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.tutorial-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 8px;
+    line-height: 1.3;
+}
+
+[data-theme="dark"] .tutorial-title {
+    color: #e8e8e8;
+}
+
+.tutorial-description {
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.65;
+    margin: 0 0 20px;
+}
+
+[data-theme="dark"] .tutorial-description {
+    color: #aaa;
+}
+
+.tutorial-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tutorial-btn-prev {
+    background: none;
+    border: 1.5px solid #ddd;
+    color: #666;
+    padding: 8px 15px;
+    border-radius: 9px;
+    font-size: 0.83rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.tutorial-btn-prev:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+
+[data-theme="dark"] .tutorial-btn-prev {
+    border-color: #383838;
+    color: #999;
+}
+
+[data-theme="dark"] .tutorial-btn-prev:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+
+.tutorial-btn-next {
+    background: #ff6b35;
+    border: none;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 9px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.tutorial-btn-next:hover {
+    background: #e55a2b;
+    transform: translateY(-1px);
+}
+
+.tutorial-btn-next:active {
+    transform: translateY(0);
+}
+
+/* FAB re-trigger */
+#tutorial-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 42px;
+    height: 42px;
+    background: #ff6b35;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 9000;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#tutorial-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 22px rgba(255, 107, 53, 0.5);
+}
+
+#tutorial-fab svg {
+    width: 18px;
+    height: 18px;
+    stroke: #fff;
+}
+
+body.tutorial-active #tutorial-fab {
+    display: none !important;
+}
+
+/* While tutorial is active, hide the mobile menu's own dark overlay
+   (the tutorial spotlight already provides the darkening effect) */
+body.tutorial-active .mobile-menu-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Hint bubble junto al FAB */
+#tutorial-fab-hint {
+    position: fixed;
+    bottom: 16px;
+    right: 76px;
+    background: #fff;
+    color: #333;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    padding: 12px 14px 10px;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    max-width: 220px;
+    z-index: 9001;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    border: 1.5px solid #f0f0f0;
+}
+
+#tutorial-fab-hint.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+}
+
+.tutorial-hint-text {
+    display: block;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.tutorial-hint-actions {
+    display: flex;
+    gap: 6px;
+    flex-direction: column;
+}
+
+.tutorial-hint-start {
+    background: #ff6b35;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.tutorial-hint-start:hover { background: #e55a2b; }
+
+.tutorial-hint-dismiss {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-align: left;
+    padding: 0 2px;
+    transition: color 0.2s;
+}
+
+.tutorial-hint-dismiss:hover { color: #888; }
+
+/* Flecha apuntando al FAB */
+#tutorial-fab-hint::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    bottom: 18px;
+    border: 8px solid transparent;
+    border-right: none;
+    border-left-color: #f0f0f0;
+}
+
+#tutorial-fab-hint::before {
+    content: '';
+    position: absolute;
+    right: -6px;
+    bottom: 19px;
+    border: 7px solid transparent;
+    border-right: none;
+    border-left-color: #fff;
+    z-index: 1;
+}
+
+[data-theme="dark"] #tutorial-fab-hint {
+    background: #1e1e1e;
+    color: #e8e8e8;
+    border-color: #333;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .tutorial-hint-text { color: #ccc; }
+
+[data-theme="dark"] #tutorial-fab-hint::after { border-left-color: #333; }
+[data-theme="dark"] #tutorial-fab-hint::before { border-left-color: #1e1e1e; }
+
+/* Overlay oscuro para steps centrados (sin target) */
+#tutorial-backdrop.tutorial-overlay-dark {
+    background: rgba(0, 0, 0, 0.72);
+}
+
+#tutorial-tooltip.tutorial-centered {
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.38), 0 4px 20px rgba(0,0,0,0.15);
+}
+
+/* =====================
+   RESPONSIVE MÓVIL
+   ===================== */
+@media (max-width: 640px) {
+    #tutorial-tooltip {
+        width: calc(100vw - 32px) !important;
+        left: 16px !important;
+        right: 16px !important;
+        top: auto !important;
+        bottom: 16px !important;
+        transform: none !important;
+        padding: 20px 18px 16px;
+    }
+
+    /* Hint bubble encima del FAB en móvil */
+    #tutorial-fab-hint {
+        bottom: 76px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+    }
+
+    #tutorial-fab-hint::after,
+    #tutorial-fab-hint::before {
+        display: none;
+    }
+
+    .tutorial-btn-prev,
+    .tutorial-btn-next {
+        padding: 9px 14px;
+        font-size: 0.82rem;
+    }
+
+    .tutorial-dots {
+        margin-top: 12px;
+    }
+}
+
+/* Dots */
+.tutorial-dots {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.tutorial-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    transition: background 0.3s, width 0.3s, border-radius 0.3s;
+    flex-shrink: 0;
+}
+
+.tutorial-dot.active {
+    background: #ff6b35;
+    width: 18px;
+    border-radius: 3px;
+}
+
+[data-theme="dark"] .tutorial-dot {
+    background: #383838;
+}
+

@@ -27,10 +27,16 @@ if (!isset($pageTitle)) {
         $v = file_exists($path) ? filemtime($path) : time();
         return asset('css/' . $file) . '?v=' . $v;
     }
+    function jsAsset($file) {
+        $path = PUBLIC_PATH . '/assets/js/' . $file;
+        $v = file_exists($path) ? filemtime($path) : time();
+        return asset('js/' . $file) . '?v=' . $v;
+    }
     ?>
     <link rel="stylesheet" href="<?php echo cssAsset('main.css'); ?>">
     <link rel="stylesheet" href="<?php echo cssAsset('dashboard.css'); ?>">
     <link rel="stylesheet" href="<?php echo cssAsset('mobile-menu.css'); ?>">
+    <link rel="stylesheet" href="<?php echo cssAsset('tutorial.css'); ?>">
 <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
         <link rel="stylesheet" href="<?php echo cssAsset($css); ?>">
@@ -50,6 +56,13 @@ if (!isset($pageTitle)) {
     const CURRENT_USER_ID  = <?php echo (int)($_SESSION['user_id'] ?? 0); ?>;
     const CURRENT_USER_EMAIL = '<?php echo addslashes($_SESSION['correo'] ?? ''); ?>';
     const IS_PROFESSIONAL  = <?php echo isProfessional() ? 'true' : 'false'; ?>;
+    const CURRENT_PAGE     = '<?php echo addslashes($currentPage ?? ''); ?>';
+    const LOGIN_COUNT      = <?php echo (int)($_SESSION['tutorial_count'] ?? $_SESSION['user']['login_count'] ?? 0); ?>;
+    const TUTORIAL_FRESH   = <?php
+        $fresh = !empty($_SESSION['tutorial_fresh_login']);
+        if ($fresh) unset($_SESSION['tutorial_fresh_login']);
+        echo $fresh ? 'true' : 'false';
+    ?>;
 </script>
 <script src="<?php echo asset('js/cache.js'); ?>"></script>
 <script defer src="<?php echo asset('js/chat-notify.js'); ?>"></script>
@@ -105,6 +118,7 @@ if (!isset($pageTitle)) {
                     <?php if (isAdmin()): ?>
                         <a href="<?php echo url('admin'); ?>">Panel Admin</a>
                     <?php endif; ?>
+                    <a href="#" onclick="event.preventDefault(); window.tutorialStart();">Ver Tutorial</a>
                     <a href="<?php echo url('auth/logout'); ?>">Cerrar Sesión</a>
                 </div>
             </div>
@@ -312,6 +326,7 @@ if (!isset($pageTitle)) {
 <script src="<?php echo asset('js/main.js'); ?>"></script>
 <script src="<?php echo asset('js/mobile-menu.js'); ?>"></script>
 <script defer src="<?php echo asset('js/keyboard-nav.js'); ?>"></script>
+<script defer src="<?php echo jsAsset('tutorial.js'); ?>"></script>
 
     <!-- Main Content -->
     <main class="main-content" id="main-content">
