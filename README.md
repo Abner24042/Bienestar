@@ -220,4 +220,4 @@ Para que funcione "Iniciar sesión con Google" necesitas crear credenciales en [
 
 **Desarrollado por**: Abner Borrego, Hannia Perez, Frida Azuara y Ana Paula  
 **Institución**: IEST Anáhuac Tampico  
-**Año**: 2025-2026
+**Año**: 2024-2026
