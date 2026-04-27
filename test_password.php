@@ -21,4 +21,4 @@ echo "Hash nuevo: " . password_hash($password_input, PASSWORD_DEFAULT);
 
 Accede a:
 ```
-http://localhost/a/Bienestar/test_password.php
+http://localhost/Bienestar/test_password.php
