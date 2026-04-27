@@ -1,182 +1,151 @@
 # 🏥 BIENIESTAR — Sistema Integral de Bienestar
 
-> Plataforma web para la gestión de salud, alimentación y ejercicio para estudiantes del IEST Anáhuac  
-> **Versión 2.2.0** · PHP MVC · MySQL · Vanilla JS
+Plataforma web para la gestión de salud, alimentación y ejercicio para estudiantes del IEST Anáhuac.  
+**Versión 2.2.0** · PHP MVC · MySQL · Vanilla JS
 
 ---
 
-## 📋 Descripción
-
-BIENIESTAR conecta a estudiantes con especialistas de bienestar (coach, nutriólogo, psicólogo) mediante:
+## ¿Qué hace la plataforma?
 
 | Módulo | Descripción |
 |---|---|
-| 🍎 **Alimentación** | Catálogo de recetas con filtros y plan asignado por nutriólogo |
-| 💪 **Ejercicio** | Rutinas por nivel/tipo y plan asignado por coach |
-| 🧠 **Salud Mental** | Tests de bienestar, respiración guiada y recursos |
-| 📅 **Citas** | Agendado de consultas con especialistas |
-| 💬 **Chat** | Mensajería directa usuario ↔ especialista |
-| 📋 **Mi Plan** | Plan personalizado asignado por el especialista |
-| ⭐ **Favoritos** | Recetas y ejercicios guardados |
-| 📰 **Noticias** | Blog de salud y bienestar |
+| 🍎 Alimentación | Catálogo de recetas con filtros y plan asignado por nutriólogo |
+| 💪 Ejercicio | Rutinas por nivel/tipo y plan asignado por coach |
+| 🧠 Salud Mental | Tests de bienestar, respiración guiada y recursos |
+| 📅 Citas | Agendado de consultas con especialistas |
+| 💬 Chat | Mensajería directa usuario ↔ especialista |
+| 📋 Mi Plan | Plan personalizado asignado por el especialista |
+| ⭐ Favoritos | Recetas y ejercicios guardados |
+| 📰 Noticias | Blog de salud y bienestar |
 
 ---
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 - **Backend**: PHP 8.0+, MySQL 8.0, PDO, Composer
-- **Frontend**: HTML5, CSS3 (Grid/Flexbox/Variables), JavaScript ES6+ (Vanilla)
+- **Frontend**: HTML5, CSS3, JavaScript ES6+ (Vanilla)
 - **Librerías**: PHPDotenv, PHPMailer, Google OAuth 2.0, EmailJS
-- **Arquitectura**: MVC con front controller (`public/index.php`) y router propio
+- **Arquitectura**: MVC con front controller y router propio
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del proyecto
 
 ```
 Bienestar/
-├── public/                  # Carpeta pública (document root de Apache)
-│   ├── index.php            # Front controller — todas las rutas pasan por aquí
-│   ├── assets/
-│   │   ├── css/             # Estilos
-│   │   ├── js/              # Scripts
-│   │   ├── img/             # Imágenes
-│   │   └── uploads/         # Fotos de perfil y archivos subidos
-│   └── pages/               # Vistas PHP de cada sección
+├── public/                  ← carpeta pública (apunta Apache aquí)
+│   ├── index.php            ← todas las rutas pasan por aquí
+│   ├── assets/css, js, img
+│   └── pages/               ← vistas de cada sección
 ├── app/
-│   ├── config/              # config.php, database.php
-│   ├── controllers/         # AuthController, etc.
-│   ├── models/              # User.php, Chat.php, etc.
-│   ├── views/layouts/       # header.php, footer.php
-│   └── Router.php           # Enrutador de URLs limpias
-├── controllers/             # Controladores de API (JSON endpoints)
-├── .env.example             # Plantilla de variables de entorno
-├── .env                     # Variables de entorno (NO se sube a Git)
-├── install.php              # ⚙️ Crea usuarios de prueba en la BD
-├── test_password.php        # 🔑 Diagnóstico de hashes de contraseña
-├── sistema_usuarios.sql     # 🗃️ Estructura completa de la base de datos
+│   ├── config/              ← config.php, database.php
+│   ├── controllers/
+│   ├── models/
+│   ├── views/layouts/       ← header.php, footer.php
+│   └── Router.php
+├── controllers/             ← endpoints JSON
+├── .env.example             ← plantilla de configuración (cópiala como .env)
+├── .env                     ← este archivo no está en el repo, lo tienes que crear tú
+├── install.php              ← crea los usuarios de prueba en la BD
+├── test_password.php        ← diagnóstico si el login no funciona
+├── sistema_usuarios.sql     ← estructura completa de la base de datos
 └── composer.json
 ```
 
 ---
 
-## 🚀 Instalación paso a paso
+## Instalación (para el profe Yustre 👋)
 
-### Requisitos previos
-- XAMPP (PHP 8.0+, Apache, MySQL)
-- Composer ([getcomposer.org](https://getcomposer.org))
+### Lo que necesitas antes de empezar
+- XAMPP con PHP 8.0+, Apache y MySQL corriendo
+- Composer → [getcomposer.org](https://getcomposer.org)
 
 ---
 
-### 1. Colocar el proyecto
+### 1. Coloca el proyecto en htdocs
 
-Descarga o clona el repositorio dentro de `htdocs`:
-
+Descarga o clona el repo y ponlo en:
 ```
 C:\xampp\htdocs\Bienestar\
 ```
 
-> Si lo pones en una subcarpeta diferente (p. ej. `htdocs\proyectos\Bienestar`), ajusta `BASE_URL` en el paso 3.
-
 ---
 
-### 2. Instalar dependencias PHP
+### 2. Instala las dependencias
 
-Abre una terminal **dentro de la carpeta del proyecto** y ejecuta:
-
+Abre una terminal dentro de la carpeta del proyecto y corre:
 ```bash
 composer install
 ```
-
-Esto crea la carpeta `vendor/` con todas las librerías necesarias (PHPDotenv, PHPMailer, etc.).
+Esto crea la carpeta `vendor/` con todo lo que necesita PHP.
 
 ---
 
-### 3. Configurar variables de entorno
+### 3. Crea el archivo `.env`
 
-Copia el archivo de ejemplo y edítalo:
+El archivo `.env` no está en el repo porque tiene credenciales. Tienes que crearlo tú:
 
 ```bash
-# En Windows (cmd)
+# En cmd de Windows
 copy .env.example .env
-
-# En Git Bash / Mac / Linux
-cp .env.example .env
 ```
 
-Abre `.env` con cualquier editor de texto y ajusta estas líneas:
+Abre el `.env` que se creó y cambia solo estas líneas:
 
 ```env
-APP_ENV=development
-APP_DEBUG=true
-
-# Cambia esto según dónde pusiste el proyecto en htdocs
 BASE_URL=http://localhost/Bienestar/public
 
-# Base de datos (XAMPP por defecto no tiene contraseña)
 DB_HOST=localhost
 DB_NAME=sistema_usuarios
 DB_USER=root
 DB_PASS=
 ```
 
-> Las demás variables (Google OAuth, EmailJS, SMTP) son opcionales para la instalación básica. Sin ellas el login normal y el contenido funcionan perfectamente.
+> Si pusiste el proyecto en otra carpeta (por ejemplo `htdocs\proyectos\Bienestar`), ajusta `BASE_URL` en consecuencia.
 
 ---
 
-### 4. Crear la base de datos
+### 4. Importa la base de datos
 
-1. Inicia **Apache** y **MySQL** desde el panel de XAMPP
-2. Abre **phpMyAdmin** → `http://localhost/phpmyadmin`
-3. Clic en **Nueva** (panel izquierdo)
-4. Nombre: `sistema_usuarios` → clic en **Crear**
-5. Selecciona la base de datos recién creada en el panel izquierdo
-6. Clic en **Importar** (menú superior)
-7. Botón **Seleccionar archivo** → elige `sistema_usuarios.sql` de la raíz del proyecto
-8. Clic en **Continuar**
-
-✅ Esto crea automáticamente todas las tablas con su estructura.
+1. Abre **phpMyAdmin** → `http://localhost/phpmyadmin`
+2. Clic en **Nueva** → nombre: `sistema_usuarios` → **Crear**
+3. Selecciona esa base de datos en el panel izquierdo
+4. Clic en **Importar** → **Seleccionar archivo** → elige `sistema_usuarios.sql` de la raíz del proyecto
+5. Clic en **Continuar**
 
 ---
 
-### 5. ⚙️ Crear usuarios de prueba con `install.php`
+### 5. Corre `install.php` para crear los usuarios ⚠️
 
-> **Este paso es indispensable para poder iniciar sesión.**
+> Aunque hayas importado la base de datos, **corre este paso de todas formas**. La primera vez que lo monté tampoco me funcionó el login porque el hash de la contraseña quedó mal al importar el SQL. `install.php` borra y recrea los usuarios con el hash correcto generado por tu propia instalación de PHP, así que no hay forma de que falle.
 
 Con Apache corriendo, abre en el navegador:
-
 ```
 http://localhost/Bienestar/install.php
 ```
 
-Deberías ver:
-
+Deberías ver algo así:
 ```
-✅ Usuario administrador creado exitosamente!
-   Email:    admin@bieniestar.com
-   Password: admin123
+🔄 Usuario admin@bieniestar.com ya existía — eliminado para recrearlo con hash correcto.
+✅ admin@bieniestar.com creado correctamente.
+   Contraseña: admin123
 
-✅ Usuario normal creado exitosamente!
-   Email:    usuario@test.com
-   Password: usuario123
+🔄 Usuario usuario@test.com ya existía — eliminado para recrearlo con hash correcto.
+✅ usuario@test.com creado correctamente.
+   Contraseña: usuario123
+
+✅ Listo. Ya puedes iniciar sesión.
 ```
 
-**¿Qué hace `install.php`?**
-- Se conecta a la base de datos usando los modelos del proyecto
-- Crea los dos usuarios con contraseñas correctamente **hasheadas** con `password_hash()`
-- Si los usuarios ya existen muestra una advertencia naranja y no los duplica
-
-> ⚠️ **Importante**: Una vez que el login funcione, elimina o renombra `install.php` para que no quede accesible públicamente.
+Si los usuarios no existían todavía, no muestra el mensaje de "ya existía" y los crea directo. De cualquier forma el resultado es el mismo.
 
 ---
 
-### 6. Acceder a la aplicación
+### 6. Entra a la aplicación
 
 ```
 http://localhost/Bienestar/public/
 ```
-
-Inicia sesión con las credenciales creadas:
 
 | Rol | Email | Contraseña |
 |---|---|---|
@@ -185,9 +154,9 @@ Inicia sesión con las credenciales creadas:
 
 ---
 
-## 🌐 Rutas disponibles
+## Rutas disponibles
 
-La app usa URLs limpias a través del front controller. **No accedas directo a los archivos `.php`**.
+Todas las páginas usan URLs limpias, no accedas directo a los `.php`.
 
 | Ruta | Descripción |
 |---|---|
@@ -195,87 +164,60 @@ La app usa URLs limpias a través del front controller. **No accedas directo a l
 | `/login` | Inicio de sesión |
 | `/alimentacion` | Catálogo de recetas |
 | `/ejercicio` | Catálogo de ejercicios |
-| `/salud-mental` | Tests y recursos de salud mental |
-| `/noticias` | Blog de noticias |
+| `/salud-mental` | Tests y recursos |
+| `/noticias` | Blog |
 | `/citas` | Gestión de citas |
 | `/chat` | Mensajería |
 | `/mi-plan` | Plan personalizado |
-| `/favoritos` | Recetas y ejercicios favoritos |
+| `/favoritos` | Guardados |
 | `/perfil` | Perfil del usuario |
 | `/profesional` | Panel del especialista |
 | `/admin` | Panel de administración |
 
 ---
 
-## 🔑 Solución de problemas de login
+## Si el login sigue sin funcionar
 
-### "Contraseña incorrecta" aunque sea la correcta
-
-Abre en el navegador:
-
+Abre:
 ```
 http://localhost/Bienestar/test_password.php
 ```
 
-Este archivo verifica si `password_verify()` funciona en tu instalación de PHP.
-
-- **✅ La contraseña coincide** → El hash está bien. Revisa que `BASE_URL` en `.env` coincida exactamente con la URL que usas en el navegador (incluyendo mayúsculas/minúsculas en la carpeta).
-- **❌ La contraseña NO coincide** → El hash en tu BD está mal. Solución: entra a phpMyAdmin → tabla `usuarios` → edita el registro → pega este hash en el campo `password`:
-  ```
-  $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
-  ```
-  O mejor aún: elimina los usuarios desde phpMyAdmin y vuelve a correr `install.php`.
-
-### La página muestra "404" o error de Apache
-
-Verifica que el módulo `mod_rewrite` de Apache esté activo:
-1. Panel de XAMPP → Apache → Config → `httpd.conf`
-2. Busca `#LoadModule rewrite_module` y quita el `#`
-3. Reinicia Apache
+- **✅ La contraseña coincide** → el hash está bien. Revisa que `BASE_URL` en `.env` coincida exactamente con la URL del navegador.
+- **❌ La contraseña NO coincide** → corre `install.php` otra vez, eso lo arregla.
 
 ---
 
-## 👥 Roles del sistema
+## Roles del sistema
 
 | Rol | Descripción |
 |---|---|
 | `usuario` | Acceso a todas las secciones del estudiante |
-| `coach` | Panel profesional + gestión de planes de ejercicio |
-| `nutriologo` | Panel profesional + gestión de planes de recetas |
-| `psicologo` | Panel profesional + recomendaciones de salud mental |
+| `coach` | Panel profesional + planes de ejercicio |
+| `nutriologo` | Panel profesional + planes de recetas |
+| `psicologo` | Panel profesional + recomendaciones |
 | `admin` | Acceso total + panel de administración |
 
-Para crear un especialista: regístrate normalmente y luego cambia el campo `rol` directamente en phpMyAdmin → tabla `usuarios`.
+Para crear un especialista: regístrate normalmente y cambia el campo `rol` en phpMyAdmin → tabla `usuarios`.
 
 ---
 
-## 🔐 Google OAuth (opcional)
+## Google OAuth (opcional)
 
-Para activar "Iniciar sesión con Google":
-
-1. Ir a [Google Cloud Console](https://console.cloud.google.com)
-2. Crear proyecto → APIs y servicios → Credenciales
-3. Crear ID de cliente OAuth 2.0 (tipo: Aplicación web)
-4. En "URIs de redirección autorizados" agregar:
-   ```
-   http://localhost/Bienestar/public/auth/google/callback
-   ```
-5. Copiar Client ID y Client Secret en `.env`
-
-Sin esto configurado el botón de Google no funcionará, pero el login normal sí.
+Para que funcione "Iniciar sesión con Google" necesitas crear credenciales en [Google Cloud Console](https://console.cloud.google.com) y agregarlas al `.env`. Sin eso el botón de Google no aparece, pero el login normal funciona sin problema.
 
 ---
 
-## 📝 Notas técnicas
+## Notas técnicas
 
 - Las tablas se **auto-crean** si no existen (los modelos tienen `CREATE TABLE IF NOT EXISTS`)
-- Las columnas nuevas se **auto-agregan** con `ensureColumns()` — no se necesitan migraciones manuales
-- Los archivos `.env` y `vendor/` están en `.gitignore` y nunca se suben al repositorio
+- Las columnas nuevas se **auto-agregan** sin necesidad de correr migraciones
+- `vendor/` y `.env` están en `.gitignore` y nunca se suben al repo
 
 ---
 
-## 👥 Créditos
+## Créditos
 
-- **Desarrollado por**: Abner Borrego
-- **Institución**: IEST Anáhuac Tampico
-- **Año**: 2025-2026
+**Desarrollado por**: Abner Borrego  
+**Institución**: IEST Anáhuac Tampico  
+**Año**: 2025-2026
