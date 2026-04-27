@@ -104,7 +104,8 @@
       "Bash(node deploy.js \"public/assets/js/tutorial.js\")",
       "Bash(node deploy.js \"app/views/layouts/header.php\" \"public/assets/js/tutorial.js\")",
       "Bash(node deploy.js \"app/controllers/AuthController.php\" \"app/models/User.php\" \"app/views/layouts/header.php\" \"controllers/google_callback.php\" \"public/assets/css/salud-mental.css\" \"public/assets/js/alimentacion.js\" \"public/assets/js/ejercicio.js\" \"public/assets/js/noticias.js\" \"public/pages/dashboard.php\")",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "\\tmp"
