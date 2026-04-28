@@ -16,7 +16,7 @@ define('APP_ENV', $_ENV['APP_ENV'] ?? 'development');
 define('APP_DEBUG', ($_ENV['APP_DEBUG'] ?? 'true') === 'true');
 
 // URLs
-define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/Bienestar/public');
+define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/a/Bienestar/public');
 define('ASSETS_URL', BASE_URL . '/assets');
 
 // Rutas del sistema
